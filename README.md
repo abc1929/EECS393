@@ -3,8 +3,8 @@
 Some goals (or how the game is foreseen)
 ---
 Arena
-- flat space with dome (force field) enclosing it (a soft boundary); exiting this dome would cause dmg to the character
-- A timer associated with it, the dome shall be smaller throughout time (forcing game to end in a way, think h1z1)
+- flat space with dome (force field) enclosing it (a soft boundary); exiting this dome out of the arena would cause dmg to the character per unit time (see WC3 Warlock)
+- A timer associated with the game, the dome shall be smaller throughout time (forcing game to end in a way, think h1z1)
 - environment objects
   - pillars;covers
   - elevation;plateau;ramp;
