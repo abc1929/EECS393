@@ -1,3 +1,6 @@
+ClassProject.VC.db
+
+
 # Compiled Object files
 *.slo
 *.lo
@@ -53,10 +56,15 @@ Build/*
 Saved/*
 
 # Compiled source files for the engine to use
-Intermediate/*
+Intermediate/*.bin
+Intermediate/Build/*
+
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# StarterContent
+Content/StarterContent/*
 
 # Mac Artifacts
 .DS_Store
