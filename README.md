@@ -1,6 +1,10 @@
 # EECS393
 
+SRS Link
+https://docs.google.com/a/case.edu/document/d/1NuMJ_82PCLxgQTY9KPE8JGp53LLNXw8gC4FuWVNnWHs/edit?usp=sharing
 
+Data Flow Link
+https://docs.google.com/a/case.edu/document/d/1NuMJ_82PCLxgQTY9KPE8JGp53LLNXw8gC4FuWVNnWHs/edit?usp=sharing
 
 Current goals of implementation
 ---
