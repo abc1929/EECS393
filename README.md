@@ -6,7 +6,7 @@ https://docs.google.com/a/case.edu/document/d/1NuMJ_82PCLxgQTY9KPE8JGp53LLNXw8gC
 
 Data Flow Link
 ---
-https://docs.google.com/a/case.edu/document/d/1NuMJ_82PCLxgQTY9KPE8JGp53LLNXw8gC4FuWVNnWHs/edit?usp=sharing
+https://drive.google.com/a/case.edu/file/d/0B8YdsyGyj4U4SC1VOHpyNmctZ1E/view?usp=sharing
 
 ---
 Current goals of implementation
