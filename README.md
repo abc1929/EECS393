@@ -12,7 +12,7 @@ https://drive.google.com/a/case.edu/file/d/0B8YdsyGyj4U4SC1VOHpyNmctZ1E/view?usp
 Current goals of implementation
 ---
 1. ☐ make arena, just flat ground with shrinking force field (we could worry about the visual of it later) associated with time 
-2. ☐ make a ragdoll character controlled by a single player with hp and movements (kinda given by UE4)
+2. ☑ make a character controlled by a single player with hp and movements (kinda given by UE4)
 3. ☐ make a punchbag ragdoll dummy enemy with hp
 4. ☑ Ranged projectile made ~~4. make a basic melee punch skill that deals minor dmg and knockback whoever is hit a bit.~~
 5. ☐ everything with hp shall take dmg constantly while in force field
