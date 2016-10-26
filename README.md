@@ -1,31 +1,28 @@
 # EECS393
 
-SRS Link
----
-https://docs.google.com/a/case.edu/document/d/1NuMJ_82PCLxgQTY9KPE8JGp53LLNXw8gC4FuWVNnWHs/edit?usp=sharing
-
-Game state flow diagram Link
----
-https://drive.google.com/a/case.edu/file/d/0B8YdsyGyj4U4SC1VOHpyNmctZ1E/view?usp=sharing
-
 ---
 Current goals of implementation
----
-1. ☐ make arena, just flat ground with shrinking force field (we could worry about the visual of it later) associated with time 
+--- 
+
+1. ~☑ make arena, just flat ground with shrinking force field (we could worry about the visual of it later) associated with time 
 2. ☑ make a character controlled by a single player with hp and movements (kinda given by UE4)
-3. ☐ make a punchbag ragdoll dummy enemy with hp
+3. ☑ ~~make a punchbag ragdoll dummy enemy with hp~~ ☐
 4. ☑ Ranged projectile made ~~4. make a basic melee punch skill that deals minor dmg and knockback whoever is hit a bit.~~
-5. ☐ everything with hp shall take dmg constantly while in force field
+5. ☑ everything with hp shall take dmg constantly while in force field
+
+
+6. Targeting system, draw enemy hp on Hud
+7. implement fireball knockback
+8. (shift to) sprint function on character
+9. fireball casting time, casting bar draw on screen.
+100. implement networking 
+65535. UI/menu 
 
 
 
 
 
-
-
-
-
-Some goals (or how the game is foreseen)
+goals
 ---
 Arena
 - flat space with dome (force field) enclosing it (a soft boundary); exiting this dome out of the arena would cause dmg to the character per unit time (see WC3 Warlock)
@@ -34,7 +31,6 @@ Arena
   - pillars;covers
   - elevation;plateau;ramp;
   - etc.
-
 
 Game elements
 - we can have some characters to choose from (think overwatch, MOBAs)
