@@ -7953,4 +7953,28 @@ Target is Mage' to 'Return Node'.
 [2016.10.27-16.50.51:334][843]LogGameState: Match State Changed from WaitingToStart to InProgress
 [2016.10.27-16.50.51:334][843]PIE: Info Play in editor start time for /Game/ThirdPersonCPP/Maps/UEDPIE_0_DefaultArena 0.294
 [2016.10.27-16.50.51:334][843]LogBlueprintUserMessages: Late PlayInEditor Detection: Level '/Game/ThirdPersonCPP/Maps/DefaultArena.DefaultArena:PersistentLevel' has LevelScriptBlueprint '/Game/ThirdPersonCPP/Maps/DefaultArena.DefaultArena:PersistentLevel.DefaultArena' with GeneratedClass '/Game/ThirdPersonCPP/Maps/DefaultArena.DefaultArena_C' with ClassGeneratedBy '/Game/ThirdPersonCPP/Maps/DefaultArena.DefaultArena:PersistentLevel.DefaultArena'
-[2016.10.27-16.50.55:209][191]Cmd: LevelEditor.ToggleImmer
+[2016.10.27-16.50.55:209][191]Cmd: LevelEditor.ToggleImmersive
+[2016.10.27-16.52.12:998][442]LogBlueprintUserMessages: Early EndPlayMap Detection: Level '/Game/ThirdPersonCPP/Maps/DefaultArena.DefaultArena:PersistentLevel' has LevelScriptBlueprint '/Game/ThirdPersonCPP/Maps/DefaultArena.DefaultArena:PersistentLevel.DefaultArena' with GeneratedClass '/Game/ThirdPersonCPP/Maps/DefaultArena.DefaultArena_C' with ClassGeneratedBy '/Game/ThirdPersonCPP/Maps/DefaultArena.DefaultArena:PersistentLevel.DefaultArena'
+[2016.10.27-16.52.13:101][442]LogBlueprintUserMessages: Late EndPlayMap Detection: Level '/Game/ThirdPersonCPP/Maps/DefaultArena.DefaultArena:PersistentLevel' has LevelScriptBlueprint '/Game/ThirdPersonCPP/Maps/DefaultArena.DefaultArena:PersistentLevel.DefaultArena' with GeneratedClass '/Game/ThirdPersonCPP/Maps/DefaultArena.DefaultArena_C' with ClassGeneratedBy '/Game/ThirdPersonCPP/Maps/DefaultArena.DefaultArena:PersistentLevel.DefaultArena'
+[2016.10.27-16.53.35:082][412]LightingResults: New page: Lighting Build
+[2016.10.27-16.53.35:087][412]MapCheck: New page: Map Check
+[2016.10.27-16.53.35:087][412]LightingResults: New page: Lighting Build
+[2016.10.27-16.53.35:122][412]LogAIModule: Creating AISystem for world Untitled
+[2016.10.27-16.53.35:127][412]LoadErrors: New page: New Map
+[2016.10.27-17.00.12:674][460]LogSavePackage: Save=13.05ms
+[2016.10.27-17.00.12:674][460]LogSavePackage: Moving '../../../../../../Users/Admin/Documents/Unreal Projects/ClassProject/Saved/MainMenuC559F69B445CDD3F33DBBFB9270F2669.tmp' to '../../../../../../Users/Admin/Documents/Unreal Projects/ClassProject/Content/ThirdPersonCPP/Blueprints/MainMenu.uasset'
+[2016.10.27-17.00.12:677][460]LogSavePackage:Display: Finished SavePackage ../../../../../../Users/Admin/Documents/Unreal Projects/ClassProject/Content/ThirdPersonCPP/Blueprints/MainMenu.uasset
+[2016.10.27-17.00.13:291][499]LogSavePackage: Save=11.43ms
+[2016.10.27-17.00.13:292][499]LogSavePackage: Moving '../../../../../../Users/Admin/Documents/Unreal Projects/ClassProject/Saved/MainMenuB4E1BDD4471D81AC42B57F925B21697A.tmp' to '../../../../../../Users/Admin/Documents/Unreal Projects/ClassProject/Content/ThirdPersonCPP/Blueprints/MainMenu.uasset'
+[2016.10.27-17.00.13:294][499]LogSavePackage:Display: Finished SavePackage ../../../../../../Users/Admin/Documents/Unreal Projects/ClassProject/Content/ThirdPersonCPP/Blueprints/MainMenu.uasset
+[2016.10.27-17.00.13:671][523]LogSavePackage: Save=10.54ms
+[2016.10.27-17.00.13:671][523]LogSavePackage: Moving '../../../../../../Users/Admin/Documents/Unreal Projects/ClassProject/Saved/MainMenuFBEC22454B8E3D1F76E400B912ED7294.tmp' to '../../../../../../Users/Admin/Documents/Unreal Projects/ClassProject/Content/ThirdPersonCPP/Blueprints/MainMenu.uasset'
+[2016.10.27-17.00.13:673][523]LogSavePackage:Display: Finished SavePackage ../../../../../../Users/Admin/Documents/Unreal Projects/ClassProject/Content/ThirdPersonCPP/Blueprints/MainMenu.uasset
+[2016.10.27-17.00.13:784][528]LogSavePackage: Save=10.58ms
+[2016.10.27-17.00.13:784][528]LogSavePackage: Moving '../../../../../../Users/Admin/Documents/Unreal Projects/ClassProject/Saved/MainMenu0F621A1F48000FBC9D96F3B337455597.tmp' to '../../../../../../Users/Admin/Documents/Unreal Projects/ClassProject/Content/ThirdPersonCPP/Blueprints/MainMenu.uasset'
+[2016.10.27-17.00.13:786][528]LogSavePackage:Display: Finished SavePackage ../../../../../../Users/Admin/Documents/Unreal Projects/ClassProject/Content/ThirdPersonCPP/Blueprints/MainMenu.uasset
+[2016.10.27-17.00.13:895][533]LogSavePackage: Save=10.46ms
+[2016.10.27-17.00.13:895][533]LogSavePackage: Moving '../../../../../../Users/Admin/Documents/Unreal Projects/ClassProject/Saved/MainMenu685FFBBE48540AE2ABCC23A9D62559B4.tmp' to '../../../../../../Users/Admin/Documents/Unreal Projects/ClassProject/Content/ThirdPersonCPP/Blueprints/MainMenu.uasset'
+[2016.10.27-17.00.13:897][533]LogSavePackage:Display: Finished SavePackage ../../../../../../Users/Admin/Documents/Unreal Projects/ClassProject/Content/ThirdPersonCPP/Blueprints/MainMenu.uasset
+[2016.10.27-17.00.14:008][538]LogSavePackage: Save=10.55ms
+[2016.1
