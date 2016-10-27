@@ -8,7 +8,7 @@
 		</ProjectConfiguration>
 	</ItemGroup>
 	<PropertyGroup Label="Globals">
-		<ProjectGuid>{93DC8396-4E07-499F-A3F2-54245DFE29D6}</ProjectGuid>
+		<ProjectGuid>{9DCC75AC-BE8E-4FC8-93BB-D497CA263870}</ProjectGuid>
 		<Keyword>MakeFileProj</Keyword>
 		<RootNamespace>UE4</RootNamespace>
        <PlatformToolset>v140</PlatformToolset>
@@ -16915,6 +16915,8 @@
 		<ClCompile Include="G:\Program Files (x86)\Epic Games\4.13\Engine\Plugins\Runtime\GoogleVR\GoogleVRHMD\Source\GoogleVRHMD\Private\GoogleVRHMDRender.cpp" />
 		<ClCompile Include="G:\Program Files (x86)\Epic Games\4.13\Engine\Plugins\Runtime\GoogleVR\GoogleVRHMD\Source\GoogleVRHMD\Private\GoogleVRHMDViewerPreviews.cpp" />
 		<ClInclude Include="G:\Program Files (x86)\Epic Games\4.13\Engine\Plugins\Runtime\GoogleVR\GoogleVRHMD\Source\GoogleVRHMD\Private\GoogleVRHMDViewerPreviews.h" />
+		<ClCompile Include="G:\Program Files (x86)\Epic Games\4.13\Engine\Plugins\Runtime\GoogleVR\GoogleVRHMD\Source\GoogleVRHMD\Private\GoogleVRSplash.cpp" />
+		<ClInclude Include="G:\Program Files (x86)\Epic Games\4.13\Engine\Plugins\Runtime\GoogleVR\GoogleVRHMD\Source\GoogleVRHMD\Private\GoogleVRSplash.h" />
 		<ClInclude Include="G:\Program Files (x86)\Epic Games\4.13\Engine\Plugins\Runtime\GoogleVR\GoogleVRHMD\Source\GoogleVRHMD\Public\IGoogleVRHMDPlugin.h" />
 		<None Include="G:\Program Files (x86)\Epic Games\4.13\Engine\Plugins\Runtime\IOSDeviceProfileSelector\Source\IOSDeviceProfileSelector\IOSDeviceProfileSelector.Build.cs" />
 		<ClCompile Include="G:\Program Files (x86)\Epic Games\4.13\Engine\Plugins\Runtime\IOSDeviceProfileSelector\Source\IOSDeviceProfileSelector\Private\IOSDeviceProfileSelectorModule.cpp" />
