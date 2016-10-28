@@ -1,5 +1,6 @@
 ClassProject.VC.db
-
+*.ini
+*.log
 
 # Compiled Object files
 *.slo
