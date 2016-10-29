@@ -406,7 +406,9 @@
     <NMakeOutput>..\..\Binaries\HTML5\ClassProject2-HTML5-Shipping.exe</NMakeOutput>
   </PropertyGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\ClassProject2\Private\Fireball.cpp" />
     <ClCompile Include="..\..\Source\ClassProject2\Private\MyCharacter.cpp" />
+    <ClCompile Include="..\..\Source\ClassProject2\Private\MyCharacter_Blueprint__pf3171751747.cpp" />
     <ClCompile Include="..\..\Source\ClassProject2\Private\MyGameMode.cpp" />
     <ClCompile Include="..\..\Source\ClassProject2\Private\MyGameState.cpp" />
     <ClCompile Include="..\..\Source\ClassProject2\Private\MyPlayerController.cpp" />
@@ -415,7 +417,9 @@
     <ClCompile Include="..\..\Source\ClassProject2\Private\ThirdPersonCharacter__pf3171751747.cpp" />
     <ClCompile Include="..\..\Source\ClassProject2\Private\ThirdPerson_AnimBP__pf4153901168.cpp" />
     <ClCompile Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\ClassProject2.generated.cpp" />
+    <ClInclude Include="..\..\Source\ClassProject2\Public\Fireball.h" />
     <ClInclude Include="..\..\Source\ClassProject2\Public\MyCharacter.h" />
+    <ClInclude Include="..\..\Source\ClassProject2\Public\MyCharacter_Blueprint__pf3171751747.h" />
     <ClInclude Include="..\..\Source\ClassProject2\Public\MyGameMode.h" />
     <ClInclude Include="..\..\Source\ClassProject2\Public\MyGameState.h" />
     <ClInclude Include="..\..\Source\ClassProject2\Public\MyPlayerController.h" />

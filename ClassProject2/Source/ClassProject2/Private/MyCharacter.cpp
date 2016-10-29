@@ -13,42 +13,52 @@ AMyCharacter::AMyCharacter()
 	Health = 100;
 	Stamina = 100;
 
-	// GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
-
+	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
+	//Mesh
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> mmesh(TEXT("SkeletalMesh'/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin'"));
+	if (mmesh.Object) {
+		PlayerMesh = GetMesh();
+		PlayerMesh->SetSkeletalMesh(mmesh.Object);
+		PlayerMesh->AddLocalOffset(FVector(0, 0, -96));
+		PlayerMesh->SetRelativeRotation(FRotator(0, -90, 0));
+	}
+	
 	// // set our turn rates for input
 	// BaseTurnRate = 45.f;
 	// BaseLookUpRate = 45.f;
 
 	// // Don't rotate when the controller rotates. Let that just affect the camera.
-	// bUseControllerRotationPitch = false;
-	// bUseControllerRotationYaw = false;
-	// bUseControllerRotationRoll = false;
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;
 
 	// // Configure character movement
-	// GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
-	// GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
-	// GetCharacterMovement()->JumpZVelocity = 600.f;
-	// GetCharacterMovement()->AirControl = 0.2f;
+	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
+	GetCharacterMovement()->JumpZVelocity = 600.f;
+	GetCharacterMovement()->AirControl = 0.2f;
 
-	// // Create a camera boom (pulls in towards the player if there is a collision)
-	// CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	// CameraBoom->SetupAttachment(RootComponent);
-	// CameraBoom->TargetArmLength = 300.0f; // The camera follows at this distance behind the character	
-	// CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
+	// Create a camera boom (pulls in towards the player if there is a collision)
+	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	CameraBoom->SetupAttachment(RootComponent);
+	CameraBoom->TargetArmLength = 300.0f; // The camera follows at this distance behind the character	
+	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 
-	// // Create a follow camera
-	// FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	// FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
-	// FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+	// Create a follow camera
+	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
+	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
+	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
-
+	FollowCamera->SetFieldOfView(110);
+	FollowCamera->AddLocalOffset(FVector(-50,0,80));
 }
 
 // Called when the game starts or when spawned
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+
 }
 
 

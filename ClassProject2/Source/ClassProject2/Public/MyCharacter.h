@@ -93,6 +93,10 @@ UPROPERTY(VisibleAnywhere, Category = Camera, meta = (AllowPrivateAccess = "true
 UPROPERTY(VisibleAnywhere, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 
+UPROPERTY(VisibleAnywhere, Category = SkeletalMesh)
+	class USkeletalMesh* mmesh;
 
-
+UPROPERTY(VisibleAnywhere, Category = SkeletalMesh)
+	class USkeletalMeshComponent* PlayerMesh;
+	
 };
