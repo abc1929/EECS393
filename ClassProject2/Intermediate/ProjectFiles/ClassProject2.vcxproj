@@ -414,6 +414,7 @@
     <ClCompile Include="..\..\Source\ClassProject2\Private\ThirdPersonCharacter_Child__pf3171751747.cpp" />
     <ClCompile Include="..\..\Source\ClassProject2\Private\ThirdPersonCharacter__pf3171751747.cpp" />
     <ClCompile Include="..\..\Source\ClassProject2\Private\ThirdPerson_AnimBP__pf4153901168.cpp" />
+    <ClCompile Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\ClassProject2.generated.cpp" />
     <ClInclude Include="..\..\Source\ClassProject2\Public\MyCharacter.h" />
     <ClInclude Include="..\..\Source\ClassProject2\Public\MyGameMode.h" />
     <ClInclude Include="..\..\Source\ClassProject2\Public\MyGameState.h" />
@@ -422,6 +423,13 @@
     <ClInclude Include="..\..\Source\ClassProject2\Public\ThirdPersonCharacter_Child__pf3171751747.h" />
     <ClInclude Include="..\..\Source\ClassProject2\Public\ThirdPersonCharacter__pf3171751747.h" />
     <ClInclude Include="..\..\Source\ClassProject2\Public\ThirdPerson_AnimBP__pf4153901168.h" />
+    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\ClassProject2.generated.dep.h" />
+    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\ClassProject2Classes.h" />
+    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\ClassProject2GameMode.generated.h" />
+    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\MyCharacter.generated.h" />
+    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\MyGameState.generated.h" />
+    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\MyPlayerController.generated.h" />
+    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\MyPlayerState.generated.h" />
     <None Include="..\..\ClassProject2.uproject" />
     <None Include="..\..\Source\ClassProject2.Target.cs" />
     <None Include="..\..\Source\ClassProject2Editor.Target.cs" />

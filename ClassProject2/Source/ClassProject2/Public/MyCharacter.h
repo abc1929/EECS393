@@ -5,7 +5,7 @@
 #include "GameFramework/Character.h"
 #include "MyCharacter.generated.h"
 
-UCLASS(config = Game)
+UCLASS()
 //class CLASSPROJECT2_API AMyCharacter : public ACharacter
 class AMyCharacter : public ACharacter
 {
@@ -43,7 +43,9 @@ public:
 	// not implemented yet, commented for compiler complaint
 	//virtual void SetIsSprinting(bool IsSprinting);
 
-	UPROPERTY(Transient, Replicated)
+	
+	//UPROPERTY(Transient, Replicated)  
+	//Some of the variables are network processed, not implemented yet
 	bool IsJumping;
 
 	//bool TryJump();

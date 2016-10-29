@@ -87,6 +87,13 @@
     <ClInclude Include="..\..\Source\ClassProject2\Public\MyGameState.h">
       <Filter>Source\ClassProject2\Public</Filter>
     </ClInclude>
+    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\ClassProject2.generated.dep.h" />
+    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\ClassProject2Classes.h" />
+    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\ClassProject2GameMode.generated.h" />
+    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\MyCharacter.generated.h" />
+    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\MyGameState.generated.h" />
+    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\MyPlayerController.generated.h" />
+    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\MyPlayerState.generated.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\ClassProject2\Private\ThirdPersonCharacter__pf3171751747.cpp">
@@ -113,5 +120,6 @@
     <ClCompile Include="..\..\Source\ClassProject2\Private\MyGameState.cpp">
       <Filter>Source\ClassProject2\Private</Filter>
     </ClCompile>
+    <ClCompile Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\ClassProject2.generated.cpp" />
   </ItemGroup>
 </Project>

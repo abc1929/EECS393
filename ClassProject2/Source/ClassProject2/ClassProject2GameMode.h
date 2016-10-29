@@ -11,6 +11,3 @@ class AClassProject2GameMode : public AGameMode
 public:
 	AClassProject2GameMode();
 };
-
-
-

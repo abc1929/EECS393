@@ -2,8 +2,8 @@
 // JW,JD
 
 #include "ClassProject2.h"
-#include "MyCharacter.h"
 #include "ClassProject2GameMode.h"
+#include "MyCharacter.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -61,20 +61,20 @@ void AMyCharacter::Tick( float DeltaTime )
 }
 
 // Called to bind functionality to input
-void AMyCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponent)
+void AMyCharacter::SetupPlayerInputComponent(class UInputComponent* MyInputComponent)
 {
 	//Super::SetupPlayerInputComponent(InputComponent);
-	check(InputComponent);
+	check(MyInputComponent);
 	// Binding inputs to actions
 	//we can, for example press WASD to move 
-	InputComponent->BindAxis("MoveForward", this, &AMyCharacter::MoveForward);
-    InputComponent->BindAxis("MoveRight", this, &AMyCharacter::MoveRight);
+	MyInputComponent->BindAxis("MoveForward", this, &AMyCharacter::MoveForward);
+    MyInputComponent->BindAxis("MoveRight", this, &AMyCharacter::MoveRight);
 	//by default we bind mouse to turn camera
-	InputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-    InputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+	MyInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
+    MyInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	//by default we bind spacebar to execute jump
-	InputComponent->BindAction("Jump", IE_Pressed, this, &AMyCharacter::Jump);
-	InputComponent->BindAction("Jump", IE_Released, this, &AMyCharacter::StopJumping);
+	MyInputComponent->BindAction("Jump", IE_Pressed, this, &AMyCharacter::Jump);
+	MyInputComponent->BindAction("Jump", IE_Released, this, &AMyCharacter::StopJumping);
 }
 
 // MoveFoward handles moving forward and backwards
@@ -115,8 +115,13 @@ void AMyCharacter::MoveRight(float Value)
 // void OnSprintFinish();
 // virtual void SetIsSprinting(bool IsSprinting);
 
-// UPROPERTY(Transient, Replicated)
-// bool IsJumping;
+// for network later
+// void AMyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+// {
+//	 Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+//	 DOREPLIFETIME_CONDITION(AMyCharacter, IsJumping, COND_SkipOwner);
+// }
+
 
 // //bool TryJump();
 // bool IsSprinting() const;

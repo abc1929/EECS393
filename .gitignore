@@ -61,6 +61,8 @@ SourceArt/**/*.tga
 # Compiled source files for the engine to use
 **/Intermediate/*.bin
 **/Intermediate/Build/*
+!**/Intermediate/Build/**/*.cpp
+!**/Intermediate/Build/**/*.h
 
 
 # Cache files for the editor to use
