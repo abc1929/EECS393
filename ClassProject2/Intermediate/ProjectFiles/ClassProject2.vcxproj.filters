@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="..\..\ClassProject2.uproject" />
+    <Filter Include="Source">
+      <UniqueIdentifier>{005856A1-18E6-4D43-831D-6BAF20F5FB50}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\ClassProject2.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\Source\ClassProject2Editor.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <Filter Include="Config">
+      <UniqueIdentifier>{667CF256-1865-44EC-80DB-C875BFC8E6CD}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Config\DefaultEditor.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEditorPerProjectUserSettings.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEngine.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultGame.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultInput.ini">
+      <Filter>Config</Filter>
+    </None>
+    <Filter Include="Source\ClassProject2">
+      <UniqueIdentifier>{C179B854-6BF2-40C1-BF7D-895F7DA207E4}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\ClassProject2\ClassProject2.Build.cs">
+      <Filter>Source\ClassProject2</Filter>
+    </None>
+    <ClCompile Include="..\..\Source\ClassProject2\ClassProject2.cpp">
+      <Filter>Source\ClassProject2</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\ClassProject2\ClassProject2.h">
+      <Filter>Source\ClassProject2</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\ClassProject2\ClassProject2Character.cpp">
+      <Filter>Source\ClassProject2</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\ClassProject2\ClassProject2Character.h">
+      <Filter>Source\ClassProject2</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\ClassProject2\ClassProject2GameMode.cpp">
+      <Filter>Source\ClassProject2</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\ClassProject2\ClassProject2GameMode.h">
+      <Filter>Source\ClassProject2</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source\ClassProject2\Public">
+      <UniqueIdentifier>{127335a3-6e08-4679-8e44-40f41e2d9ce8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ClassProject2\Private">
+      <UniqueIdentifier>{951564c4-f5de-4676-818e-a398adf32f64}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\ClassProject2\Public\ThirdPersonCharacter__pf3171751747.h">
+      <Filter>Source\ClassProject2\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\ClassProject2\Public\ThirdPerson_AnimBP__pf4153901168.h">
+      <Filter>Source\ClassProject2\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\ClassProject2\Public\ThirdPersonCharacter_Child__pf3171751747.h">
+      <Filter>Source\ClassProject2\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\ClassProject2\Public\MyCharacter.h">
+      <Filter>Source\ClassProject2\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\ClassProject2\Public\MyPlayerController.h">
+      <Filter>Source\ClassProject2\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\ClassProject2\Public\MyGameMode.h">
+      <Filter>Source\ClassProject2\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\ClassProject2\Public\MyPlayerState.h">
+      <Filter>Source\ClassProject2\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\ClassProject2\Public\MyGameState.h">
+      <Filter>Source\ClassProject2\Public</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\ClassProject2\Private\ThirdPersonCharacter__pf3171751747.cpp">
+      <Filter>Source\ClassProject2\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\ClassProject2\Private\ThirdPerson_AnimBP__pf4153901168.cpp">
+      <Filter>Source\ClassProject2\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\ClassProject2\Private\ThirdPersonCharacter_Child__pf3171751747.cpp">
+      <Filter>Source\ClassProject2\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\ClassProject2\Private\MyCharacter.cpp">
+      <Filter>Source\ClassProject2\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\ClassProject2\Private\MyPlayerController.cpp">
+      <Filter>Source\ClassProject2\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\ClassProject2\Private\MyGameMode.cpp">
+      <Filter>Source\ClassProject2\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\ClassProject2\Private\MyPlayerState.cpp">
+      <Filter>Source\ClassProject2\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\ClassProject2\Private\MyGameState.cpp">
+      <Filter>Source\ClassProject2\Private</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

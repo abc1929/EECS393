@@ -1,4 +1,5 @@
-ClassProject.VC.db
+*.VC.db
+*.db
 *.opendb
 *.ini
 *.log
