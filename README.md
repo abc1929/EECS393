@@ -4,15 +4,16 @@
 Current goals of implementation ☐☑
 --- 
 Rewriting project blueprint classes in C++, current progress percentage roughly
-1. ☐ Mage -> MyCharacter, 50%
+
+1.Mage -> MyCharacter, 50%
   to do: Sprint & stamina consumption, jump stamina consumption, other misc.
-2. ☐ Fireball, 60%
+2.Fireball, 60%
   to do: explosion effect on hit, knock back logic
-3. ☐ Safezone, 0%
+3.Safezone, 0%
   to do: basic construction ,shrink logic, damage per tick logic
-4. ☐ HUD, 0 %
+4.HUD, 0 %
   to do: drawing HP/Stamina Bars, crosshair, casting progress bar
-5. ☐ UI, 0 %
+5.UI, 0 %
   to do: main menu, in game esc menu
 
 
