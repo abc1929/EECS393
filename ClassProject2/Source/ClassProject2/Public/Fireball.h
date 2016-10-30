@@ -3,6 +3,7 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 #include "Fireball.generated.h"
 
 UCLASS()
@@ -20,6 +21,14 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
-	
-	
+	FVector velocity;
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+protected:
+	class USphereComponent* Collision;
+	class UStaticMeshComponent* FireballMesh;
+	class UProjectileMovementComponent* Movement;
+	class UParticleSystemComponent* Firetrail;
+
 };

@@ -100,6 +100,9 @@
     <ClInclude Include="..\..\Source\ClassProject2\Public\MyCharacter_Blueprint__pf3171751747.h">
       <Filter>Source\ClassProject2\Public</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\ClassProject2\Public\MyPlayerStart.h">
+      <Filter>Source\ClassProject2\Public</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\ClassProject2\Private\ThirdPersonCharacter__pf3171751747.cpp">
@@ -131,6 +134,9 @@
       <Filter>Source\ClassProject2\Private</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\ClassProject2\Private\MyCharacter_Blueprint__pf3171751747.cpp">
+      <Filter>Source\ClassProject2\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\ClassProject2\Private\MyPlayerStart.cpp">
       <Filter>Source\ClassProject2\Private</Filter>
     </ClCompile>
   </ItemGroup>

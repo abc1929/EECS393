@@ -3,6 +3,7 @@
 
 #include "ClassProject2.h"
 #include "ClassProject2GameMode.h"
+#include "GameFramework/InputSettings.h"
 #include "MyCharacter.h"
 
 // Sets default values
@@ -16,11 +17,12 @@ AMyCharacter::AMyCharacter()
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	//Mesh
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> mmesh(TEXT("SkeletalMesh'/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin'"));
-	if (mmesh.Object) {
+	if (mmesh.Object) 
+	{
 		PlayerMesh = GetMesh();
 		PlayerMesh->SetSkeletalMesh(mmesh.Object);
-		PlayerMesh->AddLocalOffset(FVector(0, 0, -96));
-		PlayerMesh->SetRelativeRotation(FRotator(0, -90, 0));
+		PlayerMesh->AddLocalOffset(FVector(0, 0, -98.0f));
+		PlayerMesh->SetRelativeRotation(FRotator(0, -90.0f, 0));
 	}
 	
 	// // set our turn rates for input
@@ -85,6 +87,9 @@ void AMyCharacter::SetupPlayerInputComponent(class UInputComponent* MyInputCompo
 	//by default we bind spacebar to execute jump
 	MyInputComponent->BindAction("Jump", IE_Pressed, this, &AMyCharacter::Jump);
 	MyInputComponent->BindAction("Jump", IE_Released, this, &AMyCharacter::StopJumping);
+
+
+	MyInputComponent->BindAction("Fire", IE_Pressed, this, &AMyCharacter::OnCast);
 }
 
 // MoveFoward handles moving forward and backwards
@@ -120,6 +125,10 @@ void AMyCharacter::MoveRight(float Value)
 
 // not yet implemented
 // void OnJump();
+void OnJump() 
+{
+	
+}
 // void OnJumpFinish();
 // void OnSprint();
 // void OnSprintFinish();
@@ -143,14 +152,51 @@ void AMyCharacter::MoveRight(float Value)
 
 // // other properties
 // float GetMaxHP() const;
+float AMyCharacter::GetMaxHP() const 
+{
+	return GetClass()->GetDefaultObject<AMyCharacter>()->Health;
+}
 // float GetHP() const;
+float AMyCharacter::GetHP() const
+{
+	return Health;
+}
+
 // float GetMaxStamina() const;
+float AMyCharacter::GetMaxStamina() const
+{
+	return GetClass()->GetDefaultObject<AMyCharacter>()->Stamina;
+}
 // float GetStamina() const;
+float AMyCharacter::GetStamina() const
+{
+	return Stamina;
+}
+
 // bool IsAlive() const;
+bool AMyCharacter::IsAlive() const
+{
+	return Health > 0;
+}
 
 // // basic attack
 // bool TryCast();
-// bool OnCast();
+//  OnCast();
+void AMyCharacter::OnCast()
+{
+	// try and fire a projectile
+	UWorld* const World = GetWorld();
+	if (World != NULL)
+	{
+		const FRotator SpawnRotation = GetControlRotation();
+		// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+		const FVector SpawnLocation = GetActorLocation() + 100*FRotationMatrix(SpawnRotation).GetScaledAxis(EAxis::X);
+
+		// spawn the projectile at the muzzle
+		World->SpawnActor<AFireball>(SpawnLocation, SpawnRotation);
+	}
+	
+}
 // bool isCasting() const;
 // bool canCast() const;
 // float GetCurrentCastElapse() const;

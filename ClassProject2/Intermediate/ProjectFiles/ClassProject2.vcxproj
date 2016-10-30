@@ -412,6 +412,7 @@
     <ClCompile Include="..\..\Source\ClassProject2\Private\MyGameMode.cpp" />
     <ClCompile Include="..\..\Source\ClassProject2\Private\MyGameState.cpp" />
     <ClCompile Include="..\..\Source\ClassProject2\Private\MyPlayerController.cpp" />
+    <ClCompile Include="..\..\Source\ClassProject2\Private\MyPlayerStart.cpp" />
     <ClCompile Include="..\..\Source\ClassProject2\Private\MyPlayerState.cpp" />
     <ClCompile Include="..\..\Source\ClassProject2\Private\ThirdPersonCharacter_Child__pf3171751747.cpp" />
     <ClCompile Include="..\..\Source\ClassProject2\Private\ThirdPersonCharacter__pf3171751747.cpp" />
@@ -423,6 +424,7 @@
     <ClInclude Include="..\..\Source\ClassProject2\Public\MyGameMode.h" />
     <ClInclude Include="..\..\Source\ClassProject2\Public\MyGameState.h" />
     <ClInclude Include="..\..\Source\ClassProject2\Public\MyPlayerController.h" />
+    <ClInclude Include="..\..\Source\ClassProject2\Public\MyPlayerStart.h" />
     <ClInclude Include="..\..\Source\ClassProject2\Public\MyPlayerState.h" />
     <ClInclude Include="..\..\Source\ClassProject2\Public\ThirdPersonCharacter_Child__pf3171751747.h" />
     <ClInclude Include="..\..\Source\ClassProject2\Public\ThirdPersonCharacter__pf3171751747.h" />

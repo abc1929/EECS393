@@ -3,6 +3,7 @@
 #pragma once
 
 #include "GameFramework/Character.h"
+#include "Fireball.h"
 #include "MyCharacter.generated.h"
 
 UCLASS()
@@ -65,11 +66,12 @@ public:
 
 	// basic attack
 	bool TryCast();
-	bool OnCast();
 	bool isCasting() const;
 	bool canCast() const;
 	float GetCurrentCastElapse() const;
 	float GetCurrentCastMax() const;
+	void OnCast();
+	void OnCastFinish();
 
 private:	
 	// not implemented yet, commented for compiler complaint
@@ -99,4 +101,8 @@ UPROPERTY(VisibleAnywhere, Category = SkeletalMesh)
 UPROPERTY(VisibleAnywhere, Category = SkeletalMesh)
 	class USkeletalMeshComponent* PlayerMesh;
 	
+// projectile
+UPROPERTY(EditDefaultsOnly, Category=Projectile)
+	TSubclassOf<class AFireball> ProjectileClass;
+
 };
