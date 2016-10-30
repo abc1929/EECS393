@@ -1,22 +1,19 @@
 # EECS393
 
 ---
-Current goals of implementation
+Current goals of implementation ☐☑
 --- 
-
-1. ~☑ make arena, just flat ground with shrinking force field (we could worry about the visual of it later) associated with time 
-2. ☑ make a character controlled by a single player with hp and movements (kinda given by UE4)
-3. ☑ ~~make a punchbag ragdoll dummy enemy with hp~~ ☐
-4. ☑ Ranged projectile made ~~4. make a basic melee punch skill that deals minor dmg and knockback whoever is hit a bit.~~
-5. ☑ everything with hp shall take dmg constantly while in force field
-
-
-6. Targeting system, draw enemy hp on Hud
-7. implement fireball knockback
-8. (shift to) sprint function on character
-9. fireball casting time, casting bar draw on screen.
-100. implement networking 
-65535. UI/menu 
+Rewriting project blueprint classes in C++, current progress percentage roughly
+☐ 1. Mage -> MyCharacter, 50%
+  to do: Sprint & stamina consumption, jump stamina consumption, other misc.
+☐ 2. Fireball, 60%
+  to do: explosion effect on hit, knock back logic
+☐ 3. Safezone, 0%
+  to do: basic construction ,shrink logic, damage per tick logic
+☐ 4. HUD, 0 %
+  to do: drawing HP/Stamina Bars, crosshair, casting progress bar
+☐ 5. UI, 0 %
+  to do: main menu, in game esc menu
 
 
 
