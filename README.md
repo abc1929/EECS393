@@ -1,9 +1,8 @@
 # EECS393
 
----
-Current goals of implementation ☐☑
---- 
+Current goals of implementation
 Rewriting project blueprint classes in C++, current progress percentage roughly
+---
 
 1.Mage -> MyCharacter, 50%
   to do: Sprint & stamina consumption, jump stamina consumption, other misc.
