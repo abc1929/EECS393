@@ -3,17 +3,12 @@
 Current goals of implementation
 Rewriting project blueprint classes in C++, current progress percentage roughly
 ---
+In Descending Priority Roughly
 
-1. Mage -> MyCharacter, 90%
- * to do: misc.
-2. Fireball, 80% 
- * to do: explosion effect on hit
-3. Safezone, 60% 
- * to do: shrink logic
-4. HUD, 0 % 
- * to do: drawing HP/Stamina Bars, crosshair, casting progress bar
-5. UI, 0 %  
- * to do: main menu, in game esc menu
+1. Ability abstract class -> spell types -> individual spells (Demonstrate "data design encapsulation pattern")
+2. Character Progression system: ("Composition pattern") Character has subalignment(Mage, Melee) and "Element affinity",together augments spells directly as well as what spell one can get, maybe I'll throw in more
+3. Game Rules - actually implement 7 rounds, inbetween rest time to progress character, and determine winner, all that
+4. HUD/UI - drawing HP/Stamina Bars, crosshair, casting progress bar, main menu, in game esc menu, tool tip, round info, misc popup, more
 
 
 
