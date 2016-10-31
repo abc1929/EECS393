@@ -6,13 +6,15 @@
 #include "Fireball.h"
 #include "MyCharacter.generated.h"
 
+class AFireball;
+
 UCLASS()
 //class CLASSPROJECT2_API AMyCharacter : public ACharacter
 class AMyCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-public:
+public: 
 	// Sets default values for this character's properties
 	AMyCharacter();
 
@@ -37,6 +39,10 @@ public:
 	void MoveRight(float Value);
 
 	// movements logics, movement properties
+	UFUNCTION(Category = "Character")
+	virtual bool CanJump();
+	UFUNCTION(Category = "Character")
+	virtual void Jump();
 	void OnJump();
 	void OnJumpFinish();
 	void OnSprint();
@@ -51,17 +57,39 @@ public:
 
 	//bool TryJump();
 	bool IsSprinting() const;
-	
 	bool InAir() const;
 	bool CanSprint() const;
 
-	float GetSprintSpeedModifier() const;
+	float SprintSpeedModifier;
+	float NormalSpeed;
+
+	bool InForceField;
 
 	//other properties
 	float GetMaxHP() const;
 	float GetHP() const;
+	
+	UFUNCTION()
+	void SetHP(float hp);
+
+	UFUNCTION()
+	void TakeDmg(float x);
+
+	UFUNCTION()
+	void TakingForceFieldDamage(bool yeah);
+
+	UFUNCTION()
 	float GetMaxStamina() const;
+
+	UFUNCTION()
 	float GetStamina() const;
+
+	UFUNCTION()
+	void SetStamina(float sta);
+
+	UFUNCTION()
+	void StaminaIncrease(float x);
+
 	bool IsAlive() const;
 
 	// basic attack
@@ -74,7 +102,7 @@ public:
 	void OnCastFinish();
 
 private:	
-	// not implemented yet, commented for compiler complaint
+	// Maybe takedmg needs more handles later on
 	//virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser) override;
 	float Health;
 	float Stamina;
@@ -85,10 +113,12 @@ private:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
-	
+	FTimerHandle DamageTimer;
+	FTimerHandle RegenTimer;
+	FTimerHandle SprintTimer;
 
 	
-// camera configurations - location etc. via USpringArmComponent
+// camera collision
 UPROPERTY(VisibleAnywhere, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
 // camera logic - we'll use a follow camera for 3rd person
@@ -96,12 +126,9 @@ UPROPERTY(VisibleAnywhere, Category = Camera, meta = (AllowPrivateAccess = "true
 	class UCameraComponent* FollowCamera;
 
 UPROPERTY(VisibleAnywhere, Category = SkeletalMesh)
-	class USkeletalMesh* mmesh;
-
-UPROPERTY(VisibleAnywhere, Category = SkeletalMesh)
 	class USkeletalMeshComponent* PlayerMesh;
 	
-// projectile
+// projectile, maybe needed later
 UPROPERTY(EditDefaultsOnly, Category=Projectile)
 	TSubclassOf<class AFireball> ProjectileClass;
 

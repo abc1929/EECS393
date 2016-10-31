@@ -6,6 +6,8 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Fireball.generated.h"
 
+class AMyCharacter;
+
 UCLASS()
 class CLASSPROJECT2_API AFireball : public AActor
 {
@@ -21,14 +23,22 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
-	FVector velocity;
+	FVector Knockbackstep;
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	
+	UFUNCTION()
+	void Knockback(AActor* InflictedTarget);
+
+	bool KBTimerExpired;
 
 protected:
+	
 	class USphereComponent* Collision;
 	class UStaticMeshComponent* FireballMesh;
 	class UProjectileMovementComponent* Movement;
 	class UParticleSystemComponent* Firetrail;
-
+	FTimerHandle KnockbackTimerHandle;
+	int increments;
+	float CastTime;
 };

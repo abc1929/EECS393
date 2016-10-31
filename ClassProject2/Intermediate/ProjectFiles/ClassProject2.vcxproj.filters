@@ -3,7 +3,7 @@
   <ItemGroup>
     <None Include="..\..\ClassProject2.uproject" />
     <Filter Include="Source">
-      <UniqueIdentifier>{005856A1-18E6-4D43-831D-6BAF20F5FB50}</UniqueIdentifier>
+      <UniqueIdentifier>{1488D0A3-0907-432C-8D53-5824011CC66A}</UniqueIdentifier>
     </Filter>
     <None Include="..\..\Source\ClassProject2.Target.cs">
       <Filter>Source</Filter>
@@ -12,7 +12,7 @@
       <Filter>Source</Filter>
     </None>
     <Filter Include="Config">
-      <UniqueIdentifier>{667CF256-1865-44EC-80DB-C875BFC8E6CD}</UniqueIdentifier>
+      <UniqueIdentifier>{DBF2F0DF-98A9-407A-838E-BE4512F11D48}</UniqueIdentifier>
     </Filter>
     <None Include="..\..\Config\DefaultEditor.ini">
       <Filter>Config</Filter>
@@ -30,7 +30,7 @@
       <Filter>Config</Filter>
     </None>
     <Filter Include="Source\ClassProject2">
-      <UniqueIdentifier>{C179B854-6BF2-40C1-BF7D-895F7DA207E4}</UniqueIdentifier>
+      <UniqueIdentifier>{F09A9ED1-2611-4B51-82F0-E2E85A7294DB}</UniqueIdentifier>
     </Filter>
     <None Include="..\..\Source\ClassProject2\ClassProject2.Build.cs">
       <Filter>Source\ClassProject2</Filter>
@@ -55,89 +55,57 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Source\ClassProject2\Public">
-      <UniqueIdentifier>{127335a3-6e08-4679-8e44-40f41e2d9ce8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\ClassProject2\Private">
-      <UniqueIdentifier>{951564c4-f5de-4676-818e-a398adf32f64}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\Source\ClassProject2\Public\ThirdPersonCharacter__pf3171751747.h">
-      <Filter>Source\ClassProject2\Public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\ClassProject2\Public\ThirdPerson_AnimBP__pf4153901168.h">
-      <Filter>Source\ClassProject2\Public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\ClassProject2\Public\ThirdPersonCharacter_Child__pf3171751747.h">
-      <Filter>Source\ClassProject2\Public</Filter>
+    <ClInclude Include="..\..\Source\ClassProject2\Public\Fireball.h">
+      <Filter>Source\ClassProject2</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\ClassProject2\Public\MyCharacter.h">
-      <Filter>Source\ClassProject2\Public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\ClassProject2\Public\MyPlayerController.h">
-      <Filter>Source\ClassProject2\Public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\ClassProject2\Public\MyGameMode.h">
-      <Filter>Source\ClassProject2\Public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\ClassProject2\Public\MyPlayerState.h">
-      <Filter>Source\ClassProject2\Public</Filter>
+      <Filter>Source\ClassProject2</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\ClassProject2\Public\MyGameState.h">
-      <Filter>Source\ClassProject2\Public</Filter>
+      <Filter>Source\ClassProject2</Filter>
     </ClInclude>
-    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\ClassProject2.generated.dep.h" />
-    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\ClassProject2Classes.h" />
-    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\ClassProject2GameMode.generated.h" />
-    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\MyCharacter.generated.h" />
-    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\MyGameState.generated.h" />
-    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\MyPlayerController.generated.h" />
-    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\MyPlayerState.generated.h" />
-    <ClInclude Include="..\..\Source\ClassProject2\Public\Fireball.h">
-      <Filter>Source\ClassProject2\Public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\ClassProject2\Public\MyCharacter_Blueprint__pf3171751747.h">
-      <Filter>Source\ClassProject2\Public</Filter>
+    <ClInclude Include="..\..\Source\ClassProject2\Public\MyPlayerController.h">
+      <Filter>Source\ClassProject2</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\ClassProject2\Public\MyPlayerStart.h">
+      <Filter>Source\ClassProject2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\ClassProject2\Public\MyPlayerState.h">
+      <Filter>Source\ClassProject2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\ClassProject2\Public\Safevolume.h">
       <Filter>Source\ClassProject2\Public</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\ClassProject2\Private\ThirdPersonCharacter__pf3171751747.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\ClassProject2\Private\ThirdPerson_AnimBP__pf4153901168.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\ClassProject2\Private\ThirdPersonCharacter_Child__pf3171751747.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
+    <ClCompile Include="..\..\Source\ClassProject2\Private\Fireball.cpp">
+      <Filter>Source\ClassProject2</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\ClassProject2\Private\MyCharacter.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\ClassProject2\Private\MyPlayerController.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\ClassProject2\Private\MyGameMode.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\ClassProject2\Private\MyPlayerState.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
+      <Filter>Source\ClassProject2</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\ClassProject2\Private\MyGameState.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
+      <Filter>Source\ClassProject2</Filter>
     </ClCompile>
-    <ClCompile Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\ClassProject2.generated.cpp" />
-    <ClCompile Include="..\..\Source\ClassProject2\Private\Fireball.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\ClassProject2\Private\MyCharacter_Blueprint__pf3171751747.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
+    <ClCompile Include="..\..\Source\ClassProject2\Private\MyPlayerController.cpp">
+      <Filter>Source\ClassProject2</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\ClassProject2\Private\MyPlayerStart.cpp">
+      <Filter>Source\ClassProject2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\ClassProject2\Private\MyPlayerState.cpp">
+      <Filter>Source\ClassProject2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\ClassProject2\Private\Safevolume.cpp">
       <Filter>Source\ClassProject2\Private</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source\ClassProject2\Public">
+      <UniqueIdentifier>{8cfbbf40-e9b0-410c-abdf-3ac3c7af8e4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ClassProject2\Private">
+      <UniqueIdentifier>{9b9f5a0d-ae97-4093-8069-f45c3912014c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

@@ -83,7 +83,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{AF2C6C40-8A65-4194-94BF-C307E594DAD2}</ProjectGuid>
+    <ProjectGuid>{AB13A047-EB4A-48CF-AE3C-83ED623EB253}</ProjectGuid>
     <Keyword>MakeFileProj</Keyword>
     <RootNamespace>ClassProject2</RootNamespace>
     <PlatformToolset>v140</PlatformToolset>
@@ -408,34 +408,18 @@
   <ItemGroup>
     <ClCompile Include="..\..\Source\ClassProject2\Private\Fireball.cpp" />
     <ClCompile Include="..\..\Source\ClassProject2\Private\MyCharacter.cpp" />
-    <ClCompile Include="..\..\Source\ClassProject2\Private\MyCharacter_Blueprint__pf3171751747.cpp" />
-    <ClCompile Include="..\..\Source\ClassProject2\Private\MyGameMode.cpp" />
     <ClCompile Include="..\..\Source\ClassProject2\Private\MyGameState.cpp" />
     <ClCompile Include="..\..\Source\ClassProject2\Private\MyPlayerController.cpp" />
     <ClCompile Include="..\..\Source\ClassProject2\Private\MyPlayerStart.cpp" />
     <ClCompile Include="..\..\Source\ClassProject2\Private\MyPlayerState.cpp" />
-    <ClCompile Include="..\..\Source\ClassProject2\Private\ThirdPersonCharacter_Child__pf3171751747.cpp" />
-    <ClCompile Include="..\..\Source\ClassProject2\Private\ThirdPersonCharacter__pf3171751747.cpp" />
-    <ClCompile Include="..\..\Source\ClassProject2\Private\ThirdPerson_AnimBP__pf4153901168.cpp" />
-    <ClCompile Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\ClassProject2.generated.cpp" />
+    <ClCompile Include="..\..\Source\ClassProject2\Private\Safevolume.cpp" />
     <ClInclude Include="..\..\Source\ClassProject2\Public\Fireball.h" />
     <ClInclude Include="..\..\Source\ClassProject2\Public\MyCharacter.h" />
-    <ClInclude Include="..\..\Source\ClassProject2\Public\MyCharacter_Blueprint__pf3171751747.h" />
-    <ClInclude Include="..\..\Source\ClassProject2\Public\MyGameMode.h" />
     <ClInclude Include="..\..\Source\ClassProject2\Public\MyGameState.h" />
     <ClInclude Include="..\..\Source\ClassProject2\Public\MyPlayerController.h" />
     <ClInclude Include="..\..\Source\ClassProject2\Public\MyPlayerStart.h" />
     <ClInclude Include="..\..\Source\ClassProject2\Public\MyPlayerState.h" />
-    <ClInclude Include="..\..\Source\ClassProject2\Public\ThirdPersonCharacter_Child__pf3171751747.h" />
-    <ClInclude Include="..\..\Source\ClassProject2\Public\ThirdPersonCharacter__pf3171751747.h" />
-    <ClInclude Include="..\..\Source\ClassProject2\Public\ThirdPerson_AnimBP__pf4153901168.h" />
-    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\ClassProject2.generated.dep.h" />
-    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\ClassProject2Classes.h" />
-    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\ClassProject2GameMode.generated.h" />
-    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\MyCharacter.generated.h" />
-    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\MyGameState.generated.h" />
-    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\MyPlayerController.generated.h" />
-    <ClInclude Include="..\Build\Win64\UE4Editor\Inc\ClassProject2\MyPlayerState.generated.h" />
+    <ClInclude Include="..\..\Source\ClassProject2\Public\Safevolume.h" />
     <None Include="..\..\ClassProject2.uproject" />
     <None Include="..\..\Source\ClassProject2.Target.cs" />
     <None Include="..\..\Source\ClassProject2Editor.Target.cs" />
