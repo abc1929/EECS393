@@ -10,10 +10,11 @@ ASafevolume::ASafevolume()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	ShrinkLevel = 0;
 	ZoneMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ZoneMesh"));
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> mmesh(TEXT("StaticMesh'/Engine/BasicShapes/Cylinder.Cylinder'"));
 	if (mmesh.Object)
-	{
+	{	
 		
 		ZoneMesh->SetStaticMesh(mmesh.Object);
 		ZoneMesh->SetWorldScale3D(FVector(65, 65, 5));
@@ -34,7 +35,12 @@ ASafevolume::ASafevolume()
 void ASafevolume::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	//Start shrinking logic
+
+	UWorld* const World = GetWorld();
+	World->GetTimerManager().SetTimer(ShrinkTimer,this, &ASafevolume::Shrink, 15.0f, true, 0.f);
+
 }
 
 // Called every frame
@@ -64,3 +70,12 @@ void ASafevolume::OnStartOverlapping(UPrimitiveComponent* OverlappedComp, AActor
 	}
 }
 
+void ASafevolume::Shrink() {
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("SafeZone Shrinked!"));
+	ZoneMesh->SetWorldScale3D(FVector(65-ShrinkLevel*13, 65-ShrinkLevel*13, 5));
+	if (ShrinkLevel == 4) {
+		UWorld* const World = GetWorld();
+		World->GetTimerManager().ClearTimer(ShrinkTimer);
+	}
+	ShrinkLevel++;
+}

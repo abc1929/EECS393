@@ -95,11 +95,17 @@ public:
 	// basic attack
 	bool TryCast();
 	bool isCasting() const;
-	bool canCast() const;
+	bool CurrentCastSuccess;
 	float GetCurrentCastElapse() const;
 	float GetCurrentCastMax() const;
 	void OnCast();
 	void OnCastFinish();
+
+	UFUNCTION()
+	void CastIncrement(float RequiredTime);
+
+	UFUNCTION()
+	void CastAbility(); // need to make a interface for abiilities
 
 private:	
 	// Maybe takedmg needs more handles later on
@@ -116,6 +122,7 @@ private:
 	FTimerHandle DamageTimer;
 	FTimerHandle RegenTimer;
 	FTimerHandle SprintTimer;
+	FTimerHandle CastTimer;
 
 	
 // camera collision

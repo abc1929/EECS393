@@ -16,6 +16,7 @@ AMyCharacter::AMyCharacter()
 	SprintSpeedModifier = 2.2f;
 	NormalSpeed = this->GetCharacterMovement()->MaxWalkSpeed;
 	exhausted = false;
+	CurrentCastElapse = 0.f;
 
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	//Mesh
@@ -107,6 +108,7 @@ void AMyCharacter::SetupPlayerInputComponent(class UInputComponent* MyInputCompo
 
 
 	MyInputComponent->BindAction("Fire", IE_Pressed, this, &AMyCharacter::OnCast);
+	MyInputComponent->BindAction("Fire", IE_Released, this, &AMyCharacter::CastAbility);
 
 	MyInputComponent->BindAction("SprintHold", IE_Pressed, this, &AMyCharacter::OnSprint);
 	MyInputComponent->BindAction("SprintHold", IE_Released, this, &AMyCharacter::OnSprintFinish);
@@ -305,20 +307,55 @@ bool AMyCharacter::IsAlive() const
 //  OnCast();
 void AMyCharacter::OnCast()
 {
+	CurrentCastSuccess = false;
+	FTimerDelegate TimerDel;
+	UWorld* const World = GetWorld();
+	if (World != NULL)
+	{
+		//Will be more logics on MaxCastTime if more ability added
+		TimerDel.BindUFunction(this, FName("CastIncrement"), 1.2f);
+		World->GetTimerManager().SetTimer(CastTimer, TimerDel, 0.01f, true, 0.f);
+	}
+}
+
+void AMyCharacter::CastIncrement(float RequiredTime)
+{
+	if (CurrentCastElapse > RequiredTime) 
+	{
+		UWorld* const World = GetWorld();
+		CurrentCastSuccess = true;
+		World->GetTimerManager().ClearTimer(CastTimer);
+		CurrentCastElapse = 0;
+	}
+	CurrentCastElapse += 0.01f;
+}
+// need handle later if we would cast something else rather than basic attack
+void AMyCharacter::CastAbility()
+{
+	if (!CurrentCastSuccess) 
+	{
+		CurrentCastElapse = 0;
+		return; 
+	}
 	// try and fire a projectile
 	UWorld* const World = GetWorld();
 	if (World != NULL)
 	{
+		World->GetTimerManager().ClearTimer(CastTimer);
+
 		const FRotator SpawnRotation = GetControlRotation();
 		// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-		const FVector SpawnLocation = GetActorLocation() + 150*FRotationMatrix(SpawnRotation).GetScaledAxis(EAxis::X) ;
+		const FVector SpawnLocation = GetActorLocation() + 150 * FRotationMatrix(SpawnRotation).GetScaledAxis(EAxis::X);
 
 		// spawn the projectile at the muzzle
 		FActorSpawnParameters params;
 		params.Owner = this;
+
+
 		World->SpawnActor<AFireball>(SpawnLocation, SpawnRotation, params);
+		CurrentCastSuccess = false;
+		CurrentCastElapse = 0;
 	}
-	
 }
 // bool isCasting() const;
 // bool canCast() const;

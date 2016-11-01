@@ -5,7 +5,7 @@
 #include "public/MyCharacter.h"
 
 
-// Sets default values
+// Sets default cas
 AFireball::AFireball()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -61,6 +61,7 @@ AFireball::AFireball()
 
 	//Knockback variables
 	increments = 0;
+	CastTime = 1.2f;
 }
 
 // Called when the game starts or when spawned

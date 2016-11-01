@@ -60,6 +60,7 @@ SourceArt/**/*.tga
 # Compiled source files for the engine to use
 **/Intermediate/*.bin
 **/Intermediate/Build/*
+**/Intermediate/ProjectFiles/*
 !**/Intermediate/Build/**/*.cpp
 !**/Intermediate/Build/**/*.h
 
