@@ -3,7 +3,7 @@
 #pragma once
 
 #include "GameFramework/Character.h"
-#include "Fireball.h"
+#include "public/Fireball.h"
 #include "MyCharacter.generated.h"
 
 class AFireball;
