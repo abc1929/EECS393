@@ -26,3 +26,8 @@ void AAbility::Tick( float DeltaTime )
 
 }
 
+//void AAbility::SelfSpecialization();
+//AAbilityEffect* AAbility::CreateEffectList();
+
+//Multipliers from elemental affinity of the owner (ability caster)
+//float AAbility::GetFAffinity();
