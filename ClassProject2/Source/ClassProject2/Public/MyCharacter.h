@@ -6,7 +6,6 @@
 #include "Fireball.h"
 #include "MyCharacter.generated.h"
 
-class AFireball;
 
 UCLASS()
 //class CLASSPROJECT2_API AMyCharacter : public ACharacter
