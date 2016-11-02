@@ -1,0 +1,26 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#include "ClassProject2.h"
+#include "TestClass.h"
+#include "AutomationTest.h"
+#include "ClassProject2GameMode.h"
+#include "GameFramework/InputSettings.h"
+#include "public/MyCharacter.h"
+
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FMyCharacterTest, "MyCharacter.SetHP", EAutomationTestFlags::ApplicationContextMask|EAutomationTestFlags::SmokeFilter)
+
+bool FMyCharacterTest::RunTest(const FString& Parameters)
+{
+	//AddError(FString::Printf(TEXT("The testing goat says NO! Hourray! Goto coding! ")));
+	// constructors must create equal objects
+	{
+		AMyCharacter* t = NewObject<AMyCharacter>();
+		t->SetHP(50);
+		TestEqual(TEXT("Default health"), t->GetHP(), 100.f);
+
+		AddError(FString::Printf(TEXT("The testing goat says NO! Hourray! Goto coding! ")));
+	}
+
+	return true;
+}
