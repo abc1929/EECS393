@@ -10,7 +10,23 @@ In Descending Priority Roughly
 3. Game Rules - actually implement 7 rounds, inbetween rest time to progress character, and determine winner, all that
 4. HUD/UI - drawing HP/Stamina Bars, crosshair, casting progress bar, main menu, in game esc menu, tool tip, round info, misc popup, more
 
+Specifications
+---
+Ability(contains visual, life cycle. hit mechanics/movement component, onhit event, owner, abilityeffectlist)
+  - maybe a raytracing and target system needed, for instant cast and the game itself's sake
+Abilityeffectlist(contains list of procedurally processed effect on hit target, resolves on itself, no info needed passing from ability)
+Abilityeffect(contains info how to resolve the effect, maybe visual here as well)
+  - dot, slow, stun etc.
 
+all of those need modifiers and augments from owner, namely his elemental affinity
+
+World state
+  - char state
+    - level? (maybe we don't need this)
+    - elemental affinity (maybe make it slider, floats rather than int)
+      - modifying char attributes
+      - modifying ability (passing through)
+  maybe no need to rush game rules
 
 
 
