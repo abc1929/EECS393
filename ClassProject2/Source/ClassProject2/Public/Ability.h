@@ -4,6 +4,8 @@
 
 #include "GameFramework/Actor.h"
 #include "public/AbilityEffect.h"
+#include "public/MyCharacter.h"
+#include "public/ElementalAffinity.h"
 #include "Ability.generated.h"
 
 class AAbilityEffect;
@@ -28,10 +30,11 @@ public:
 	//it can be dmg, slowing effect, buff, whatever.
 
 	//what structure do we use? this is a single effect
-	virtual AAbilityEffect* CreateEffectList() = 0;
+	virtual TArray<AAbilityEffect> CreateEffectList() PURE_VIRTUAL(AAbility::CreateEffectList, return TArray<AAbilityEffect>(););
+
 	
 	//Multipliers from elemental affinity of the owner (ability caster)
-	virtual float GetFAffinity() = 0;
+	virtual ElementalAffinity* GetAffinity() PURE_VIRTUAL(AAbility::GetAffinity, return new ElementalAffinity(););
 	//... and so on
 
 	//visual representation (spawn logic) of the ability actor and hit logic
@@ -39,7 +42,7 @@ public:
 
 	//self specialization from owner's affinity
 private:
-	virtual void SelfSpecialization()=0;
+	virtual void SelfSpecialization() PURE_VIRTUAL(AAbility::SelfSpecialization, );
 
 	//basic vars, cd; stamcost; casttime; distance; aoe?; targeted?; 
 	float cd;
@@ -48,6 +51,13 @@ private:
 	float castTime;
 	int targetingType; //targeted, targeted aoe, non targeted projectile, non targeted spawn effect (flamestrike ish)
 	
+	float AtkSpeedMultiplier; //Fire
+	float AtkDmgMultiplier; //Darkness
+	float ProjectileSpeedMultiplier; //Lightning
+	float CritChanceMultiplier; //Lightning
+	float CritDmgMultiplier; //Lightning minor, Darkness
+
+
 
 	//can't think of more now
 	

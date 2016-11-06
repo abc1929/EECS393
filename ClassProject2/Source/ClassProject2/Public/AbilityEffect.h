@@ -7,6 +7,8 @@
 
 class AAbility;
 
+// UE4's internal objects don't really do true abstract since they need to exist in some instance that you run
+// we use macro to do abstract methods
 UCLASS(ABSTRACT)
 class CLASSPROJECT2_API AAbilityEffect : public AActor
 {
@@ -44,21 +46,21 @@ private:
 	// it's fine that some effect might not inflicting dmg or momentum at all
 
 	// these will be allocated timers so we have async
-	virtual float dmgCurve(float t) = 0;
-	virtual FVector mmtCurve(float t) = 0; //this gonna be per tick location offset for the target
-	virtual float stamdrainCurve(float t) = 0;
+	virtual float dmgCurve(float t) PURE_VIRTUAL(AAbilityEffect::dmgCurve, return 1;);
+	virtual FVector mmtCurve(float t) PURE_VIRTUAL(AAbilityEffect::mmtCurve, return FVector();); //this gonna be per tick location offset for the target
+	virtual float stamdrainCurve(float t) PURE_VIRTUAL(AAbilityEffect::stamdrainCurve, return 1;);
 
 
 	// how momentum penalty of MyCharacter is should be written at 
 
-	// example other effect: slow(boost speed), stun, immobilize (slow 100%), dmg(heal
-	virtual float movSlowCurve(float t) = 0;
-	virtual float stunCurve(float t) = 0;
-	virtual float atkSlowCurve(float t) = 0;
+	// example other effect: slow(boost speed), stun, immobilize (slow 100%), dmg(heal)
+	virtual float movSlowCurve(float t) PURE_VIRTUAL(AAbilityEffect::movSlowCurve, return 1;);
+	virtual float stunCurve(float t) PURE_VIRTUAL(AAbilityEffect::stunCurve, return 1;);
+	virtual float atkSlowCurve(float t) PURE_VIRTUAL(AAbilityEffect::atkSlowCurve, return 1;);
 
 	//regen suppression? defense boost, attack dmg boost? assume all negative effects, but can be written other way 
-	virtual float defWeakenCurve(float t) = 0;
-	virtual float atkWeakenCurve(float t) = 0;
+	virtual float defWeakenCurve(float t) PURE_VIRTUAL(AAbilityEffect::atkWeakenCurve, return 1;);
+	virtual float atkWeakenCurve(float t) PURE_VIRTUAL(AAbilityEffect::atkWeakenCurve, return 1;);
 
 
 };

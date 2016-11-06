@@ -3,7 +3,7 @@
 #pragma once
 
 #include "GameFramework/Character.h"
-#include "public/Fireball.h"
+#include "public/ElementalAffinity.h"
 #include "MyCharacter.generated.h"
 
 
@@ -42,6 +42,8 @@ public:
 	virtual bool CanJump();
 	UFUNCTION(Category = "Character")
 	virtual void Jump();
+
+	bool CanJumpOverload;
 	void OnJump();
 	void OnJumpFinish();
 	void OnSprint();
@@ -93,7 +95,7 @@ public:
 
 	// basic attack
 	bool TryCast();
-	bool isCasting() const;
+	bool isCasting;
 	bool CurrentCastSuccess;
 	float GetCurrentCastElapse() const;
 	float GetCurrentCastMax() const;
@@ -104,7 +106,18 @@ public:
 	void CastIncrement(float RequiredTime);
 
 	UFUNCTION()
-	void CastAbility(); // need to make a interface for abiilities
+	void CastAbility(); // bind 1234 F/left mouse to this
+	UFUNCTION()
+	void CastMobilityAbility();
+	/*UFUNCTION()
+	void CastOffensiveAbility(); 
+	UFUNCTION()
+	void CastDefensiveAbility(); 
+	UFUNCTION()
+	void CastUtilityAbility(); 
+*/
+
+	void GainController();
 
 private:	
 	// Maybe takedmg needs more handles later on
@@ -122,6 +135,33 @@ private:
 	FTimerHandle RegenTimer;
 	FTimerHandle SprintTimer;
 	FTimerHandle CastTimer;
+
+
+	//Character progression records
+
+	//beginning of each round gets 3 points, 21 totals
+	//each element has cap of 10
+	float EFire;
+	float EEarth;
+	float ELightning;
+	float EDarkness;
+	float EIce;
+
+
+
+
+	float AtkSpeedMultiplier; //Fire
+	float AtkDmgMultiplier; //Darkness
+	float MovSpeedMultiplier;  //Fire
+	float CritChanceMultiplier; //Lightning
+	float CritDmgMultiplier; //? Lightning, Darkness
+	float HPMultiplier; //Earth
+	float MomentumResistanceMultiplier; //Earth
+	float StamRegenMultiplier; //Ice
+	float DefenseMultiplier; //Earth, Ice
+	
+
+
 
 	
 // camera collision

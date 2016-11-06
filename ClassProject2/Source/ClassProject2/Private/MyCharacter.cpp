@@ -5,6 +5,7 @@
 #include "ClassProject2GameMode.h"
 #include "GameFramework/InputSettings.h"
 #include "public/MyCharacter.h"
+#include "public/AbilityList.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -16,6 +17,7 @@ AMyCharacter::AMyCharacter()
 	SprintSpeedModifier = 2.2f;
 	NormalSpeed = this->GetCharacterMovement()->MaxWalkSpeed;
 	exhausted = false;
+	CanJumpOverload = false;
 	CurrentCastElapse = 0.f;
 
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -110,6 +112,9 @@ void AMyCharacter::SetupPlayerInputComponent(class UInputComponent* MyInputCompo
 	MyInputComponent->BindAction("Fire", IE_Pressed, this, &AMyCharacter::OnCast);
 	MyInputComponent->BindAction("Fire", IE_Released, this, &AMyCharacter::CastAbility);
 
+	//MyInputComponent->BindAction("CastMobilityAbility", IE_Pressed, this, &AMyCharacter::OnCast);
+	MyInputComponent->BindAction("CastMobilityAbility", IE_Released, this, &AMyCharacter::CastMobilityAbility);
+
 	MyInputComponent->BindAction("SprintHold", IE_Pressed, this, &AMyCharacter::OnSprint);
 	MyInputComponent->BindAction("SprintHold", IE_Released, this, &AMyCharacter::OnSprintFinish);
 }
@@ -150,7 +155,7 @@ bool AMyCharacter::CanJump()
 	// a bug where canjump locked to false?
 	// this method is not used, avoided
 
-	if (Stamina > 20) 
+	if (Stamina > 20 && !CanJumpOverload) 
 	{
 		return true;
 	}
@@ -329,7 +334,7 @@ void AMyCharacter::CastIncrement(float RequiredTime)
 	}
 	CurrentCastElapse += 0.01f;
 }
-// need handle later if we would cast something else rather than basic attack
+// need handle later if we would cast something else rather than basic attack - nvm we only have 5 abilities, just write more functions
 void AMyCharacter::CastAbility()
 {
 	if (!CurrentCastSuccess) 
@@ -344,10 +349,8 @@ void AMyCharacter::CastAbility()
 		World->GetTimerManager().ClearTimer(CastTimer);
 
 		const FRotator SpawnRotation = GetControlRotation();
-		// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
 		const FVector SpawnLocation = GetActorLocation() + 150 * FRotationMatrix(SpawnRotation).GetScaledAxis(EAxis::X);
 
-		// spawn the projectile at the muzzle
 		FActorSpawnParameters params;
 		params.Owner = this;
 
@@ -357,7 +360,40 @@ void AMyCharacter::CastAbility()
 		CurrentCastElapse = 0;
 	}
 }
-// bool isCasting() const;
+
+void AMyCharacter::CastMobilityAbility()
+{
+	UWorld* const World = GetWorld();
+	if (World != NULL)
+	{
+		//GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+		FRotator SpawnRotation = GetControlRotation();
+		const FVector SpawnLocation = GetActorLocation();
+		FActorSpawnParameters params;
+		params.Owner = this;
+		//GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		SpawnRotation.Pitch = 0;
+		auto AbilityCasing = World->SpawnActor<AMobilityAbility_RushBase>(SpawnLocation, SpawnRotation, params); //hardcoded for now
+
+		AttachToActor(AbilityCasing, FAttachmentTransformRules(EAttachmentRule::SnapToTarget,true));
+
+		DisableInput(World->GetFirstPlayerController());	
+		FTimerHandle local;
+		//GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		World->GetTimerManager().SetTimer(local,this, &AMyCharacter::GainController, 1.0f, false);
+	}
+}
+
+void AMyCharacter::GainController()
+{
+	UWorld* const World = GetWorld();
+	if (World != NULL)
+	{
+		EnableInput(World->GetFirstPlayerController());
+		//GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+	}
+}
+
 // bool canCast() const;
 // float GetCurrentCastElapse() const;
 // float GetCurrentCastMax() const;

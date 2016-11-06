@@ -1,0 +1,15 @@
+0 Fiery
+1 Earth
+2 Lightning
+3 Dark
+4 Ice
+43 Debilitating
+42 Arctic
+41 Glacial
+40 Dual
+32 Crushing
+31 Blight
+30 Hell
+21 Storm
+20 Surging
+10 Magma
