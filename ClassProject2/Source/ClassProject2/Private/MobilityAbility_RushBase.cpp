@@ -11,15 +11,15 @@ AMobilityAbility_RushBase::AMobilityAbility_RushBase(const class FObjectInitiali
 	auto Owner = Cast<AMyCharacter>(GetOwner());
 	auto Collision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("RootComponent_Collision"));
 	Collision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
-	//AttachToActor(Owner, FAttachmentTransformRules::KeepRelativeTransform);
+
+	//AttachToActor(Owner, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
 	
 
 
 	Collision->InitCapsuleSize(90.f, 110.0f);
 	RootComponent = Collision;
 	Collision->SetCollisionProfileName(TEXT("Character Collision Enlarged"));
-
-	Collision->OnComponentHit.AddDynamic(this, &AMobilityAbility_RushBase::OnHit);
+	Collision->OnComponentBeginOverlap.AddDynamic(this, &AMobilityAbility_RushBase::OnStartOverlapping);
 	//Base rush distance 1200
 	//Base dmg
 	//Base momentum -> speed
@@ -50,19 +50,22 @@ AMobilityAbility_RushBase::~AMobilityAbility_RushBase()
 
 
 
-void AMobilityAbility_RushBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+void AMobilityAbility_RushBase::OnStartOverlapping(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (GetOwner() != OtherActor)
+	if (GetOwner() != OtherActor && !OtherActor->IsA(ASafevolume::StaticClass())) //hit something valid
 	{	
-		Movement->DestroyComponent();
-		Knockbackstep = this->GetVelocity() / 500;
+		Deactivate();
+		//Movement->DestroyComponent();
+		UWorld* const World = GetWorld();
+		Cast<AMyCharacter>(GetOwner())->isCharging = false;
+		Cast<AMyCharacter>(GetOwner())->EnableInput(World->GetFirstPlayerController());
 		if (AMyCharacter* targethit = Cast<AMyCharacter>(OtherActor)) {
 			if (targethit != GetOwner())
 			{
+				Knockbackstep = this->GetVelocity() / 500;
 				if (GEngine)
 					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Waaa RushBase Test!"));
 				targethit->SetHP(targethit->GetHP() - 15.0f);
-				UWorld* const World = GetWorld();
 				FTimerDelegate TimerDel;
 				TimerDel.BindUFunction(this, FName("Knockback"), targethit);
 				World->GetTimerManager().SetTimer(KnockbackTimerHandle, TimerDel, 0.01f, true, 0.f);
@@ -89,4 +92,10 @@ void AMobilityAbility_RushBase::Knockback(AActor* InflictedTarget)
 		Destroy();
 	}
 	increments++;
+}
+
+void AMobilityAbility_RushBase::Deactivate()
+{
+	Movement->DestroyComponent();
+	this->SetActorEnableCollision(false);
 }

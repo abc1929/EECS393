@@ -22,10 +22,10 @@ public:
 	AMobilityAbility_RushBase(const class FObjectInitializer& ObjectInitializer);
 	~AMobilityAbility_RushBase();
 
-	//UFUNCTION()
+	UFUNCTION()
 	void OnStartOverlapping(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	//UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	//void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 	UFUNCTION()
 	void Knockback(AActor* InflictedTarget);
@@ -35,5 +35,7 @@ public:
 	int increments;
 
 	class UProjectileMovementComponent* Movement;
-	
+
+	UFUNCTION()
+	void Deactivate(); //deactive movement and collision, go in to a state resolving momentum infliction
 };

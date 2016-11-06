@@ -15,7 +15,8 @@ AMyCharacter::AMyCharacter()
 	Health = 100.f;
 	Stamina = 100.f;
 	SprintSpeedModifier = 2.2f;
-	NormalSpeed = this->GetCharacterMovement()->MaxWalkSpeed;
+	NormalSpeed = this->GetCharacterMovement()->MaxWalkSpeed /1.5;
+	this->GetCharacterMovement()->MaxWalkSpeed = NormalSpeed;
 	exhausted = false;
 	CanJumpOverload = false;
 	CurrentCastElapse = 0.f;
@@ -47,7 +48,7 @@ AMyCharacter::AMyCharacter()
 	// // Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
-	GetCharacterMovement()->JumpZVelocity = 600.f;
+	GetCharacterMovement()->JumpZVelocity = 400.f;
 	GetCharacterMovement()->AirControl = 0.2f;
 
 	// Create a camera boom (camera collision)
@@ -376,22 +377,34 @@ void AMyCharacter::CastMobilityAbility()
 		auto AbilityCasing = World->SpawnActor<AMobilityAbility_RushBase>(SpawnLocation, SpawnRotation, params); //hardcoded for now
 
 		AttachToActor(AbilityCasing, FAttachmentTransformRules(EAttachmentRule::SnapToTarget,true));
+		//auto sMovement = AbilityCasing->Movement;
+		//sMovement->UpdatedComponent = RootComponent;
+
 
 		DisableInput(World->GetFirstPlayerController());	
-		FTimerHandle local;
-		//GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		World->GetTimerManager().SetTimer(local,this, &AMyCharacter::GainController, 1.0f, false);
+		//FTimerHandle local;
+		FTimerDelegate local2;
+		local2.BindUFunction(this, FName("GainController"), AbilityCasing);
+		//GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+		World->GetTimerManager().SetTimer(CastTimer, local2, 1.0f, false);
+		isCharging = true;
 	}
 }
 
-void AMyCharacter::GainController()
+void AMyCharacter::GainController(AActor* effect)
 {
+	if (!isCharging)
+		return;
 	UWorld* const World = GetWorld();
 	if (World != NULL)
 	{
 		EnableInput(World->GetFirstPlayerController());
+		(Cast<AMobilityAbility_RushBase>(effect))->Deactivate();
+		//(Cast<AMobilityAbility_RushBase>(effect))->Movement->DestroyComponent();
+		//(Cast<AMobilityAbility_RushBase>(effect))->Collision
 		//GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
 	}
+	isCharging = false;
 }
 
 // bool canCast() const;

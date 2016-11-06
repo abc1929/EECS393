@@ -116,8 +116,8 @@ public:
 	UFUNCTION()
 	void CastUtilityAbility(); 
 */
-
-	void GainController();
+	UFUNCTION()
+	void GainController(AActor* effect);
 
 private:	
 	// Maybe takedmg needs more handles later on
@@ -131,6 +131,7 @@ private:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
+public:
 	FTimerHandle DamageTimer;
 	FTimerHandle RegenTimer;
 	FTimerHandle SprintTimer;
@@ -141,6 +142,7 @@ private:
 
 	//beginning of each round gets 3 points, 21 totals
 	//each element has cap of 10
+private:	
 	float EFire;
 	float EEarth;
 	float ELightning;
@@ -159,6 +161,11 @@ private:
 	float MomentumResistanceMultiplier; //Earth
 	float StamRegenMultiplier; //Ice
 	float DefenseMultiplier; //Earth, Ice
+
+
+public:
+	//Ability related
+	bool isCharging;
 	
 
 
