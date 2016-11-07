@@ -1,68 +1,27 @@
-# EECS393
+# EECS393 code guide
 
-Current goals of implementation
-Rewriting project blueprint classes in C++, current progress percentage roughly
----
-In Descending Priority Roughly
-
-1. Ability abstract class -> spell types -> individual spells (Demonstrate "data design encapsulation pattern")
-2. Character Progression system: ("Composition pattern") Character has subalignment(Mage, Melee) and "Element affinity",together augments spells directly as well as what spell one can get, maybe I'll throw in more
-3. Game Rules - actually implement 7 rounds, inbetween rest time to progress character, and determine winner, all that
-4. HUD/UI - drawing HP/Stamina Bars, crosshair, casting progress bar, main menu, in game esc menu, tool tip, round info, misc popup, more
-
-Specifications
----
-Ability(contains visual, life cycle. hit mechanics/movement component, onhit event, owner, abilityeffectlist)
-  - maybe a raytracing and target system needed, for instant cast and the game itself's sake
-Abilityeffectlist(contains list of procedurally processed effect on hit target, resolves on itself, no info needed passing from ability)
-Abilityeffect(contains info how to resolve the effect, maybe visual here as well)
-  - dot, slow, stun etc.
-
-all of those need modifiers and augments from owner, namely his elemental affinity
-
-World state
-  - char state
-    - level? (maybe we don't need this)
-    - elemental affinity (maybe make it slider, floats rather than int)
-      - modifying char attributes
-      - modifying ability (passing through)
-  maybe no need to rush game rules
+ClassProject1 Contains original blueprint scripts assets, kept for potential reuse
+ClassProject2 is the one we're operating on.
 
 
+Source/
 
-goals
----
-Arena
-- flat space with dome (force field) enclosing it (a soft boundary); exiting this dome out of the arena would cause dmg to the character per unit time (see WC3 Warlock)
-- A timer associated with the game, the dome shall be smaller throughout time (forcing game to end in a way, think h1z1)
-- environment objects
-  - pillars;covers
-  - elevation;plateau;ramp;
-  - etc.
+    - *.cs are generated code for compiling
+    - ClassProject2/
+        ClassProject2.cpp is generated code for compiling and linking utitlies, not modified
+        ClassProject2Character.cpp is generated, unused for our project, maybe we should just delete it
+        ClassProject2GameMode.cpp is generated class that would contains guides overarching game behavior and world state which we have none yet.
 
-Game elements
-- we can have some characters to choose from (think overwatch, MOBAs)
-  - We should have basic attack (melee/ranged basic knocking back/with dmg, also see WC3 Warlock)
-    - game should stress keeping opponent out of the force field to take prime dmg rather than hitting them to deal dmg.
-    more actions; more movements; this shall be a fast paced game
-  - We should have customizable actives and passive skills (see WC3 Warlock)
-    - Skill shots and environment utilization are where the primary skillcap is at
-    - also think abilities that might change how a game is played
-    like placing a stationary sigil on the ground and you could press a button to teleport to it. 
-
-
-game format
-- we shall treat this as a online competitive pvp game
-  - FFA
-    - game ends when there is one character alive
-  - Team VS
-    - game ends when there is no alive character in one team
-  - 1v1
-    - well.. 
-  
-UI
-- see pretty much any single player game out during 2015-16; clean looks 
-
-Assets
-- IDK, we're not making arts, just ignore this for now.
-  
+    - ClassProject2/Private or Public
+       1.*Ability* is an abstract class that guides 5 castable categories of abilities that a player controlled character has.
+       1.*AbilityEffect* is not implemented yet, it would corresponds a slowing/stun/DoT etc. effect applied to a character. 
+       1.*AbilityList.h* is a header file for include encapsulation 
+       1.*Fireball* 
+       1.*Mobility/Offensive Ability* is an abstract class that guide one category of abilities
+       1.*MobilityAbility_RushBase* describes a charge ability, not fully implemented yet. It actually would represents 15 slight differnetly flavored charging forward abilities, 1.determined by a prefix calculated by *MyElementalAffinity* 
+       1.*MyAutomationTestSettings* contains some unit tests 
+       1.*MyCharacter* describes a basic character, it is derived from UE's ACharacter class for camera configuration. The class contains how our character is assembled using engine internals and how to react to user input, it contains basic properties like HP/Stamina, as well as encapsulating a *MyElementalAffinity* component for character behavior   
+       1.*MyElementalAffinity* describes the character progression of 5 elements. It takes in character's 5 elements amount and calculate effective multiplier that buffs character's own properties as well as the abilities a character casts.
+       1.*Safevolume* describes a fat cylindrical volume that player will not take damage in, the volume would shrink every 15 seconds. This is an object that is crucial to actual gameplay, as it is extremely rewarding to force your opponent outside of the safevolume. The visual representation is subject to change. 
+       1.*MobilityAbility_RushBase* is not implemented yet, it should resembles *MobilityAbility_RushBase* in a parallel way
+       1.*OtherClasses* are generated templates that are not used and modified currently, which might get utilized later.
