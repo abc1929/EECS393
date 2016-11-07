@@ -24,12 +24,12 @@ AMyCharacter::AMyCharacter()
 	CurrentCastElapse = 0.f;
 	MyAffinity = CreateDefaultSubobject<UMyElementalAffinity>(TEXT("Affinity"));
 	//debug
-	MyAffinity->UpdateElements(4, 1);
+	MyAffinity->UpdateElements(4, 1); //FELDI
 	MyAffinity->UpdateElements(3, 2);
 	MyAffinity->UpdateElements(7, 3);
 	MyAffinity->UpdateElements(2, 4);
 	MyAffinity->UpdateElements(9, 0);
-	//MyAffinity->AddToRoot();
+	MyAffinity->RegisterComponent();
 
 
 
@@ -76,6 +76,9 @@ AMyCharacter::AMyCharacter()
 
 	FollowCamera->SetFieldOfView(110);
 	FollowCamera->AddLocalOffset(FVector(0,0,110));
+
+	//initializing movement effect
+	movementcomponent = CreateDefaultSubobject<UProjectileMovementComponent>(" ");
 }
 
 
@@ -391,11 +394,20 @@ void AMyCharacter::CastMobilityAbility()
 		const FVector SpawnLocation = GetActorLocation();
 		FActorSpawnParameters params2;
 		params2.Owner = this;
+		params2.Instigator = this;
 		//GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 		SpawnRotation.Pitch = 0;
 		AMobilityAbility_RushBase* AbilityCasing = World->SpawnActor<AMobilityAbility_RushBase>(SpawnLocation, SpawnRotation, params2); //hardcoded for now
 
-		AttachToActor(AbilityCasing, FAttachmentTransformRules(EAttachmentRule::SnapToTarget,true));
+
+		//debug
+		//I assume that this part is messing with owner passing
+		
+		//AttachToActor(AbilityCasing, FAttachmentTransformRules(EAttachmentRule::SnapToTarget,true));
+		AbilityCasing->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
+		AbilityCasing->OwnerAffinity = MyAffinity;
+		//DuplicateObject(MyAffinity, AbilityCasing->OwnerAffinity);
+		AbilityCasing->Movement->UpdatedComponent = this->RootComponent;
 		//auto sMovement = AbilityCasing->Movement;
 		//sMovement->UpdatedComponent = RootComponent;
 		DisableInput(World->GetFirstPlayerController());	
@@ -408,15 +420,23 @@ void AMyCharacter::CastMobilityAbility()
 	}
 }
 
-void AMyCharacter::GainController(AActor* effect)
+void AMyCharacter::GainController(AActor* effect)//, UProjectileMovementComponent* movementeffecthandle)
 {
 	if (!isCharging)
 		return;
 	UWorld* const World = GetWorld();
 	if (World != NULL)
 	{
+
+		
 		EnableInput(World->GetFirstPlayerController());
-		(Cast<AMobilityAbility_RushBase>(effect))->Deactivate();
+		//if (movementeffecthandle->IsRooted()) {
+			//movementeffecthandle->RemoveFromRoot();
+		//}'
+		if (Cast<AMobilityAbility_RushBase>(effect))
+			if (effect->IsRooted())
+				effect->RemoveFromRoot();
+			(Cast<AMobilityAbility_RushBase>(effect))->Deactivate();
 		//(Cast<AMobilityAbility_RushBase>(effect))->Movement->DestroyComponent();
 		//(Cast<AMobilityAbility_RushBase>(effect))->Collision
 		//GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);

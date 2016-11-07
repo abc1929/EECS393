@@ -3,6 +3,7 @@
 #pragma once
 
 #include "GameFramework/Character.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 #include "public/MyElementalAffinity.h"
 #include "MyCharacter.generated.h"
 
@@ -118,7 +119,7 @@ public:
 	void CastUtilityAbility(); 
 */
 	UFUNCTION()
-	void GainController(AActor* effect);
+		void GainController(AActor* effect);//, UProjectileMovementComponent* movementeffecthandle=NULL);
 
 private:	
 	// Maybe takedmg needs more handles later on
@@ -187,8 +188,8 @@ public:
 	//Ability related
 	bool isCharging;
 	
-
-
+	//movement effect on char
+	class UProjectileMovementComponent* movementcomponent;
 
 	
 // camera collision

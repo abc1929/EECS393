@@ -11,13 +11,15 @@
 
 AMobilityAbility_RushBase::AMobilityAbility_RushBase(const class FObjectInitializer& ObjectInitializer)
 {
+	
 	PrimaryActorTick.bCanEverTick = true;
-	Owner = Cast<AMyCharacter>(GetOwner());
+	OwnerAffinity = CreateDefaultSubobject<UMyElementalAffinity>(TEXT("Affinity"));
+	OwnerAffinity->RegisterComponent();
 	auto Collision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("RootComponent_Collision"));
 	Collision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 
 	//AttachToActor(Owner, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
-	
+	//AttachToActor(GetOwner(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
 
 
 	Collision->InitCapsuleSize(90.f, 110.0f);
@@ -33,21 +35,21 @@ AMobilityAbility_RushBase::AMobilityAbility_RushBase(const class FObjectInitiali
 
 
 	//float test = Cast<AMyCharacter>(GetOwner())->GetAtkSpeedMultiplier();
-	if (Cast<AMyCharacter>(GetOwner()))
+	if (Cast<AMyCharacter>(GetInstigator()))
 	{
-		Movement->InitialSpeed = 1000.f * std::pow(Cast<AMyCharacter>(GetOwner())->GetAtkSpeedMultiplier(), 1.5) * Cast<AMyCharacter>(GetOwner())->GetMovSpeedMultiplier(); // 0.5 power from atkspd is actual weight, 1.0 to counter mycharacter side
-		Movement->MaxSpeed = 1000.f * std::pow(Cast<AMyCharacter>(GetOwner())->GetAtkSpeedMultiplier(), 1.5) * Cast<AMyCharacter>(GetOwner())->GetMovSpeedMultiplier();
+		Movement->InitialSpeed = 1000.f * std::pow(Cast<AMyCharacter>(GetInstigator())->GetAtkSpeedMultiplier(), 1.5) * Cast<AMyCharacter>(GetInstigator())->GetMovSpeedMultiplier(); // 0.5 power from atkspd is actual weight, 1.0 to counter mycharacter side
+		Movement->MaxSpeed = 1000.f * std::pow(Cast<AMyCharacter>(GetInstigator())->GetAtkSpeedMultiplier(), 1.5) * Cast<AMyCharacter>(GetInstigator())->GetMovSpeedMultiplier();
 		if (GEngine)
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Rushspeed buffed!");
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(Movement->InitialSpeed));
 	}
 	else
 	{	
-		FString sd;
-		if(GetOwner())
-			FString sd = GetOwner()->GetName();
+		FString sd = "sd";
+		if(GetRootComponent())
+			FString sd = GetRootComponent()->GetName();
 		if(GEngine)
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, sd);
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(OwnerAffinity->GetAbilityElementalPrefix()));
 		Movement->InitialSpeed = 1000.f;
 		Movement->MaxSpeed = 1000.f;
 	}
@@ -59,7 +61,6 @@ AMobilityAbility_RushBase::AMobilityAbility_RushBase(const class FObjectInitiali
 void AMobilityAbility_RushBase::BeginPlay()
 {
 	Super::BeginPlay();
-	Owner = Cast<AMyCharacter>(GetOwner());
 	this->SetLifeSpan(3.f);
 }
 
@@ -68,6 +69,8 @@ AMobilityAbility_RushBase::~AMobilityAbility_RushBase()
 {
 	//auto Owner = Cast<AMyCharacter>(GetOwner());
 	//Owner->GainController();
+	if (IsRooted())
+		RemoveFromRoot();
 
 }
 
@@ -113,8 +116,8 @@ void AMobilityAbility_RushBase::Knockback(AMyCharacter* InflictedTarget)
 		//	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Some debug message!"));
 		UWorld* const World = GetWorld();
 		World->GetTimerManager().ClearTimer(KnockbackTimerHandle);
-		auto Owner = Cast<AMyCharacter>(GetOwner());
-		Owner->SetActorEnableCollision(true);
+		//auto Owner = Cast<AMyCharacter>(GetOwner());
+		//Owner->SetActorEnableCollision(true);
 		Destroy();
 	}
 	increments++;

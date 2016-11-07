@@ -4,6 +4,7 @@
 #include <algorithm> 
 #include <math.h>  
 #include "MyElementalAffinity.h"
+#include "public/MyCharacter.h"
 
 UMyElementalAffinity::UMyElementalAffinity()
 {
@@ -18,6 +19,8 @@ UMyElementalAffinity::UMyElementalAffinity(TArray<float> elements)
 	Elements = elements;
 	CalculateAffinities();
 	CalculateMultipliers();
+	if (Cast<AMyCharacter>(GetOwner()))
+		Cast<AMyCharacter>(GetOwner())->UpdateStats();
 }
 
 
@@ -27,6 +30,8 @@ void UMyElementalAffinity::UpdateElements(float newamount, int element) //01234 
 	Elements[element] = newamount;
 	CalculateAffinities();
 	CalculateMultipliers();
+	if (Cast<AMyCharacter>(GetOwner()))
+		Cast<AMyCharacter>(GetOwner())->UpdateStats();
 }
 
 float UMyElementalAffinity::PenaltyCurve(float ratio)
@@ -110,7 +115,7 @@ void UMyElementalAffinity::CalculateAffinities()
 	penalty.Init(0, 5);
 	if (total>0)
 	{
-		//calculating penalties
+		//calculating weight and penalties
 		for (int index = 0; index<5; index++)
 		{
 			weight[index] = [&, total](auto s)->auto {return s / total; }(Elements[index]);
@@ -119,7 +124,7 @@ void UMyElementalAffinity::CalculateAffinities()
 		for (int index = 0; index<5; index++)
 		{
 			//elemental supressions, let's say you have 2 ice and 5 fire, it would be the tipping point where fire gets penalized
-			//while if you have 3 ice then you won't
+			//while if you have 6 fire then you won't
 			if (weight[index % 5] == 0 || weight[(index + 1) % 5]) //compiler is kinda dumb
 				continue;
 			if (weight[index % 5] / weight[(index + 1) % 5] > 0.4) {
@@ -143,7 +148,7 @@ void UMyElementalAffinity::CalculateAffinities()
 		}
 
 		// I think it is more appropriate to process buff multipliers and stuff otherwhere, not in this class, just keep the data pure
-		ProcessedElementAffinities.Init(0, 5);
+		//ProcessedElementAffinities.Init(0, 5);
 		for (int index = 0; index < 5; index++)
 		{
 			ProcessedElementAffinities[index] = Elements[index] * (1 - penalty[index]);

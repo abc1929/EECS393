@@ -37,8 +37,9 @@ public:
 	FVector Knockbackstep;
 	int increments;
 
-	
-	AMyCharacter* Owner;
+	UPROPERTY()
+	class UMyElementalAffinity* OwnerAffinity;
+	AActor* Instigator;
 
 	class UProjectileMovementComponent* Movement;
 
