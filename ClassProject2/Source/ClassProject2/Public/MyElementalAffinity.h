@@ -30,7 +30,8 @@ public:
 	float opfCurve(float firstAffinity, float secondAffinity = 0, int AffinityCount = 1);
 	float optCurve(float affinity);
 
-
+	void UpdateAll(TArray<float> elements);
+	void Update();
 	TArray<float> Elements; //[8,3,7,2,0] FELDI
 	TArray<float> ProcessedElementAffinities; // Penalized Elements
 	int AbilityElementalPrefix;

@@ -34,6 +34,24 @@ void UMyElementalAffinity::UpdateElements(float newamount, int element) //01234 
 		Cast<AMyCharacter>(GetOwner())->UpdateStats();
 }
 
+void UMyElementalAffinity::Update()
+{
+	CalculateAffinities();
+	CalculateMultipliers();
+	if (Cast<AMyCharacter>(GetOwner()))
+		Cast<AMyCharacter>(GetOwner())->UpdateStats();
+}
+
+void UMyElementalAffinity::UpdateAll(TArray<float> ele) //01234 -> FELDI
+{
+	Elements = ele;
+	CalculateAffinities();
+	CalculateMultipliers();
+	if (Cast<AMyCharacter>(GetOwner()))
+		Cast<AMyCharacter>(GetOwner())->UpdateStats();
+}
+
+
 float UMyElementalAffinity::PenaltyCurve(float ratio)
 {
 	if (ratio > 0.4)

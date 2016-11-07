@@ -24,11 +24,11 @@ AMyCharacter::AMyCharacter()
 	CurrentCastElapse = 0.f;
 	MyAffinity = CreateDefaultSubobject<UMyElementalAffinity>(TEXT("Affinity"));
 	//debug
-	MyAffinity->UpdateElements(4, 1); //FELDI
-	MyAffinity->UpdateElements(3, 2);
-	MyAffinity->UpdateElements(7, 3);
-	MyAffinity->UpdateElements(2, 4);
-	MyAffinity->UpdateElements(9, 0);
+	//MyAffinity->UpdateElements(4, 1); //FELDI
+	//MyAffinity->UpdateElements(3, 2);
+	//MyAffinity->UpdateElements(7, 3);
+	//MyAffinity->UpdateElements(2, 4);
+	//MyAffinity->UpdateElements(9, 0);
 	MyAffinity->RegisterComponent();
 
 
@@ -405,7 +405,8 @@ void AMyCharacter::CastMobilityAbility()
 		
 		//AttachToActor(AbilityCasing, FAttachmentTransformRules(EAttachmentRule::SnapToTarget,true));
 		AbilityCasing->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
-		AbilityCasing->OwnerAffinity = MyAffinity;
+		//AbilityCasing->OwnerAffinity=MyAffinity;
+		AbilityCasing->OwnerAffinity->UpdateAll(MyAffinity->GetElements());
 		//DuplicateObject(MyAffinity, AbilityCasing->OwnerAffinity);
 		AbilityCasing->Movement->UpdatedComponent = this->RootComponent;
 		//auto sMovement = AbilityCasing->Movement;

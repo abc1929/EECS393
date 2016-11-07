@@ -35,10 +35,10 @@ AMobilityAbility_RushBase::AMobilityAbility_RushBase(const class FObjectInitiali
 
 
 	//float test = Cast<AMyCharacter>(GetOwner())->GetAtkSpeedMultiplier();
-	if (Cast<AMyCharacter>(GetInstigator()))
+	if (OwnerAffinity)
 	{
-		Movement->InitialSpeed = 1000.f * std::pow(Cast<AMyCharacter>(GetInstigator())->GetAtkSpeedMultiplier(), 1.5) * Cast<AMyCharacter>(GetInstigator())->GetMovSpeedMultiplier(); // 0.5 power from atkspd is actual weight, 1.0 to counter mycharacter side
-		Movement->MaxSpeed = 1000.f * std::pow(Cast<AMyCharacter>(GetInstigator())->GetAtkSpeedMultiplier(), 1.5) * Cast<AMyCharacter>(GetInstigator())->GetMovSpeedMultiplier();
+		Movement->InitialSpeed = 1000.f * std::pow(OwnerAffinity->GetAtkSpeedMultiplier(), 1.5) * OwnerAffinity->GetMovSpeedMultiplier(); // 0.5 power from atkspd is actual weight, 1.0 to counter mycharacter side
+		Movement->MaxSpeed = 1000.f * std::pow(OwnerAffinity->GetAtkSpeedMultiplier(), 1.5) * OwnerAffinity->GetMovSpeedMultiplier();
 		if (GEngine)
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Rushspeed buffed!");
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(Movement->InitialSpeed));
@@ -48,8 +48,6 @@ AMobilityAbility_RushBase::AMobilityAbility_RushBase(const class FObjectInitiali
 		FString sd = "sd";
 		if(GetRootComponent())
 			FString sd = GetRootComponent()->GetName();
-		if(GEngine)
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(OwnerAffinity->GetAbilityElementalPrefix()));
 		Movement->InitialSpeed = 1000.f;
 		Movement->MaxSpeed = 1000.f;
 	}
@@ -81,6 +79,8 @@ void AMobilityAbility_RushBase::OnStartOverlapping(UPrimitiveComponent* Overlapp
 {
 	if (GetOwner() != OtherActor && !OtherActor->IsA(ASafevolume::StaticClass())) //hit something valid
 	{	
+		if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(OwnerAffinity->GetHPMultiplier()));
 		Deactivate();
 		//Movement->DestroyComponent();
 		UWorld* const World = GetWorld();
