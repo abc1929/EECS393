@@ -4,7 +4,7 @@
 	<ItemGroup>
 		<None Include="..\..\ClassProject2.uproject" />
 		<Filter Include="Source">
-			<UniqueIdentifier>{5F6FD6AA-8B69-4BA8-BD12-1B48D9775AD9}</UniqueIdentifier>
+			<UniqueIdentifier>{EBD49AAD-9E96-4DED-9AD5-096A5CB0F858}</UniqueIdentifier>
 		</Filter>
 		<None Include="..\..\Source\ClassProject2.Target.cs">
 			<Filter>Source</Filter>
@@ -13,7 +13,7 @@
 			<Filter>Source</Filter>
 		</None >
 		<Filter Include="Config">
-			<UniqueIdentifier>{1A0C0838-673D-46F8-8417-E225CB682480}</UniqueIdentifier>
+			<UniqueIdentifier>{4C8C918D-C159-419A-AA55-26678DC7E4D8}</UniqueIdentifier>
 		</Filter>
 		<None Include="..\..\Config\DefaultEditor.ini">
 			<Filter>Config</Filter>
@@ -31,7 +31,7 @@
 			<Filter>Config</Filter>
 		</None >
 		<Filter Include="Source\ClassProject2">
-			<UniqueIdentifier>{0B044B31-F70B-45A6-8913-F612BF4A3DE5}</UniqueIdentifier>
+			<UniqueIdentifier>{4ECFFEBF-5744-4A8C-95BF-5C04D6B6557B}</UniqueIdentifier>
 		</Filter>
 		<None Include="..\..\Source\ClassProject2\ClassProject2.Build.cs">
 			<Filter>Source\ClassProject2</Filter>
@@ -58,15 +58,12 @@
 			<Filter>Source\ClassProject2</Filter>
 		</None >
 		<Filter Include="Source\ClassProject2\Private">
-			<UniqueIdentifier>{CB5D6D41-9202-472F-8BE6-67DE5A302DE7}</UniqueIdentifier>
+			<UniqueIdentifier>{8E0A1E8C-5998-40FD-B432-913F597CF2A5}</UniqueIdentifier>
 		</Filter>
 		<ClCompile Include="..\..\Source\ClassProject2\Private\Ability.cpp">
 			<Filter>Source\ClassProject2\Private</Filter>
 		</ClCompile >
 		<ClCompile Include="..\..\Source\ClassProject2\Private\AbilityEffect.cpp">
-			<Filter>Source\ClassProject2\Private</Filter>
-		</ClCompile >
-		<ClCompile Include="..\..\Source\ClassProject2\Private\ElementalAffinity.cpp">
 			<Filter>Source\ClassProject2\Private</Filter>
 		</ClCompile >
 		<ClCompile Include="..\..\Source\ClassProject2\Private\Fireball.cpp">
@@ -82,6 +79,9 @@
 			<Filter>Source\ClassProject2\Private</Filter>
 		</ClCompile >
 		<ClCompile Include="..\..\Source\ClassProject2\Private\MyCharacter.cpp">
+			<Filter>Source\ClassProject2\Private</Filter>
+		</ClCompile >
+		<ClCompile Include="..\..\Source\ClassProject2\Private\MyElementalAffinity.cpp">
 			<Filter>Source\ClassProject2\Private</Filter>
 		</ClCompile >
 		<ClCompile Include="..\..\Source\ClassProject2\Private\MyGameState.cpp">
@@ -109,7 +109,7 @@
 			<Filter>Source\ClassProject2\Private</Filter>
 		</None >
 		<Filter Include="Source\ClassProject2\Public">
-			<UniqueIdentifier>{2EDFF2FC-78F3-495D-930F-0F99D13F1CAF}</UniqueIdentifier>
+			<UniqueIdentifier>{79DFC599-E25A-442B-B6B1-54B7F0590E14}</UniqueIdentifier>
 		</Filter>
 		<ClInclude Include="..\..\Source\ClassProject2\Public\Ability.h">
 			<Filter>Source\ClassProject2\Public</Filter>
@@ -117,7 +117,7 @@
 		<ClInclude Include="..\..\Source\ClassProject2\Public\AbilityEffect.h">
 			<Filter>Source\ClassProject2\Public</Filter>
 		</ClInclude >
-		<ClInclude Include="..\..\Source\ClassProject2\Public\ElementalAffinity.h">
+		<ClInclude Include="..\..\Source\ClassProject2\Public\AbilityList.h">
 			<Filter>Source\ClassProject2\Public</Filter>
 		</ClInclude >
 		<ClInclude Include="..\..\Source\ClassProject2\Public\Fireball.h">
@@ -133,6 +133,9 @@
 			<Filter>Source\ClassProject2\Public</Filter>
 		</ClInclude >
 		<ClInclude Include="..\..\Source\ClassProject2\Public\MyCharacter.h">
+			<Filter>Source\ClassProject2\Public</Filter>
+		</ClInclude >
+		<ClInclude Include="..\..\Source\ClassProject2\Public\MyElementalAffinity.h">
 			<Filter>Source\ClassProject2\Public</Filter>
 		</ClInclude >
 		<ClInclude Include="..\..\Source\ClassProject2\Public\MyGameState.h">

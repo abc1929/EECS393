@@ -5,10 +5,10 @@
 #include "GameFramework/Actor.h"
 #include "public/AbilityEffect.h"
 #include "public/MyCharacter.h"
-#include "public/ElementalAffinity.h"
 #include "Ability.generated.h"
 
 class AAbilityEffect;
+class UMyElementalAffinity;
 
 UCLASS(ABSTRACT)
 class CLASSPROJECT2_API AAbility : public AActor
@@ -34,7 +34,7 @@ public:
 
 	
 	//Multipliers from elemental affinity of the owner (ability caster)
-	virtual ElementalAffinity* GetAffinity() PURE_VIRTUAL(AAbility::GetAffinity, return new ElementalAffinity(););
+	//virtual UMyElementalAffinity* GetAffinity() PURE_VIRTUAL(AAbility::GetAffinity, return new UMyElementalAffinity(););
 	//... and so on
 
 	//visual representation (spawn logic) of the ability actor and hit logic

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "GameFramework/Character.h"
-#include "public/ElementalAffinity.h"
+#include "public/MyElementalAffinity.h"
 #include "MyCharacter.generated.h"
 
 
@@ -62,11 +62,12 @@ public:
 	bool CanSprint() const;
 
 	float SprintSpeedModifier;
-	float NormalSpeed;
+	float DefaultNormalSpeed;
 
 	bool InForceField;
 
 	//other properties
+
 	float GetMaxHP() const;
 	float GetHP() const;
 	
@@ -74,7 +75,7 @@ public:
 	void SetHP(float hp);
 
 	UFUNCTION()
-	void TakeDmg(float x);
+	void TakeDmg(float x, bool canReduce=false);
 
 	UFUNCTION()
 	void TakingForceFieldDamage(bool yeah);
@@ -122,6 +123,8 @@ public:
 private:	
 	// Maybe takedmg needs more handles later on
 	//virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser) override;
+	float MaxHealth;
+	float MaxStamina;
 	float Health;
 	float Stamina;
 	float CurrentCastMax;
@@ -139,29 +142,46 @@ public:
 
 
 	//Character progression records
-
+	
 	//beginning of each round gets 3 points, 21 totals
 	//each element has cap of 10
-private:	
-	float EFire;
-	float EEarth;
-	float ELightning;
-	float EDarkness;
-	float EIce;
 
+	//UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
+	class UMyElementalAffinity* MyAffinity; 
 
+	//TSubclassOf<class UMyElementalAffinity> MyAffinity;
 
+	//UFUNCTION()
+	//UMyElementalAffinity* GetAffinity();
+	//float BaseDmgReduction = 0.2f;
+	//float EFire;
+	//float EEarth;
+	//float ELightning;
+	//float EDarkness;
+	//float EIce;
 
-	float AtkSpeedMultiplier; //Fire
-	float AtkDmgMultiplier; //Darkness
-	float MovSpeedMultiplier;  //Fire
-	float CritChanceMultiplier; //Lightning
-	float CritDmgMultiplier; //? Lightning, Darkness
-	float HPMultiplier; //Earth
-	float MomentumResistanceMultiplier; //Earth
-	float StamRegenMultiplier; //Ice
-	float DefenseMultiplier; //Earth, Ice
+	float GetAtkSpeedMultiplier();
 
+	float GetAtkDmgMultiplier();
+
+	float GetMovSpeedMultiplier();
+
+	float GetCritChanceMultiplier(); // Criting not implemented yet
+
+	float GetCritDmgMultiplier(); //
+
+	float GetHPMultiplier();
+
+	float GetMomentumResistanceMultiplier();
+
+	float GetStamRegenMultiplier();
+
+	float GetDefenseMultiplier();
+
+	//Sync between MyAffinity and self
+	UFUNCTION()
+	void UpdateStats();
 
 public:
 	//Ability related

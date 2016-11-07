@@ -28,9 +28,10 @@ public:
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 	
 	UFUNCTION()
-	void Knockback(AActor* InflictedTarget);
+	void Knockback(AMyCharacter* InflictedTarget);
 
 	bool KBTimerExpired;
+	AMyCharacter* Owner;
 
 protected:
 	

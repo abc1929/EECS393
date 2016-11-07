@@ -10,7 +10,7 @@ AFireball::AFireball()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	Owner = Cast<AMyCharacter>(GetOwner());
 	// Setup collision sphere and static mesh
 	Collision = CreateDefaultSubobject<USphereComponent>(TEXT("RootComponent"));
 	RootComponent = Collision;
@@ -47,8 +47,8 @@ AFireball::AFireball()
 	//Movement
 	Movement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement"));
 	Movement->UpdatedComponent = Collision;
-	Movement->InitialSpeed = 800.f;
-	Movement->MaxSpeed = 800.f;
+	Movement->InitialSpeed = 800.f; //* Cast<AMyCharacter>(GetOwner())->MyAffinity->GetAtkSpeedMultiplier();
+	Movement->MaxSpeed = 800.f; //* Cast<AMyCharacter>(GetOwner())->MyAffinity->GetAtkSpeedMultiplier();
 	Movement->bRotationFollowsVelocity = false;
 	Movement->ProjectileGravityScale = 0.01;
 
@@ -61,7 +61,7 @@ AFireball::AFireball()
 
 	//Knockback variables
 	increments = 0;
-	CastTime = 1.2f;
+	CastTime = 1.2f; // / Cast<AMyCharacter>(GetOwner())->MyAffinity->GetAtkSpeedMultiplier();
 }
 
 // Called when the game starts or when spawned
@@ -91,7 +91,7 @@ void AFireball::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimiti
 		else 
 		//more complex damage inflicting mechanisms can be implemented
 		{ 
-			targethit->SetHP(targethit->GetHP() - 15.0f);
+			targethit->TakeDmg(15.0f);//* Cast<AMyCharacter>(GetOwner())->MyAffinity->GetAtkDmgMultiplier());
 			UWorld* const World = GetWorld();
 			FTimerDelegate TimerDel;
 			TimerDel.BindUFunction(this, FName("Knockback"), targethit);
@@ -109,10 +109,10 @@ void AFireball::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimiti
 	
 }
 
-void AFireball::Knockback(AActor* InflictedTarget)
+void AFireball::Knockback(AMyCharacter* InflictedTarget)
 {
 	//possible to do AOE this way as well, but right now we're just doing single target
-	InflictedTarget->AddActorWorldOffset(Knockbackstep);
+	InflictedTarget->AddActorWorldOffset(Knockbackstep); // / InflictedTarget->MyAffinity->GetMomentumResistanceMultiplier());
 
 	if (increments >= 100)
 	{

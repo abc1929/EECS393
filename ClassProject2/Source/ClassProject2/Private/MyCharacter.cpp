@@ -12,14 +12,26 @@ AMyCharacter::AMyCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	Health = 100.f;
-	Stamina = 100.f;
-	SprintSpeedModifier = 2.2f;
-	NormalSpeed = this->GetCharacterMovement()->MaxWalkSpeed /1.5;
-	this->GetCharacterMovement()->MaxWalkSpeed = NormalSpeed;
+	MaxHealth = 100.f;
+	Health = MaxHealth;
+	MaxStamina = 100.f;
+	Stamina = MaxStamina;
+	SprintSpeedModifier = 1.8f;
+	DefaultNormalSpeed = this->GetCharacterMovement()->MaxWalkSpeed /1.5;
+	this->GetCharacterMovement()->MaxWalkSpeed = DefaultNormalSpeed;
 	exhausted = false;
 	CanJumpOverload = false;
 	CurrentCastElapse = 0.f;
+	MyAffinity = CreateDefaultSubobject<UMyElementalAffinity>(TEXT("Affinity"));
+	//debug
+	MyAffinity->UpdateElements(4, 1);
+	MyAffinity->UpdateElements(3, 2);
+	MyAffinity->UpdateElements(7, 3);
+	MyAffinity->UpdateElements(2, 4);
+	MyAffinity->UpdateElements(9, 0);
+	//MyAffinity->AddToRoot();
+
+
 
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	//Mesh
@@ -66,14 +78,18 @@ AMyCharacter::AMyCharacter()
 	FollowCamera->AddLocalOffset(FVector(0,0,110));
 }
 
+
 // Called when the game starts or when spawned
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
+	//debug
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(MyAffinity->GetAtkDmgMultiplier()));
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(MyAffinity->GetAbilityElementalPrefix()));
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(MyAffinity->GetCritDmgMultiplier()));
 	UWorld* const World = GetWorld();
 	FTimerDelegate TimerDele;
-	TimerDele.BindUFunction(this, FName("StaminaIncrease"), 1.0f);
+	TimerDele.BindUFunction(this, FName("StaminaIncrease"), 1.0f); // multiplier handled in StaminaIncrease
 	World->GetTimerManager().SetTimer(RegenTimer, TimerDele, 0.1f, true, 0.f);
 }
 
@@ -187,7 +203,7 @@ void AMyCharacter::OnSprint()
 {
 	if (!exhausted)
 	{
-		this->GetCharacterMovement()->MaxWalkSpeed = NormalSpeed * SprintSpeedModifier;
+		this->GetCharacterMovement()->MaxWalkSpeed = DefaultNormalSpeed*MyAffinity->GetMovSpeedMultiplier() * SprintSpeedModifier;
 		UWorld* const World = GetWorld();
 		FTimerDelegate TimerDele;
 		TimerDele.BindUFunction(this, FName("StaminaIncrease"), -2.0f);
@@ -197,7 +213,7 @@ void AMyCharacter::OnSprint()
 void AMyCharacter::OnSprintFinish()
 {
 	UWorld* const World = GetWorld();
-	this->GetCharacterMovement()->MaxWalkSpeed = NormalSpeed;
+	this->GetCharacterMovement()->MaxWalkSpeed = DefaultNormalSpeed*MyAffinity->GetMovSpeedMultiplier();
 	World->GetTimerManager().ClearTimer(SprintTimer);
 }
 
@@ -221,7 +237,7 @@ void AMyCharacter::OnSprintFinish()
 // float GetMaxHP() const;
 float AMyCharacter::GetMaxHP() const 
 {
-	return GetClass()->GetDefaultObject<AMyCharacter>()->Health;
+	return MaxHealth;
 }
 // float GetHP() const;
 float AMyCharacter::GetHP() const
@@ -243,9 +259,12 @@ void AMyCharacter::SetHP(float hp)
 	}
 }
 
-void AMyCharacter::TakeDmg(float x)
+void AMyCharacter::TakeDmg(float x, bool canReduce)
 {
-	SetHP(GetHP() - x);
+	if(canReduce)
+		SetHP(GetHP() - x/(1.2*MyAffinity->GetDefenseMultiplier()));
+	else 
+		SetHP(GetHP() - x);
 }
 
 void AMyCharacter::TakingForceFieldDamage(bool yeah)
@@ -267,7 +286,7 @@ void AMyCharacter::TakingForceFieldDamage(bool yeah)
 // float GetMaxStamina() const;
 float AMyCharacter::GetMaxStamina() const
 {
-	return GetClass()->GetDefaultObject<AMyCharacter>()->Stamina;
+	return MaxStamina;
 }
 // float GetStamina() const;
 float AMyCharacter::GetStamina() const
@@ -277,8 +296,8 @@ float AMyCharacter::GetStamina() const
 
 void AMyCharacter::SetStamina(float sta)
 {
-	if (sta >= 100) {
-		Stamina = 99;
+	if (sta >= MaxStamina) {
+		Stamina = MaxStamina-1;
 	}
 	else
 	if (sta <= 0) {
@@ -287,7 +306,7 @@ void AMyCharacter::SetStamina(float sta)
 	}
 	else
 	// for debug
-	if (GEngine && (int) floor(Stamina) % 10 == 0 && Stamina<100)
+	if (GEngine && (int) floor(Stamina) % 10 == 0 && Stamina<MaxStamina)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Setting stamina!"));
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(Stamina));
@@ -297,9 +316,9 @@ void AMyCharacter::SetStamina(float sta)
 
 void AMyCharacter::StaminaIncrease(float x)
 {
-	if (Stamina > 100) { SetStamina(99); }
+	if (Stamina > MaxStamina) { SetStamina(MaxStamina-1); }
 	else if (Stamina < 0) { SetStamina(0); exhausted = true; }
-	else { SetStamina(GetStamina() + x); }
+	else { SetStamina(GetStamina() + x * MyAffinity->GetStamRegenMultiplier()); }
 }
 
 // bool IsAlive() const;
@@ -319,7 +338,7 @@ void AMyCharacter::OnCast()
 	if (World != NULL)
 	{
 		//Will be more logics on MaxCastTime if more ability added
-		TimerDel.BindUFunction(this, FName("CastIncrement"), 1.2f);
+		TimerDel.BindUFunction(this, FName("CastIncrement"), 1.2f/ MyAffinity->GetAtkSpeedMultiplier());
 		World->GetTimerManager().SetTimer(CastTimer, TimerDel, 0.01f, true, 0.f);
 	}
 }
@@ -370,23 +389,21 @@ void AMyCharacter::CastMobilityAbility()
 		//GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 		FRotator SpawnRotation = GetControlRotation();
 		const FVector SpawnLocation = GetActorLocation();
-		FActorSpawnParameters params;
-		params.Owner = this;
+		FActorSpawnParameters params2;
+		params2.Owner = this;
 		//GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 		SpawnRotation.Pitch = 0;
-		auto AbilityCasing = World->SpawnActor<AMobilityAbility_RushBase>(SpawnLocation, SpawnRotation, params); //hardcoded for now
+		AMobilityAbility_RushBase* AbilityCasing = World->SpawnActor<AMobilityAbility_RushBase>(SpawnLocation, SpawnRotation, params2); //hardcoded for now
 
 		AttachToActor(AbilityCasing, FAttachmentTransformRules(EAttachmentRule::SnapToTarget,true));
 		//auto sMovement = AbilityCasing->Movement;
 		//sMovement->UpdatedComponent = RootComponent;
-
-
 		DisableInput(World->GetFirstPlayerController());	
 		//FTimerHandle local;
 		FTimerDelegate local2;
 		local2.BindUFunction(this, FName("GainController"), AbilityCasing);
 		//GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
-		World->GetTimerManager().SetTimer(CastTimer, local2, 1.0f, false);
+		World->GetTimerManager().SetTimer(CastTimer, local2, 1.0f/ MyAffinity->GetAtkSpeedMultiplier(), false);
 		isCharging = true;
 	}
 }
@@ -410,6 +427,32 @@ void AMyCharacter::GainController(AActor* effect)
 // bool canCast() const;
 // float GetCurrentCastElapse() const;
 // float GetCurrentCastMax() const;
+
+//Char Progression
+//UMyElementalAffinity* AMyCharacter::GetAffinity() {
+//	return MyAffinity;
+//}
+
+
+// Can't access affinity directly from other class? have to do this
+float AMyCharacter::GetAtkSpeedMultiplier() { return MyAffinity->GetAtkSpeedMultiplier(); }
+float AMyCharacter::GetAtkDmgMultiplier() { return MyAffinity->GetAtkDmgMultiplier(); }
+float AMyCharacter::GetMovSpeedMultiplier() { return MyAffinity->GetMovSpeedMultiplier(); }
+float AMyCharacter::GetCritChanceMultiplier() { return MyAffinity->GetCritChanceMultiplier(); }
+float AMyCharacter::GetCritDmgMultiplier() { return MyAffinity->GetCritDmgMultiplier(); }
+float AMyCharacter::GetHPMultiplier() { return MyAffinity->GetHPMultiplier(); }
+float AMyCharacter::GetMomentumResistanceMultiplier() { return MyAffinity->GetMomentumResistanceMultiplier(); }
+float AMyCharacter::GetStamRegenMultiplier() { return MyAffinity->GetStamRegenMultiplier(); }
+float AMyCharacter::GetDefenseMultiplier() { return MyAffinity->GetDefenseMultiplier(); }
+
+// This should get called after allocating points
+void AMyCharacter::UpdateStats()
+{
+	MaxHealth = 100 * MyAffinity->GetHPMultiplier();
+	Health = MaxHealth;
+	this->GetCharacterMovement()->MaxWalkSpeed = DefaultNormalSpeed*MyAffinity->GetMovSpeedMultiplier();
+	//others not needed yet, those multipliers communicate with abilities directly
+}
 
 
 //Misc
