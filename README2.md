@@ -1,6 +1,14 @@
 # EECS393
 
 Current goals of implementation
+
+code coverage: we might test via this:
+https://opencppcoverage.codeplex.com/
+
+getting coverage from unit tests might be a bit difficult since we're not operating on Visual studio's unit test solutions but rather the UE4 inner unit test solution.
+
+I think it is valid to test coverage via running the executable directly if possible that is pertaining towards functional testings.
+
 Rewriting project blueprint classes in C++, current progress percentage roughly
 ---
 In Descending Priority Roughly
