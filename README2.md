@@ -10,6 +10,7 @@ getting coverage from unit tests might be a bit difficult since we're not operat
 I think it is valid to test coverage via running the executable directly if possible that is pertaining towards functional testings.
 
 Current implementation goals (works before functional test demo)
+---
 I'll provide sources as much as I can
 ---
 JD:
