@@ -9,14 +9,25 @@ getting coverage from unit tests might be a bit difficult since we're not operat
 
 I think it is valid to test coverage via running the executable directly if possible that is pertaining towards functional testings.
 
-Rewriting project blueprint classes in C++, current progress percentage roughly
+Current implementation goals (works before functional test demo)
+I'll provide sources as much as I can
 ---
-In Descending Priority Roughly
+JD:
 
-1. Ability abstract class -> spell types -> individual spells (more necessary as we create more abilities)
-2. Character Progression system: Character has subalignment(Mage, Melee, not implemented yet) and "Element affinity",together augments spells directly as well as what spell one can get, maybe I'll throw in more
-3. Game Rules - actually implement 7 rounds, inbetween rest time to progress character, and determine winner, all that
-4. HUD/UI - drawing HP/Stamina Bars, crosshair, casting progress bar, main menu, in game esc menu, tool tip, round info, misc popup, more
+1. HUD implementations: flesh it up, we shall have a skill bar take tracks our 4 abilities CDs, as well as the basic ability CD
+  we need a tooltip system, UI part of the targeting system. We need nameplates and HP bars drawn on characters heads
+2. Menu: nothing particularly, but we do need a multiplayer module part in the menu
+3. Networking: we shall start with a local two person multiplayer, we would then do a lan thing.
+
+JW:
+
+1. Create a base defensive (highly morphable like rushbase, wavebase) and a utility ability
+2. Targeting system: ray casting, maybe something like a smart soft lock on.
+3. momentum accumulation value (another attribute to characters, it's like current vulnerability value, decreases overtime)
+4. something else 
+
+
+
 
 Specifications
 ---
