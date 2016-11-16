@@ -42,6 +42,8 @@ public:
 
 
 	AActor* Instigator;
+
+	UPROPERTY()
 	AMyCharacter* CustomOwner;
 
 	class UProjectileMovementComponent* Movement;

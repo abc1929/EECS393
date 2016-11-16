@@ -13,8 +13,8 @@ AMobilityAbility_RushBase::AMobilityAbility_RushBase(const class FObjectInitiali
 {
 	
 	PrimaryActorTick.bCanEverTick = true;
-	OwnerAffinity = CreateDefaultSubobject<UMyElementalAffinity>(TEXT("Affinity"));
-	OwnerAffinity->RegisterComponent();
+	//CustomOwner->MyAffinity = CreateDefaultSubobject<UMyElementalAffinity>(TEXT("Affinity"));
+	//CustomOwner->MyAffinity->RegisterComponent();
 	if (Cast<AMyCharacter>(CustomOwner)) {
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("I Have a owner!" + CustomOwner->GetName()));
 	}
@@ -38,10 +38,10 @@ AMobilityAbility_RushBase::AMobilityAbility_RushBase(const class FObjectInitiali
 
 
 	//float test = Cast<AMyCharacter>(CustomOwner)->GetAtkSpeedMultiplier();
-	if (OwnerAffinity)
+	if (CustomOwner!=nullptr)
 	{
-		Movement->InitialSpeed = 1000.f *std::pow(OwnerAffinity->GetAtkSpeedMultiplier(), 1.5) * OwnerAffinity->GetMovSpeedMultiplier(); // 0.5 power from atkspd is actual weight, 1.0 to counter mycharacter side
-		Movement->MaxSpeed = 1000.f *std::pow(OwnerAffinity->GetAtkSpeedMultiplier(), 1.5) * OwnerAffinity->GetMovSpeedMultiplier();
+		Movement->InitialSpeed = 1000.f *std::pow(CustomOwner->MyAffinity->GetAtkSpeedMultiplier(), 1.5) * CustomOwner->MyAffinity->GetMovSpeedMultiplier(); // 0.5 power from atkspd is actual weight, 1.0 to counter mycharacter side
+		Movement->MaxSpeed = 1000.f *std::pow(CustomOwner->MyAffinity->GetAtkSpeedMultiplier(), 1.5) * CustomOwner->MyAffinity->GetMovSpeedMultiplier();
 		if (GEngine) {
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Rushspeed buffed!"));
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(Movement->InitialSpeed));
@@ -52,8 +52,8 @@ AMobilityAbility_RushBase::AMobilityAbility_RushBase(const class FObjectInitiali
 		FString sd = "sd";
 		if(GetRootComponent())
 			FString sd = GetRootComponent()->GetName();
-		Movement->InitialSpeed = 1000.f;
-		Movement->MaxSpeed = 1000.f;
+		Movement->InitialSpeed = 1.f;
+		Movement->MaxSpeed = 30000.f;
 	}
 	Movement->bRotationFollowsVelocity = false;
 	Movement->ProjectileGravityScale = 0.0f;
@@ -64,6 +64,25 @@ void AMobilityAbility_RushBase::BeginPlay()
 {
 	Super::BeginPlay();
 	this->SetLifeSpan(3.f);
+	if (CustomOwner != nullptr)
+	{
+		Movement->Velocity = Movement->Velocity * 1000;
+		Movement->Velocity = Movement->Velocity *std::pow(CustomOwner->MyAffinity->GetAtkSpeedMultiplier(), 1.5) * CustomOwner->MyAffinity->GetMovSpeedMultiplier(); // 0.5 power from atkspd is actual weight, 1.0 to counter mycharacter side
+		Movement->UpdateComponentVelocity();
+		//Movement->MaxSpeed = 1000.f *std::pow(CustomOwner->MyAffinity->GetAtkSpeedMultiplier(), 1.5) * CustomOwner->MyAffinity->GetMovSpeedMultiplier();
+		if (GEngine) {
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Rushspeed buffed!"));
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(Movement->Velocity.Size()));
+		}
+	}
+	else
+	{
+		FString sd = "sd";
+		if (GetRootComponent())
+			FString sd = GetRootComponent()->GetName();
+		Movement->InitialSpeed = 1000.f;
+		Movement->MaxSpeed = 1000.f;
+	}
 }
 
 
@@ -84,7 +103,7 @@ void AMobilityAbility_RushBase::OnStartOverlapping(UPrimitiveComponent* Overlapp
 	if (CustomOwner != OtherActor && !OtherActor->IsA(ASafevolume::StaticClass())) //hit something valid
 	{	
 		if (GEngine)
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(OwnerAffinity->GetHPMultiplier()));
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(CustomOwner->MyAffinity->GetHPMultiplier()));
 		Deactivate();
 		//Movement->DestroyComponent();
 		UWorld* const World = GetWorld();
@@ -98,7 +117,7 @@ void AMobilityAbility_RushBase::OnStartOverlapping(UPrimitiveComponent* Overlapp
 					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Waaa RushBase Test!"));
 
 				
-				targethit->TakeDmg(15.0f); //* Cast<AMyCharacter>(CustomOwner)->MyAffinity->GetAtkDmgMultiplier());
+				targethit->TakeDmg(15.0f * Cast<AMyCharacter>(CustomOwner)->MyAffinity->GetAtkDmgMultiplier());
 				FTimerDelegate TimerDel;
 				TimerDel.BindUFunction(this, FName("Knockback"), targethit);
 				World->GetTimerManager().SetTimer(KnockbackTimerHandle, TimerDel, 0.01f, true, 0.f);
@@ -112,7 +131,7 @@ void AMobilityAbility_RushBase::OnStartOverlapping(UPrimitiveComponent* Overlapp
 void AMobilityAbility_RushBase::Knockback(AMyCharacter* InflictedTarget)
 {
 	//possible to do AOE this way as well, but right now we're just doing single target
-	InflictedTarget->AddActorWorldOffset(Knockbackstep);// / InflictedTarget->MyAffinity->GetMomentumResistanceMultiplier()); //maybe even square the multiplier if gameplay wise knockback resistance too underpowered
+	InflictedTarget->AddActorWorldOffset(Knockbackstep / InflictedTarget->MyAffinity->GetMomentumResistanceMultiplier()); //maybe even square the multiplier if gameplay wise knockback resistance too underpowered
 
 	if (increments >= 100)
 	{

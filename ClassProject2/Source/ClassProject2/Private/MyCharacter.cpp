@@ -404,7 +404,7 @@ void AMyCharacter::CastMobilityAbility()
 		if (AbilityCasing != nullptr)
 		{
 			AbilityCasing->CustomOwner = this;
-			AbilityCasing->OwnerAffinity->UpdateAll(MyAffinity->GetElements()); //not working, maybe just directly access this's affinity
+			//AbilityCasing->OwnerAffinity->UpdateAll(MyAffinity->GetElements()); //not working, maybe just directly access this's affinity
 
 			UGameplayStatics::FinishSpawningActor(AbilityCasing, SpawnTransform);
 		}

@@ -147,8 +147,7 @@ public:
 	//beginning of each round gets 3 points, 21 totals
 	//each element has cap of 10
 
-	//UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, meta = (AllowPublicAccess = "true"))
 	class UMyElementalAffinity* MyAffinity; 
 
 	//TSubclassOf<class UMyElementalAffinity> MyAffinity;
