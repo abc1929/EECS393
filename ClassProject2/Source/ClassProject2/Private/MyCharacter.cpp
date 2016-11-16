@@ -24,11 +24,11 @@ AMyCharacter::AMyCharacter()
 	CurrentCastElapse = 0.f;
 	MyAffinity = CreateDefaultSubobject<UMyElementalAffinity>(TEXT("Affinity"));
 	//debug
-	//MyAffinity->UpdateElements(4, 1); //FELDI
-	//MyAffinity->UpdateElements(3, 2);
-	//MyAffinity->UpdateElements(7, 3);
-	//MyAffinity->UpdateElements(2, 4);
-	//MyAffinity->UpdateElements(9, 0);
+	MyAffinity->UpdateElements(4, 1); //FELDI
+	MyAffinity->UpdateElements(3, 2);
+	MyAffinity->UpdateElements(7, 3);
+	MyAffinity->UpdateElements(2, 4);
+	MyAffinity->UpdateElements(9, 0);
 	MyAffinity->RegisterComponent();
 
 
@@ -397,8 +397,17 @@ void AMyCharacter::CastMobilityAbility()
 		params2.Instigator = this;
 		//GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 		SpawnRotation.Pitch = 0;
-		AMobilityAbility_RushBase* AbilityCasing = World->SpawnActor<AMobilityAbility_RushBase>(SpawnLocation, SpawnRotation, params2); //hardcoded for now
+		//AMobilityAbility_RushBase* AbilityCasing = World->SpawnActor<AMobilityAbility_RushBase>(SpawnLocation, SpawnRotation, params2); //hardcoded for now
 
+		FTransform SpawnTransform(SpawnRotation,SpawnLocation);
+		auto AbilityCasing = Cast<AMobilityAbility_RushBase>(UGameplayStatics::BeginDeferredActorSpawnFromClass(this, AMobilityAbility_RushBase::StaticClass(), SpawnTransform));
+		if (AbilityCasing != nullptr)
+		{
+			AbilityCasing->CustomOwner = this;
+			AbilityCasing->OwnerAffinity->UpdateAll(MyAffinity->GetElements()); //not working, maybe just directly access this's affinity
+
+			UGameplayStatics::FinishSpawningActor(AbilityCasing, SpawnTransform);
+		}
 
 		//debug
 		//I assume that this part is messing with owner passing
@@ -406,7 +415,6 @@ void AMyCharacter::CastMobilityAbility()
 		//AttachToActor(AbilityCasing, FAttachmentTransformRules(EAttachmentRule::SnapToTarget,true));
 		AbilityCasing->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
 		//AbilityCasing->OwnerAffinity=MyAffinity;
-		AbilityCasing->OwnerAffinity->UpdateAll(MyAffinity->GetElements());
 		//DuplicateObject(MyAffinity, AbilityCasing->OwnerAffinity);
 		AbilityCasing->Movement->UpdatedComponent = this->RootComponent;
 		//auto sMovement = AbilityCasing->Movement;

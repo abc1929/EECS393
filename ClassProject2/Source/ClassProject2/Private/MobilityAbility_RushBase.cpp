@@ -15,11 +15,14 @@ AMobilityAbility_RushBase::AMobilityAbility_RushBase(const class FObjectInitiali
 	PrimaryActorTick.bCanEverTick = true;
 	OwnerAffinity = CreateDefaultSubobject<UMyElementalAffinity>(TEXT("Affinity"));
 	OwnerAffinity->RegisterComponent();
+	if (Cast<AMyCharacter>(CustomOwner)) {
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("I Have a owner!" + CustomOwner->GetName()));
+	}
 	auto Collision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("RootComponent_Collision"));
 	Collision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 
 	//AttachToActor(Owner, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
-	//AttachToActor(GetOwner(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
+	//AttachToActor(CustomOwner, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
 
 
 	Collision->InitCapsuleSize(90.f, 110.0f);
@@ -34,14 +37,15 @@ AMobilityAbility_RushBase::AMobilityAbility_RushBase(const class FObjectInitiali
 	Movement->UpdatedComponent = Collision;
 
 
-	//float test = Cast<AMyCharacter>(GetOwner())->GetAtkSpeedMultiplier();
+	//float test = Cast<AMyCharacter>(CustomOwner)->GetAtkSpeedMultiplier();
 	if (OwnerAffinity)
 	{
-		Movement->InitialSpeed = 1000.f * std::pow(OwnerAffinity->GetAtkSpeedMultiplier(), 1.5) * OwnerAffinity->GetMovSpeedMultiplier(); // 0.5 power from atkspd is actual weight, 1.0 to counter mycharacter side
-		Movement->MaxSpeed = 1000.f * std::pow(OwnerAffinity->GetAtkSpeedMultiplier(), 1.5) * OwnerAffinity->GetMovSpeedMultiplier();
-		if (GEngine)
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Rushspeed buffed!");
+		Movement->InitialSpeed = 1000.f *std::pow(OwnerAffinity->GetAtkSpeedMultiplier(), 1.5) * OwnerAffinity->GetMovSpeedMultiplier(); // 0.5 power from atkspd is actual weight, 1.0 to counter mycharacter side
+		Movement->MaxSpeed = 1000.f *std::pow(OwnerAffinity->GetAtkSpeedMultiplier(), 1.5) * OwnerAffinity->GetMovSpeedMultiplier();
+		if (GEngine) {
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Rushspeed buffed!"));
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(Movement->InitialSpeed));
+		}	
 	}
 	else
 	{	
@@ -65,7 +69,7 @@ void AMobilityAbility_RushBase::BeginPlay()
 
 AMobilityAbility_RushBase::~AMobilityAbility_RushBase()
 {
-	//auto Owner = Cast<AMyCharacter>(GetOwner());
+	//auto Owner = Cast<AMyCharacter>(CustomOwner);
 	//Owner->GainController();
 	if (IsRooted())
 		RemoveFromRoot();
@@ -77,24 +81,24 @@ AMobilityAbility_RushBase::~AMobilityAbility_RushBase()
 
 void AMobilityAbility_RushBase::OnStartOverlapping(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (GetOwner() != OtherActor && !OtherActor->IsA(ASafevolume::StaticClass())) //hit something valid
+	if (CustomOwner != OtherActor && !OtherActor->IsA(ASafevolume::StaticClass())) //hit something valid
 	{	
 		if (GEngine)
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(OwnerAffinity->GetHPMultiplier()));
 		Deactivate();
 		//Movement->DestroyComponent();
 		UWorld* const World = GetWorld();
-		Cast<AMyCharacter>(GetOwner())->isCharging = false;
-		Cast<AMyCharacter>(GetOwner())->EnableInput(World->GetFirstPlayerController());
+		Cast<AMyCharacter>(CustomOwner)->isCharging = false;
+		Cast<AMyCharacter>(CustomOwner)->EnableInput(World->GetFirstPlayerController());
 		if (AMyCharacter* targethit = Cast<AMyCharacter>(OtherActor)) {
-			if (targethit != GetOwner())
+			if (targethit != CustomOwner)
 			{
 				Knockbackstep = this->GetVelocity() / 500;
 				if (GEngine)
 					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Waaa RushBase Test!"));
 
 				
-				targethit->TakeDmg(15.0f); //* Cast<AMyCharacter>(GetOwner())->MyAffinity->GetAtkDmgMultiplier());
+				targethit->TakeDmg(15.0f); //* Cast<AMyCharacter>(CustomOwner)->MyAffinity->GetAtkDmgMultiplier());
 				FTimerDelegate TimerDel;
 				TimerDel.BindUFunction(this, FName("Knockback"), targethit);
 				World->GetTimerManager().SetTimer(KnockbackTimerHandle, TimerDel, 0.01f, true, 0.f);
@@ -116,7 +120,7 @@ void AMobilityAbility_RushBase::Knockback(AMyCharacter* InflictedTarget)
 		//	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Some debug message!"));
 		UWorld* const World = GetWorld();
 		World->GetTimerManager().ClearTimer(KnockbackTimerHandle);
-		//auto Owner = Cast<AMyCharacter>(GetOwner());
+		//auto Owner = Cast<AMyCharacter>(CustomOwner);
 		//Owner->SetActorEnableCollision(true);
 		Destroy();
 	}

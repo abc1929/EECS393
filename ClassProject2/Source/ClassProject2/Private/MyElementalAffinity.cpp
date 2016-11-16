@@ -47,7 +47,7 @@ void UMyElementalAffinity::UpdateAll(TArray<float> ele) //01234 -> FELDI
 	Elements = ele;
 	CalculateAffinities();
 	CalculateMultipliers();
-	if (Cast<AMyCharacter>(GetOwner()))
+	if (Cast<AMyCharacter>(GetOwner())) //for cases of non player owner (abilities)
 		Cast<AMyCharacter>(GetOwner())->UpdateStats();
 }
 

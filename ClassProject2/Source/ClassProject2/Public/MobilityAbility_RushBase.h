@@ -39,7 +39,10 @@ public:
 
 	UPROPERTY()
 	class UMyElementalAffinity* OwnerAffinity;
+
+
 	AActor* Instigator;
+	AMyCharacter* CustomOwner;
 
 	class UProjectileMovementComponent* Movement;
 
