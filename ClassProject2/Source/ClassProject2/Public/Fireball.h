@@ -31,7 +31,9 @@ public:
 	void Knockback(AMyCharacter* InflictedTarget);
 
 	bool KBTimerExpired;
-	AMyCharacter* Owner;
+
+	UPROPERTY()
+	AMyCharacter* CustomOwner;
 
 protected:
 	

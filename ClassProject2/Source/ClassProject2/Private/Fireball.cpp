@@ -10,7 +10,6 @@ AFireball::AFireball()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	Owner = Cast<AMyCharacter>(GetOwner());
 	// Setup collision sphere and static mesh
 	Collision = CreateDefaultSubobject<USphereComponent>(TEXT("RootComponent"));
 	RootComponent = Collision;
@@ -48,7 +47,7 @@ AFireball::AFireball()
 	Movement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement"));
 	Movement->UpdatedComponent = Collision;
 	Movement->InitialSpeed = 800.f; //* Cast<AMyCharacter>(GetOwner())->MyAffinity->GetAtkSpeedMultiplier();
-	Movement->MaxSpeed = 800.f; //* Cast<AMyCharacter>(GetOwner())->MyAffinity->GetAtkSpeedMultiplier();
+	Movement->MaxSpeed = 50000.f; //* Cast<AMyCharacter>(GetOwner())->MyAffinity->GetAtkSpeedMultiplier();
 	Movement->bRotationFollowsVelocity = false;
 	Movement->ProjectileGravityScale = 0.01;
 
@@ -61,7 +60,7 @@ AFireball::AFireball()
 
 	//Knockback variables
 	increments = 0;
-	CastTime = 1.2f; // / Cast<AMyCharacter>(GetOwner())->MyAffinity->GetAtkSpeedMultiplier();
+
 }
 
 // Called when the game starts or when spawned
@@ -69,6 +68,9 @@ void AFireball::BeginPlay()
 {
 	Super::BeginPlay();
 	this->SetLifeSpan(20.f);
+	Movement->Velocity=Movement->Velocity* Cast<AMyCharacter>(CustomOwner)->MyAffinity->GetAtkSpeedMultiplier();
+	Movement->UpdateComponentVelocity();
+	
 }
 
 // Called every frame
@@ -84,14 +86,14 @@ void AFireball::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimiti
 	Knockbackstep = this->GetVelocity()/300;
 	if (AMyCharacter* targethit = Cast<AMyCharacter>(OtherActor)) {
 
-		if (targethit == GetOwner())
+		if (targethit == CustomOwner)
 		{
 			Destroy();
 		}
 		else 
 		//more complex damage inflicting mechanisms can be implemented
 		{ 
-			targethit->TakeDmg(15.0f);//* Cast<AMyCharacter>(GetOwner())->MyAffinity->GetAtkDmgMultiplier());
+			targethit->TakeDmg(15.0f * Cast<AMyCharacter>(CustomOwner)->MyAffinity->GetAtkDmgMultiplier());
 			UWorld* const World = GetWorld();
 			FTimerDelegate TimerDel;
 			TimerDel.BindUFunction(this, FName("Knockback"), targethit);

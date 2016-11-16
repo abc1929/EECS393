@@ -374,11 +374,15 @@ void AMyCharacter::CastAbility()
 		const FRotator SpawnRotation = GetControlRotation();
 		const FVector SpawnLocation = GetActorLocation() + 150 * FRotationMatrix(SpawnRotation).GetScaledAxis(EAxis::X);
 
-		FActorSpawnParameters params;
-		params.Owner = this;
+		FTransform SpawnTransform(SpawnRotation, SpawnLocation);
+		auto Fireballspawn = Cast<AFireball>(UGameplayStatics::BeginDeferredActorSpawnFromClass(this, AFireball::StaticClass(), SpawnTransform));
+		if (Fireballspawn != nullptr)
+		{
+			Fireballspawn->CustomOwner = this;
+			//AbilityCasing->OwnerAffinity->UpdateAll(MyAffinity->GetElements()); //not working, maybe just directly access this's affinity
 
-
-		World->SpawnActor<AFireball>(SpawnLocation, SpawnRotation, params);
+			UGameplayStatics::FinishSpawningActor(Fireballspawn, SpawnTransform);
+		}
 		CurrentCastSuccess = false;
 		CurrentCastElapse = 0;
 	}
