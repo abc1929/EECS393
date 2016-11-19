@@ -319,7 +319,9 @@ void AMyCharacter::SetStamina(float sta)
 
 void AMyCharacter::StaminaIncrease(float x)
 {
-	if (Stamina > MaxStamina) { SetStamina(MaxStamina-1); }
+	if (this->GetCharacterMovement()->MaxWalkSpeed > DefaultNormalSpeed*MyAffinity->GetMovSpeedMultiplier() 
+		&& this->GetCharacterMovement()->Velocity.Size()<50) {return;} //holding sprint while not moving will not decrease stamina, but it blocks regen
+	if (Stamina > MaxStamina) { SetStamina(MaxStamina-1.5f); } // needs to be reduced more than 1.f (regen is at 1.f, would have bugs)
 	else if (Stamina < 0) { SetStamina(0); exhausted = true; }
 	else { SetStamina(GetStamina() + x * MyAffinity->GetStamRegenMultiplier()); }
 }

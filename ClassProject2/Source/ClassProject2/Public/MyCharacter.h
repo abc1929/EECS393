@@ -190,6 +190,9 @@ public:
 	//movement effect on char
 	class UProjectileMovementComponent* movementcomponent;
 
+	UPROPERTY()
+	AMyCharacter* CurrentTarget;
+
 	
 // camera collision
 UPROPERTY(VisibleAnywhere, Category = Camera, meta = (AllowPrivateAccess = "true"))
