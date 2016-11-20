@@ -34,7 +34,8 @@ public:
 	void Update();
 	TArray<float> Elements; //[8,3,7,2,0] FELDI
 	TArray<float> ProcessedElementAffinities; // Penalized Elements
-	int AbilityElementalPrefix;
+	int AbilityElementalPrefix; //majority of morphable abilities are determined by this (15 total)
+	int PrimaryElementalPrefix; //basic attack is only morphed on primary affinity (5 total)
 
 
 	float AtkSpeedMultiplier; //Fire, Lightning <1.5, cast & projectile speed

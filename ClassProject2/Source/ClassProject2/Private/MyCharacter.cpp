@@ -24,11 +24,11 @@ AMyCharacter::AMyCharacter()
 	CurrentCastElapse = 0.f;
 	MyAffinity = CreateDefaultSubobject<UMyElementalAffinity>(TEXT("Affinity"));
 	//debug
-	MyAffinity->UpdateElements(4, 1); //FELDI
-	MyAffinity->UpdateElements(3, 2);
-	MyAffinity->UpdateElements(7, 3);
-	MyAffinity->UpdateElements(2, 4);
-	MyAffinity->UpdateElements(9, 0);
+	MyAffinity->UpdateElements(5, 0); //Fire
+	MyAffinity->UpdateElements(4, 1); //Earth
+	MyAffinity->UpdateElements(8, 2); //Lightning
+	MyAffinity->UpdateElements(7, 3); //Darkness
+	MyAffinity->UpdateElements(2, 4); //Ice
 	MyAffinity->RegisterComponent();
 
 

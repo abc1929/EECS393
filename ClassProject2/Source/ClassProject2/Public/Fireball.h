@@ -36,11 +36,22 @@ public:
 	AMyCharacter* CustomOwner;
 
 protected:
-	
+	UFUNCTION()
+	void CreateMesh(int prefix);
+
+	UFUNCTION()
+	void GetAssets();
+
+	UStaticMesh* mmesh;
+	UMaterial* grime;
+	UParticleSystem* ParticleAsset_sparks;
+	UParticleSystem* ParticleAsset_fire;
+
+
 	class USphereComponent* Collision;
-	class UStaticMeshComponent* FireballMesh;
+	class UStaticMeshComponent* FireballMesh; //This would be the mesh for the basic attack, it doesn't have to be a fireball..
 	class UProjectileMovementComponent* Movement;
-	class UParticleSystemComponent* Firetrail;
+	class UParticleSystemComponent* Firetrail; //Particle effect of our basic attack projectile
 	FTimerHandle KnockbackTimerHandle;
 	int increments;
 	float CastTime;

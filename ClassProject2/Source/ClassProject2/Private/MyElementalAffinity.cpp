@@ -126,6 +126,8 @@ void UMyElementalAffinity::CalculateAffinities()
 		}
 	}
 
+	PrimaryElementalPrefix = FirstAffinityIndex;
+
 	for (int index = 0; index<5; index++) { total += Elements[index]; }//there isn't a native function to sum. 
 	TArray<float> weight; //temp stores elements weight , ranging from 0,1
 	TArray<float> penalty; //penalty array;

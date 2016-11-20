@@ -70,6 +70,8 @@ SourceArt/**/*.tga
 
 # StarterContent
 **/Content/StarterContent/*
+**/Content/InfinityBladeGrassLands/*
+**/Content/InfinityBladeEffects/*
 
 # Mac Artifacts
 .DS_Store
