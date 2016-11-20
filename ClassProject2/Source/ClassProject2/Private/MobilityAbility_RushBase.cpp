@@ -92,7 +92,6 @@ AMobilityAbility_RushBase::~AMobilityAbility_RushBase()
 	//Owner->GainController();
 	if (IsRooted())
 		RemoveFromRoot();
-
 }
 
 

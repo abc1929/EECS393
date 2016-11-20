@@ -193,7 +193,10 @@ public:
 	UPROPERTY()
 	AMyCharacter* CurrentTarget;
 
-	
+	UPROPERTY(EditAnywhere)
+	UAnimBlueprint* SampleBP;
+
+
 // camera collision
 UPROPERTY(VisibleAnywhere, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;

@@ -29,7 +29,8 @@ AMyCharacter::AMyCharacter()
 	MyAffinity->UpdateElements(8, 2); //Lightning
 	MyAffinity->UpdateElements(7, 3); //Darkness
 	MyAffinity->UpdateElements(2, 4); //Ice
-	MyAffinity->RegisterComponent();
+
+	//MyAffinity->RegisterComponent();
 
 
 
@@ -45,7 +46,12 @@ AMyCharacter::AMyCharacter()
 	}
 
 	static ConstructorHelpers::FObjectFinder<UAnimBlueprint> MeshAnim(TEXT("AnimBlueprint'/Game/Mannequin/Animations/ThirdPerson_AnimBP.ThirdPerson_AnimBP'"));
-	GetMesh()->SetAnimInstanceClass(MeshAnim.Object->GetAnimBlueprintGeneratedClass());
+	
+	if (MeshAnim.Object) 
+	{
+		SampleBP = MeshAnim.Object;
+		GetMesh()->SetAnimInstanceClass(SampleBP->GetAnimBlueprintGeneratedClass());
+	}
 
 	
 	// // set our turn rates for input
@@ -78,7 +84,7 @@ AMyCharacter::AMyCharacter()
 	FollowCamera->AddLocalOffset(FVector(0,0,110));
 
 	//initializing movement effect
-	movementcomponent = CreateDefaultSubobject<UProjectileMovementComponent>(" ");
+	//movementcomponent = CreateDefaultSubobject<UProjectileMovementComponent>(" ");
 }
 
 
@@ -412,17 +418,20 @@ void AMyCharacter::CastMobilityAbility()
 			AbilityCasing->CustomOwner = this;
 			//AbilityCasing->OwnerAffinity->UpdateAll(MyAffinity->GetElements()); //not working, maybe just directly access this's affinity
 
+
 			UGameplayStatics::FinishSpawningActor(AbilityCasing, SpawnTransform);
+
 		}
 
 		//debug
 		//I assume that this part is messing with owner passing
-		
-		//AttachToActor(AbilityCasing, FAttachmentTransformRules(EAttachmentRule::SnapToTarget,true));
 		AbilityCasing->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
+		//AttachToActor(AbilityCasing, FAttachmentTransformRules(EAttachmentRule::SnapToTarget,true));
 		//AbilityCasing->OwnerAffinity=MyAffinity;
 		//DuplicateObject(MyAffinity, AbilityCasing->OwnerAffinity);
-		AbilityCasing->Movement->UpdatedComponent = this->RootComponent;
+
+
+		AbilityCasing->Movement->UpdatedComponent = this->GetRootComponent();
 		//auto sMovement = AbilityCasing->Movement;
 		//sMovement->UpdatedComponent = RootComponent;
 		DisableInput(World->GetFirstPlayerController());	

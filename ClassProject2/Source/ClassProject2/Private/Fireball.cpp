@@ -19,6 +19,7 @@ AFireball::AFireball()
 	FireballMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ballmesh"));
 	FireballMesh->SetupAttachment(RootComponent);
 	Firetrail = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("FireTrail"));
+	Firetrail->SetupAttachment(FireballMesh);
 	
 	Firetrail->bAutoActivate = true;
 	Movement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement"));
@@ -90,7 +91,6 @@ void AFireball::CreateMesh(int PrimaryElementalPrefix)
 			}
 
 			//Fire
-			Firetrail->SetupAttachment(FireballMesh);
 			Firetrail->SetRelativeLocation(FVector(0.0f, 0.0f, 35.0f));
 			if (ParticleAsset_fire)
 			{
@@ -143,7 +143,7 @@ void AFireball::CreateMesh(int PrimaryElementalPrefix)
 
 				Firetrail->SetTemplate(ParticleAsset_sparks);
 				//Firetrail->SetupAttachment(FireballMesh);
-				Firetrail->SetupAttachment(FireballMesh);
+				//Firetrail->SetupAttachment(FireballMesh);
 
 				Firetrail->SetWorldScale3D(FVector(1.5f));
 			}
