@@ -1,0 +1,149 @@
+<html>
+	<head>
+	<link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	<script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+	<title>
+		classproject2character.cpp
+	</title>
+	<body onload="prettyPrint()">
+        <h4></h4>
+		<pre class="prettyprint lang-cpp linenums">
+// Copyright 1998-2016 Epic Games, Inc. All Rights Reserved.
+
+#include "ClassProject2.h"
+#include "Kismet/HeadMountedDisplayFunctionLibrary.h"
+#include "ClassProject2Character.h"
+
+//////////////////////////////////////////////////////////////////////////
+// AClassProject2Character
+
+AClassProject2Character::AClassProject2Character()
+<span style = "background-color:#dfd">{</span>
+	// Set size for collision capsule
+<span style = "background-color:#dfd">	GetCapsuleComponent()-&gt;InitCapsuleSize(42.f, 96.0f);</span>
+
+	// set our turn rates for input
+<span style = "background-color:#dfd">	BaseTurnRate = 45.f;
+	BaseLookUpRate = 45.f;</span>
+
+	// Don't rotate when the controller rotates. Let that just affect the camera.
+<span style = "background-color:#dfd">	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;</span>
+
+	// Configure character movement
+<span style = "background-color:#dfd">	GetCharacterMovement()-&gt;bOrientRotationToMovement = true; // Character moves in the direction of input...	
+	GetCharacterMovement()-&gt;RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
+	GetCharacterMovement()-&gt;JumpZVelocity = 600.f;
+	GetCharacterMovement()-&gt;AirControl = 0.2f;</span>
+
+	// Create a camera boom (pulls in towards the player if there is a collision)
+<span style = "background-color:#dfd">	CameraBoom = CreateDefaultSubobject&lt;USpringArmComponent&gt;(TEXT("CameraBoom"));
+	CameraBoom-&gt;SetupAttachment(RootComponent);
+	CameraBoom-&gt;TargetArmLength = 300.0f; // The camera follows at this distance behind the character	
+	CameraBoom-&gt;bUsePawnControlRotation = true; // Rotate the arm based on the controller</span>
+
+	// Create a follow camera
+<span style = "background-color:#dfd">	FollowCamera = CreateDefaultSubobject&lt;UCameraComponent&gt;(TEXT("FollowCamera"));
+	FollowCamera-&gt;SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
+	FollowCamera-&gt;bUsePawnControlRotation = false; // Camera does not rotate relative to arm</span>
+
+	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
+	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+<span style = "background-color:#dfd">}</span>
+
+//////////////////////////////////////////////////////////////////////////
+// Input
+
+void AClassProject2Character::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
+<span style = "background-color:#fdd">{</span>
+	// Set up gameplay key bindings
+<span style = "background-color:#fdd">	check(PlayerInputComponent);
+	PlayerInputComponent-&gt;BindAction("Jump", IE_Pressed, this, &amp;ACharacter::Jump);
+	PlayerInputComponent-&gt;BindAction("Jump", IE_Released, this, &amp;ACharacter::StopJumping);</span>
+
+<span style = "background-color:#fdd">	PlayerInputComponent-&gt;BindAxis("MoveForward", this, &amp;AClassProject2Character::MoveForward);
+	PlayerInputComponent-&gt;BindAxis("MoveRight", this, &amp;AClassProject2Character::MoveRight);</span>
+
+	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
+	// "turn" handles devices that provide an absolute delta, such as a mouse.
+	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
+<span style = "background-color:#fdd">	PlayerInputComponent-&gt;BindAxis("Turn", this, &amp;APawn::AddControllerYawInput);
+	PlayerInputComponent-&gt;BindAxis("TurnRate", this, &amp;AClassProject2Character::TurnAtRate);
+	PlayerInputComponent-&gt;BindAxis("LookUp", this, &amp;APawn::AddControllerPitchInput);
+	PlayerInputComponent-&gt;BindAxis("LookUpRate", this, &amp;AClassProject2Character::LookUpAtRate);</span>
+
+	// handle touch devices
+<span style = "background-color:#fdd">	PlayerInputComponent-&gt;BindTouch(IE_Pressed, this, &amp;AClassProject2Character::TouchStarted);
+	PlayerInputComponent-&gt;BindTouch(IE_Released, this, &amp;AClassProject2Character::TouchStopped);</span>
+
+	// VR headset functionality
+<span style = "background-color:#fdd">	PlayerInputComponent-&gt;BindAction("ResetVR", IE_Pressed, this, &amp;AClassProject2Character::OnResetVR);
+}</span>
+
+
+void AClassProject2Character::OnResetVR()
+<span style = "background-color:#fdd">{
+	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
+}</span>
+
+void AClassProject2Character::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
+<span style = "background-color:#fdd">{</span>
+	// jump, but only on the first touch
+<span style = "background-color:#fdd">	if (FingerIndex == ETouchIndex::Touch1)</span>
+	{
+<span style = "background-color:#fdd">		Jump();</span>
+	}
+<span style = "background-color:#fdd">}</span>
+
+void AClassProject2Character::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
+<span style = "background-color:#fdd">{
+	if (FingerIndex == ETouchIndex::Touch1)</span>
+	{
+<span style = "background-color:#fdd">		StopJumping();</span>
+	}
+<span style = "background-color:#fdd">}</span>
+
+void AClassProject2Character::TurnAtRate(float Rate)
+<span style = "background-color:#fdd">{</span>
+	// calculate delta for this frame from the rate information
+<span style = "background-color:#fdd">	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()-&gt;GetDeltaSeconds());
+}</span>
+
+void AClassProject2Character::LookUpAtRate(float Rate)
+<span style = "background-color:#fdd">{</span>
+	// calculate delta for this frame from the rate information
+<span style = "background-color:#fdd">	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()-&gt;GetDeltaSeconds());
+}</span>
+
+void AClassProject2Character::MoveForward(float Value)
+<span style = "background-color:#fdd">{
+	if ((Controller != NULL) &amp;&amp; (Value != 0.0f))</span>
+	{
+		// find out which way is forward
+<span style = "background-color:#fdd">		const FRotator Rotation = Controller-&gt;GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);</span>
+
+		// get forward vector
+<span style = "background-color:#fdd">		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		AddMovementInput(Direction, Value);</span>
+	}
+<span style = "background-color:#fdd">}</span>
+
+void AClassProject2Character::MoveRight(float Value)
+<span style = "background-color:#fdd">{
+	if ( (Controller != NULL) &amp;&amp; (Value != 0.0f) )</span>
+	{
+		// find out which way is right
+<span style = "background-color:#fdd">		const FRotator Rotation = Controller-&gt;GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);</span>
+	
+		// get right vector 
+<span style = "background-color:#fdd">		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);</span>
+		// add movement in that direction
+<span style = "background-color:#fdd">		AddMovementInput(Direction, Value);</span>
+	}
+<span style = "background-color:#fdd">}</span></pre>
+	</body>
+</html>

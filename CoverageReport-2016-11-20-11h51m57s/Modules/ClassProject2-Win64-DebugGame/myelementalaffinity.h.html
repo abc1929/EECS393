@@ -1,0 +1,76 @@
+<html>
+	<head>
+	<link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	<script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+	<title>
+		myelementalaffinity.h
+	</title>
+	<body onload="prettyPrint()">
+        <h4></h4>
+		<pre class="prettyprint lang-cpp linenums">
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "Components/ActorComponent.h"
+#include "MyElementalAffinity.generated.h"
+
+/**
+ * 
+ */
+UCLASS()
+class CLASSPROJECT2_API UMyElementalAffinity : public UActorComponent
+{
+<span style = "background-color:#fdd">	GENERATED_BODY()</span>
+
+	UMyElementalAffinity();
+	UMyElementalAffinity(TArray&lt;float&gt; elements);
+
+
+public:
+	float PenaltyCurve(float ratio);
+	void UpdateElements(float newamount, int element); //01234 -&gt; FELDI
+	void CalculateAffinities();
+
+	int GetAbilityElementalPrefix();
+	TArray&lt;float&gt; GetElements(); //raw
+	TArray&lt;float&gt; GetProcessedElementAffinities();
+	void CalculateMultipliers();
+	float opeCurve(float firstAffinity, float secondAffinity = 0, int AffinityCount = 1);
+	float opfCurve(float firstAffinity, float secondAffinity = 0, int AffinityCount = 1);
+	float optCurve(float affinity);
+
+	void UpdateAll(TArray&lt;float&gt; elements);
+	void Update();
+	TArray&lt;float&gt; Elements; //[8,3,7,2,0] FELDI
+	TArray&lt;float&gt; ProcessedElementAffinities; // Penalized Elements
+	int AbilityElementalPrefix; //majority of morphable abilities are determined by this (15 total)
+	int PrimaryElementalPrefix; //basic attack is only morphed on primary affinity (5 total)
+
+
+	float AtkSpeedMultiplier; //Fire, Lightning &lt;1.5, cast &amp; projectile speed
+	float AtkDmgMultiplier; //Darkness &lt;1.5
+	float MovSpeedMultiplier;  //Fire &lt;1.2
+	float CritChanceMultiplier; //Lightning &lt;1.8
+	float CritDmgMultiplier; //? Lightning, Darkness 1.5
+	float HPMultiplier; //Earth &lt;1.8
+	float MomentumResistanceMultiplier; //Earth &lt;1.2
+	float StamRegenMultiplier; //Ice &lt;1.5
+	float DefenseMultiplier; //Earth, Ice &lt;1.8
+
+
+	UFUNCTION() float GetAtkSpeedMultiplier();
+	UFUNCTION() float GetAtkDmgMultiplier();
+	UFUNCTION() float GetMovSpeedMultiplier();
+	UFUNCTION() float GetCritChanceMultiplier(); // Criting not implemented yet
+	UFUNCTION() float GetCritDmgMultiplier(); //
+	UFUNCTION() float GetHPMultiplier();
+	UFUNCTION() float GetMomentumResistanceMultiplier();
+	UFUNCTION() float GetStamRegenMultiplier();
+	UFUNCTION() float GetDefenseMultiplier();
+	
+	
+};</pre>
+	</body>
+</html>

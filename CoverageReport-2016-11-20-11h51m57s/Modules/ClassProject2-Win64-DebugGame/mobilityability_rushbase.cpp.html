@@ -1,0 +1,165 @@
+<html>
+	<head>
+	<link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	<script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+	<title>
+		mobilityability_rushbase.cpp
+	</title>
+	<body onload="prettyPrint()">
+        <h4></h4>
+		<pre class="prettyprint lang-cpp linenums">
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#include "ClassProject2.h"
+#include "public/Safevolume.h"
+#include &lt;algorithm&gt; 
+#include &lt;math.h&gt;  
+#include "MobilityAbility_RushBase.h"
+#include "public/MyCharacter.h"
+
+
+
+AMobilityAbility_RushBase::AMobilityAbility_RushBase(const class FObjectInitializer&amp; ObjectInitializer)
+<span style = "background-color:#dfd">{</span>
+	
+<span style = "background-color:#dfd">	PrimaryActorTick.bCanEverTick = true;</span>
+	//CustomOwner-&gt;MyAffinity = CreateDefaultSubobject&lt;UMyElementalAffinity&gt;(TEXT("Affinity"));
+	//CustomOwner-&gt;MyAffinity-&gt;RegisterComponent();
+<span style = "background-color:#dfd">	if (Cast&lt;AMyCharacter&gt;(CustomOwner)) {</span>
+<span style = "background-color:#fdd">		GEngine-&gt;AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("I Have a owner!" + CustomOwner-&gt;GetName()));</span>
+	}
+<span style = "background-color:#dfd">	auto Collision = CreateDefaultSubobject&lt;UCapsuleComponent&gt;(TEXT("RootComponent_Collision"));
+	Collision-&gt;SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);</span>
+
+	//AttachToActor(Owner, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
+	//AttachToActor(CustomOwner, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
+
+
+<span style = "background-color:#dfd">	Collision-&gt;InitCapsuleSize(90.f, 110.0f);
+	RootComponent = Collision;
+	Collision-&gt;SetCollisionProfileName(TEXT("Character Collision Enlarged"));
+	Collision-&gt;OnComponentBeginOverlap.AddDynamic(this, &amp;AMobilityAbility_RushBase::OnStartOverlapping);</span>
+	//Base rush distance 1000
+	//Base dmg
+	//Base momentum -&gt; speed
+	
+<span style = "background-color:#dfd">	Movement = CreateDefaultSubobject&lt;UProjectileMovementComponent&gt;(TEXT("Movement"));
+	Movement-&gt;UpdatedComponent = Collision;</span>
+
+
+	//float test = Cast&lt;AMyCharacter&gt;(CustomOwner)-&gt;GetAtkSpeedMultiplier();
+<span style = "background-color:#dfd">	if (CustomOwner!=nullptr)</span>
+	{
+<span style = "background-color:#fdd">		Movement-&gt;InitialSpeed = 1000.f *std::pow(CustomOwner-&gt;MyAffinity-&gt;GetAtkSpeedMultiplier(), 1.5) * CustomOwner-&gt;MyAffinity-&gt;GetMovSpeedMultiplier(); // 0.5 power from atkspd is actual weight, 1.0 to counter mycharacter side
+		Movement-&gt;MaxSpeed = 1000.f *std::pow(CustomOwner-&gt;MyAffinity-&gt;GetAtkSpeedMultiplier(), 1.5) * CustomOwner-&gt;MyAffinity-&gt;GetMovSpeedMultiplier();
+		if (GEngine) {
+			GEngine-&gt;AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Rushspeed buffed!"));
+			GEngine-&gt;AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(Movement-&gt;InitialSpeed));</span>
+		}	
+	}
+<span style = "background-color:#fdd">	else</span>
+	{	
+<span style = "background-color:#dfd">		FString sd = "sd";
+		if(GetRootComponent())
+			FString sd = GetRootComponent()-&gt;GetName();
+		Movement-&gt;InitialSpeed = 1.f;
+		Movement-&gt;MaxSpeed = 30000.f;</span>
+	}
+<span style = "background-color:#dfd">	Movement-&gt;bRotationFollowsVelocity = false;
+	Movement-&gt;ProjectileGravityScale = 0.0f;</span>
+	
+<span style = "background-color:#dfd">}</span>
+
+void AMobilityAbility_RushBase::BeginPlay()
+<span style = "background-color:#dfd">{
+	Super::BeginPlay();
+	this-&gt;SetLifeSpan(3.f);
+	if (CustomOwner != nullptr)</span>
+	{
+<span style = "background-color:#dfd">		Movement-&gt;Velocity = Movement-&gt;Velocity * 1000;
+		Movement-&gt;Velocity = Movement-&gt;Velocity *std::pow(CustomOwner-&gt;MyAffinity-&gt;GetAtkSpeedMultiplier(), 1.5) * CustomOwner-&gt;MyAffinity-&gt;GetMovSpeedMultiplier(); // 0.5 power from atkspd is actual weight, 1.0 to counter mycharacter side
+		Movement-&gt;UpdateComponentVelocity();</span>
+		//Movement-&gt;MaxSpeed = 1000.f *std::pow(CustomOwner-&gt;MyAffinity-&gt;GetAtkSpeedMultiplier(), 1.5) * CustomOwner-&gt;MyAffinity-&gt;GetMovSpeedMultiplier();
+<span style = "background-color:#dfd">		if (GEngine) {
+			GEngine-&gt;AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Rushspeed buffed!"));
+			GEngine-&gt;AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(Movement-&gt;Velocity.Size()));</span>
+		}
+	}
+<span style = "background-color:#dfd">	else</span>
+	{
+<span style = "background-color:#fdd">		FString sd = "sd";
+		if (GetRootComponent())
+			FString sd = GetRootComponent()-&gt;GetName();
+		Movement-&gt;InitialSpeed = 1000.f;
+		Movement-&gt;MaxSpeed = 1000.f;</span>
+	}
+<span style = "background-color:#dfd">}</span>
+
+
+AMobilityAbility_RushBase::~AMobilityAbility_RushBase()
+<span style = "background-color:#dfd">{</span>
+	//auto Owner = Cast&lt;AMyCharacter&gt;(CustomOwner);
+	//Owner-&gt;GainController();
+<span style = "background-color:#dfd">	if (IsRooted())
+		RemoveFromRoot();
+}</span>
+
+
+
+
+void AMobilityAbility_RushBase::OnStartOverlapping(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult&amp; SweepResult)
+<span style = "background-color:#dfd">{
+	if (CustomOwner != OtherActor &amp;&amp; !OtherActor-&gt;IsA(ASafevolume::StaticClass())) //hit something valid</span>
+	{	
+<span style = "background-color:#dfd">		if (GEngine)
+			GEngine-&gt;AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(CustomOwner-&gt;MyAffinity-&gt;GetHPMultiplier()));
+		Deactivate();</span>
+		//Movement-&gt;DestroyComponent();
+<span style = "background-color:#dfd">		UWorld* const World = GetWorld();
+		Cast&lt;AMyCharacter&gt;(CustomOwner)-&gt;isCharging = false;
+		Cast&lt;AMyCharacter&gt;(CustomOwner)-&gt;EnableInput(World-&gt;GetFirstPlayerController());
+		if (AMyCharacter* targethit = Cast&lt;AMyCharacter&gt;(OtherActor)) {
+			if (targethit != CustomOwner)</span>
+			{
+<span style = "background-color:#dfd">				Knockbackstep = this-&gt;GetVelocity() / 500;
+				if (GEngine)
+					GEngine-&gt;AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Waaa RushBase Test!"));</span>
+
+				
+<span style = "background-color:#dfd">				targethit-&gt;TakeDmg(15.0f * Cast&lt;AMyCharacter&gt;(CustomOwner)-&gt;MyAffinity-&gt;GetAtkDmgMultiplier());
+				FTimerDelegate TimerDel;
+				TimerDel.BindUFunction(this, FName("Knockback"), targethit);
+				World-&gt;GetTimerManager().SetTimer(KnockbackTimerHandle, TimerDel, 0.01f, true, 0.f);</span>
+			}
+<span style = "background-color:#dfd">			this-&gt;SetActorHiddenInGame(true);
+			this-&gt;SetActorEnableCollision(false);</span>
+		}
+	}
+<span style = "background-color:#dfd">}</span>
+
+void AMobilityAbility_RushBase::Knockback(AMyCharacter* InflictedTarget)
+<span style = "background-color:#dfd">{</span>
+	//possible to do AOE this way as well, but right now we're just doing single target
+<span style = "background-color:#dfd">	InflictedTarget-&gt;AddActorWorldOffset(Knockbackstep / InflictedTarget-&gt;MyAffinity-&gt;GetMomentumResistanceMultiplier()); //maybe even square the multiplier if gameplay wise knockback resistance too underpowered</span>
+
+<span style = "background-color:#dfd">	if (increments &gt;= 100)</span>
+	{
+		//if (GEngine)
+		//	GEngine-&gt;AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Some debug message!"));
+<span style = "background-color:#dfd">		UWorld* const World = GetWorld();
+		World-&gt;GetTimerManager().ClearTimer(KnockbackTimerHandle);</span>
+		//auto Owner = Cast&lt;AMyCharacter&gt;(CustomOwner);
+		//Owner-&gt;SetActorEnableCollision(true);
+<span style = "background-color:#dfd">		Destroy();</span>
+	}
+<span style = "background-color:#dfd">	increments++;
+}</span>
+
+void AMobilityAbility_RushBase::Deactivate()
+<span style = "background-color:#dfd">{
+	Movement-&gt;DestroyComponent();
+	this-&gt;SetActorEnableCollision(false);
+}</span></pre>
+	</body>
+</html>
