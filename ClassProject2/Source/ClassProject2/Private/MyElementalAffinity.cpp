@@ -17,6 +17,7 @@ UMyElementalAffinity::UMyElementalAffinity()
 UMyElementalAffinity::UMyElementalAffinity(TArray<float> elements)
 {
 	Elements = elements;
+	ProcessedElementAffinities.Init(0, 5);
 	CalculateAffinities();
 	CalculateMultipliers();
 	if (Cast<AMyCharacter>(GetOwner()))
@@ -147,7 +148,7 @@ void UMyElementalAffinity::CalculateAffinities()
 		{
 			//elemental supressions, let's say you have 2 ice and 5 fire, it would be the tipping point where fire gets penalized
 			//while if you have 6 fire then you won't
-			if (weight[index % 5] == 0 || weight[(index + 1) % 5]) //compiler is kinda dumb
+			if (weight[index % 5] == 0 || weight[(index + 1) % 5] == 0) //compiler is kinda dumb
 				continue;
 			if (weight[index % 5] / weight[(index + 1) % 5] > 0.4) {
 				penalty[(index + 1) % 5] = std::min(PenaltyCurve(weight[index % 5] / weight[(index + 1) % 5]), 0.25f);

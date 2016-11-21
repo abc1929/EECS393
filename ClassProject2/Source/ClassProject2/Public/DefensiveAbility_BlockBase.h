@@ -13,7 +13,11 @@ class CLASSPROJECT2_API ADefensiveAbility_BlockBase : public ADefensiveAbility
 {
 	GENERATED_BODY()
 	
-	
+public:
+	virtual void BeginPlay() override;
+
+	ADefensiveAbility_BlockBase(const class FObjectInitializer& ObjectInitializer);
+	//~ADefensiveAbility_BlockBase();
 	
 	
 };

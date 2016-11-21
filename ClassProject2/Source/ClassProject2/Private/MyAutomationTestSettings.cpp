@@ -53,7 +53,7 @@ bool FMyCharacterAffin2Test::RunTest(const FString& Parameters)
 	{
 		AMyCharacter* t = NewObject<AMyCharacter>();
 		t->MyAffinity->UpdateElements(2, 0);
-		TestEqual(TEXT("Prefix changed"), t->MyAffinity->GetAbilityElementalPrefix(), 0);
+		TestEqual(TEXT("Prefix changed" + FString::FromInt(t->MyAffinity->GetAbilityElementalPrefix())), t->MyAffinity->GetAbilityElementalPrefix(), 0);
 		t->MyAffinity->UpdateElements(1, 3);
 		TestEqual(TEXT("Prefix Not changed, primary element not high enough"), t->MyAffinity->GetAbilityElementalPrefix(), 0);
 		t->Destroy();

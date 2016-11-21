@@ -6,3 +6,12 @@
 
 
 
+ADefensiveAbility_BlockBase::ADefensiveAbility_BlockBase(const class FObjectInitializer& ObjectInitializer)
+{
+	
+}
+
+void ADefensiveAbility_BlockBase::BeginPlay() 
+{
+
+}
