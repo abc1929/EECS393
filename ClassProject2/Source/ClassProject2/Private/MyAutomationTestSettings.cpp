@@ -39,7 +39,7 @@ bool FMyCharacterAffin1Test::RunTest(const FString& Parameters)
 		TestEqual(TEXT("Prefix changed again"), t->MyAffinity->GetAbilityElementalPrefix(), 21);
 		t->MyAffinity->UpdateElements(9, 2);
 		TestEqual(TEXT("Prefix changed to singular"), t->MyAffinity->GetAbilityElementalPrefix(), 2);
-		TestNotEqual(TEXT("CritChanceMultiplier changed"), t->GetCritChanceMultiplier(), 1.0f);
+		TestNotEqual(TEXT("CritChanceMultiplier changed to " + FString::SanitizeFloat(t->GetCritChanceMultiplier())), t->GetCritChanceMultiplier(), 1.0f);
 		t->Destroy();
 	}
 
