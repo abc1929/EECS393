@@ -39,7 +39,7 @@ bool FMyCharacterAffin1Test::RunTest(const FString& Parameters)
 		TestEqual(TEXT("Prefix changed again"), t->MyAffinity->GetAbilityElementalPrefix(), 21);
 		t->MyAffinity->UpdateElements(9, 2);
 		TestEqual(TEXT("Prefix changed to singular"), t->MyAffinity->GetAbilityElementalPrefix(), 2);
-		TestNotEqual(TEXT("CritChanceMultiplier changed"), t->GetCritChanceMultiplier(), 1.0f);
+		TestNotEqual(TEXT("CritChanceMultiplier changed to " + FString::SanitizeFloat(t->GetCritChanceMultiplier())), t->GetCritChanceMultiplier(), 1.0f);
 		t->Destroy();
 	}
 
@@ -53,7 +53,7 @@ bool FMyCharacterAffin2Test::RunTest(const FString& Parameters)
 	{
 		AMyCharacter* t = NewObject<AMyCharacter>();
 		t->MyAffinity->UpdateElements(2, 0);
-		TestEqual(TEXT("Prefix changed"), t->MyAffinity->GetAbilityElementalPrefix(), 0);
+		TestEqual(TEXT("Prefix changed" + FString::FromInt(t->MyAffinity->GetAbilityElementalPrefix())), t->MyAffinity->GetAbilityElementalPrefix(), 0);
 		t->MyAffinity->UpdateElements(1, 3);
 		TestEqual(TEXT("Prefix Not changed, primary element not high enough"), t->MyAffinity->GetAbilityElementalPrefix(), 0);
 		t->Destroy();

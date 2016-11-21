@@ -25,11 +25,11 @@ AMyCharacter::AMyCharacter()
 	CurrentCastElapse = 0.f;
 	MyAffinity = CreateDefaultSubobject<UMyElementalAffinity>(TEXT("Affinity"));
 	//debug
-	MyAffinity->UpdateElements(5, 0); //Fire
-	MyAffinity->UpdateElements(4, 1); //Earth
-	MyAffinity->UpdateElements(8, 2); //Lightning
-	MyAffinity->UpdateElements(7, 3); //Darkness
-	MyAffinity->UpdateElements(2, 4); //Ice
+	//MyAffinity->UpdateElements(5, 0); //Fire
+	//MyAffinity->UpdateElements(4, 1); //Earth
+	//MyAffinity->UpdateElements(8, 2); //Lightning
+	//MyAffinity->UpdateElements(7, 3); //Darkness
+	//MyAffinity->UpdateElements(2, 4); //Ice
 
 	//MyAffinity->RegisterComponent();
 
@@ -276,7 +276,7 @@ void AMyCharacter::SetHP(float hp)
 void AMyCharacter::TakeDmg(float x, bool canReduce)
 {
 	if(canReduce)
-		SetHP(GetHP() - x/(1.2*MyAffinity->GetDefenseMultiplier()));
+		SetHP(GetHP() - x/MyAffinity->GetDefenseMultiplier());
 	else 
 		SetHP(GetHP() - x);
 }
@@ -288,7 +288,7 @@ void AMyCharacter::TakingForceFieldDamage(bool yeah)
 	if (InForceField)
 	{
 		FTimerDelegate TimerDel;
-		TimerDel.BindUFunction(this, FName("TakeDmg"), 0.5f);
+		TimerDel.BindUFunction(this, FName("TakeDmg"), 0.5f, false);
 		World->GetTimerManager().SetTimer(DamageTimer, TimerDel, 0.1f, true, 0.f);
 	}
 	else
