@@ -19,6 +19,7 @@ class CLASSPROJECT2_API UMyElementalAffinity : public UActorComponent
 
 public:
 	float PenaltyCurve(float ratio);
+	UFUNCTION(BlueprintCallable, Category = "Affin")
 	void UpdateElements(float newamount, int element); //01234 -> FELDI
 	void CalculateAffinities();
 
@@ -30,6 +31,7 @@ public:
 	float opfCurve(float firstAffinity, float secondAffinity = 0, int AffinityCount = 1);
 	float optCurve(float affinity);
 
+	UFUNCTION(BlueprintCallable, Category = "Affin")
 	void UpdateAll(TArray<float> elements);
 	void Update();
 	TArray<float> Elements; //[8,3,7,2,0] FELDI

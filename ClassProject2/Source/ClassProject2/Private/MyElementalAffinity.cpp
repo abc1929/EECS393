@@ -32,6 +32,8 @@ void UMyElementalAffinity::UpdateElements(float newamount, int element) //01234 
 	CalculateMultipliers();
 	if (Cast<AMyCharacter>(GetOwner()))
 		Cast<AMyCharacter>(GetOwner())->UpdateStats();
+	if(GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("New affinities set"));
 }
 
 void UMyElementalAffinity::Update()

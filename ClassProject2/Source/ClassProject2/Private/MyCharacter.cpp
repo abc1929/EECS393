@@ -21,6 +21,7 @@ AMyCharacter::AMyCharacter()
 	this->GetCharacterMovement()->MaxWalkSpeed = DefaultNormalSpeed;
 	exhausted = false;
 	CanJumpOverload = false;
+	BasicAttackCDFinished = true; MobilityAbilityCDFinished = true;
 	CurrentCastElapse = 0.f;
 	MyAffinity = CreateDefaultSubobject<UMyElementalAffinity>(TEXT("Affinity"));
 	//debug
@@ -47,6 +48,8 @@ AMyCharacter::AMyCharacter()
 
 	static ConstructorHelpers::FObjectFinder<UAnimBlueprint> MeshAnim(TEXT("AnimBlueprint'/Game/Mannequin/Animations/ThirdPerson_AnimBP.ThirdPerson_AnimBP'"));
 	
+
+	// this part doesnt work in packaged game. Maybe have to wrap the character in a Blueprint class at the end.
 	if (MeshAnim.Object) 
 	{
 		SampleBP = MeshAnim.Object;
@@ -93,9 +96,11 @@ void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	//debug
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(MyAffinity->GetAtkDmgMultiplier()));
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(MyAffinity->GetAbilityElementalPrefix()));
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(MyAffinity->GetCritDmgMultiplier()));
+	if (IsPlayerControlled()) {
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(MyAffinity->GetAtkDmgMultiplier()));
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(MyAffinity->GetAbilityElementalPrefix()));
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(MyAffinity->GetCritDmgMultiplier()));
+	}
 	UWorld* const World = GetWorld();
 	FTimerDelegate TimerDele;
 	TimerDele.BindUFunction(this, FName("StaminaIncrease"), 1.0f); // multiplier handled in StaminaIncrease
@@ -343,6 +348,7 @@ bool AMyCharacter::IsAlive() const
 //  OnCast();
 void AMyCharacter::OnCast()
 {
+	if (!BasicAttackCDFinished) { return; }
 	CurrentCastSuccess = false;
 	FTimerDelegate TimerDel;
 	UWorld* const World = GetWorld();
@@ -365,20 +371,26 @@ void AMyCharacter::CastIncrement(float RequiredTime)
 	}
 	CurrentCastElapse += 0.01f;
 }
-// need handle later if we would cast something else rather than basic attack - nvm we only have 5 abilities, just write more functions
+// this only casts basic attack despite the name
 void AMyCharacter::CastAbility()
 {
-	if (!CurrentCastSuccess) 
+	if (!CurrentCastSuccess)
 	{
 		CurrentCastElapse = 0;
 		return; 
+		// exit function call
 	}
+	if (!BasicAttackCDFinished) { return; }
+
+
 	// try and fire a projectile
 	UWorld* const World = GetWorld();
 	if (World != NULL)
 	{
 		World->GetTimerManager().ClearTimer(CastTimer);
-
+		World->GetTimerManager().SetTimer(BasicAttackCD, this, &AMyCharacter::BasicAttackCDRefresh, 3.f, false);
+		//consume stamina
+		StaminaIncrease(-20);
 		const FRotator SpawnRotation = GetControlRotation();
 		const FVector SpawnLocation = GetActorLocation() + 150 * FRotationMatrix(SpawnRotation).GetScaledAxis(EAxis::X);
 
@@ -393,15 +405,26 @@ void AMyCharacter::CastAbility()
 		}
 		CurrentCastSuccess = false;
 		CurrentCastElapse = 0;
+		BasicAttackCDFinished = false;
 	}
 }
 
 void AMyCharacter::CastMobilityAbility()
 {
+
+	if (!MobilityAbilityCDFinished)
+	{
+		return;
+		// exit function call
+	}
+
 	UWorld* const World = GetWorld();
 	if (World != NULL)
 	{
 		//GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+		World->GetTimerManager().SetTimer(MobilityAbilityCD, this, &AMyCharacter::MobilityAbilityCDRefresh, 8.f, false);
+
+		StaminaIncrease(-20);
 		FRotator SpawnRotation = GetControlRotation();
 		const FVector SpawnLocation = GetActorLocation();
 		FActorSpawnParameters params2;
@@ -422,6 +445,7 @@ void AMyCharacter::CastMobilityAbility()
 			UGameplayStatics::FinishSpawningActor(AbilityCasing, SpawnTransform);
 
 		}
+		MobilityAbilityCDFinished = false;
 
 		//debug
 		//I assume that this part is messing with owner passing
@@ -441,6 +465,7 @@ void AMyCharacter::CastMobilityAbility()
 		//GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
 		World->GetTimerManager().SetTimer(CastTimer, local2, 1.0f/ MyAffinity->GetAtkSpeedMultiplier(), false);
 		isCharging = true;
+		
 	}
 }
 
@@ -473,9 +498,9 @@ void AMyCharacter::GainController(AActor* effect)//, UProjectileMovementComponen
 // float GetCurrentCastMax() const;
 
 //Char Progression
-//UMyElementalAffinity* AMyCharacter::GetAffinity() {
-//	return MyAffinity;
-//}
+UMyElementalAffinity* AMyCharacter::GetAffinity() {
+	return MyAffinity;
+}
 
 
 // Can't access affinity directly from other class? have to do this
@@ -501,3 +526,11 @@ void AMyCharacter::UpdateStats()
 
 //Misc
 //Timing
+void AMyCharacter::BasicAttackCDRefresh() { BasicAttackCDFinished = true; UWorld* const World = GetWorld(); 
+if (World != NULL)
+	World->GetTimerManager().ClearTimer(BasicAttackCD);
+}
+void AMyCharacter::MobilityAbilityCDRefresh() { MobilityAbilityCDFinished = true; UWorld* const World = GetWorld();
+if (World != NULL)
+	World->GetTimerManager().ClearTimer(MobilityAbilityCD);
+}

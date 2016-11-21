@@ -141,7 +141,12 @@ public:
 	FTimerHandle SprintTimer;
 	FTimerHandle CastTimer;
 
-
+	FTimerHandle BasicAttackCD;
+	bool BasicAttackCDFinished;
+	void BasicAttackCDRefresh();
+	FTimerHandle MobilityAbilityCD;
+	bool MobilityAbilityCDFinished;
+	void MobilityAbilityCDRefresh();
 	//Character progression records
 	
 	//beginning of each round gets 3 points, 21 totals
@@ -152,8 +157,8 @@ public:
 
 	//TSubclassOf<class UMyElementalAffinity> MyAffinity;
 
-	//UFUNCTION()
-	//UMyElementalAffinity* GetAffinity();
+	UFUNCTION(BlueprintCallable, Category = "Affin")
+	UMyElementalAffinity* GetAffinity();
 	//float BaseDmgReduction = 0.2f;
 	//float EFire;
 	//float EEarth;

@@ -15,9 +15,7 @@ AMobilityAbility_RushBase::AMobilityAbility_RushBase(const class FObjectInitiali
 	PrimaryActorTick.bCanEverTick = true;
 	//CustomOwner->MyAffinity = CreateDefaultSubobject<UMyElementalAffinity>(TEXT("Affinity"));
 	//CustomOwner->MyAffinity->RegisterComponent();
-	if (Cast<AMyCharacter>(CustomOwner)) {
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("I Have a owner!" + CustomOwner->GetName()));
-	}
+
 	auto Collision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("RootComponent_Collision"));
 	Collision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 
@@ -37,24 +35,8 @@ AMobilityAbility_RushBase::AMobilityAbility_RushBase(const class FObjectInitiali
 	Movement->UpdatedComponent = Collision;
 
 
-	//float test = Cast<AMyCharacter>(CustomOwner)->GetAtkSpeedMultiplier();
-	if (CustomOwner!=nullptr)
-	{
-		Movement->InitialSpeed = 1000.f *std::pow(CustomOwner->MyAffinity->GetAtkSpeedMultiplier(), 1.5) * CustomOwner->MyAffinity->GetMovSpeedMultiplier(); // 0.5 power from atkspd is actual weight, 1.0 to counter mycharacter side
-		Movement->MaxSpeed = 1000.f *std::pow(CustomOwner->MyAffinity->GetAtkSpeedMultiplier(), 1.5) * CustomOwner->MyAffinity->GetMovSpeedMultiplier();
-		if (GEngine) {
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Rushspeed buffed!"));
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(Movement->InitialSpeed));
-		}	
-	}
-	else
-	{	
-		FString sd = "sd";
-		if(GetRootComponent())
-			FString sd = GetRootComponent()->GetName();
-		Movement->InitialSpeed = 1.f;
-		Movement->MaxSpeed = 30000.f;
-	}
+	Movement->InitialSpeed = 100.f;
+	Movement->MaxSpeed = 30000.f;
 	Movement->bRotationFollowsVelocity = false;
 	Movement->ProjectileGravityScale = 0.0f;
 	
@@ -66,23 +48,42 @@ void AMobilityAbility_RushBase::BeginPlay()
 	this->SetLifeSpan(3.f);
 	if (CustomOwner != nullptr)
 	{
-		Movement->Velocity = Movement->Velocity * 1000;
+		Movement->Velocity = Movement->Velocity * 10;
 		Movement->Velocity = Movement->Velocity *std::pow(CustomOwner->MyAffinity->GetAtkSpeedMultiplier(), 1.5) * CustomOwner->MyAffinity->GetMovSpeedMultiplier(); // 0.5 power from atkspd is actual weight, 1.0 to counter mycharacter side
+		BaseVelocity = Movement->Velocity;
 		Movement->UpdateComponentVelocity();
 		//Movement->MaxSpeed = 1000.f *std::pow(CustomOwner->MyAffinity->GetAtkSpeedMultiplier(), 1.5) * CustomOwner->MyAffinity->GetMovSpeedMultiplier();
 		if (GEngine) {
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Rushspeed buffed!"));
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Rushspeed buffed!, and elemental is " + FString::FromInt(CustomOwner->MyAffinity->GetAbilityElementalPrefix())));
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(Movement->Velocity.Size()));
+		}
+
+
+		switch (CustomOwner->MyAffinity->GetAbilityElementalPrefix())
+		{
+			case 0: {
+				break;
+			}
+
+			case 2:  //lightning based rush, will have slight zigzag movement
+			case 21:
+			case 20: {
+				Zigzag(0);
+				break;
+			}
+
+			default:
+				break;
 		}
 	}
 	else
 	{
-		FString sd = "sd";
-		if (GetRootComponent())
-			FString sd = GetRootComponent()->GetName();
 		Movement->InitialSpeed = 1000.f;
-		Movement->MaxSpeed = 1000.f;
+		Movement->MaxSpeed = 50000.f;
 	}
+
+
+
 }
 
 
@@ -94,7 +95,34 @@ AMobilityAbility_RushBase::~AMobilityAbility_RushBase()
 		RemoveFromRoot();
 }
 
+void AMobilityAbility_RushBase::Zigzag(int count)
+{
+	UWorld* const World = GetWorld();
+	Movement->UpdateComponentVelocity();
 
+	World->GetTimerManager().ClearTimer(ZigzagTimerHandle);
+	FTimerDelegate TimerDel;
+	if (count == 0) {
+
+		Movement->Velocity = BaseVelocity - 0.25 * FVector(-(BaseVelocity.Y), BaseVelocity.X, 0);
+		Zigzag(1);
+	}
+	if (count == 1) {
+
+		TimerDel.BindUFunction(this, FName("Zigzag"), 2);
+		World->GetTimerManager().SetTimer(ZigzagTimerHandle, TimerDel, 0.2f, false, -0.2f);
+		Movement->Velocity = BaseVelocity + 0.5*FVector(-(BaseVelocity.Y), BaseVelocity.X, 0);
+		
+	}
+
+	if (count == 2) {
+		TimerDel.BindUFunction(this, FName("Zigzag"), 1);
+		World->GetTimerManager().SetTimer(ZigzagTimerHandle, TimerDel, 0.2f, false, -0.2f);
+		Movement->Velocity = BaseVelocity + 0.5*FVector(BaseVelocity.Y, -(BaseVelocity.X), 0);
+		//Movement->Velocity = Movement->Velocity + Movement->Velocity.RightVector * 2500;
+		
+	}
+}
 
 
 void AMobilityAbility_RushBase::OnStartOverlapping(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -111,9 +139,9 @@ void AMobilityAbility_RushBase::OnStartOverlapping(UPrimitiveComponent* Overlapp
 		if (AMyCharacter* targethit = Cast<AMyCharacter>(OtherActor)) {
 			if (targethit != CustomOwner)
 			{
-				Knockbackstep = this->GetVelocity() / 500;
-				if (GEngine)
-					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Waaa RushBase Test!"));
+				Knockbackstep = this->BaseVelocity / 500;
+				//if (GEngine)
+				//	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Waaa RushBase Test!"));
 
 				
 				targethit->TakeDmg(15.0f * Cast<AMyCharacter>(CustomOwner)->MyAffinity->GetAtkDmgMultiplier());

@@ -32,9 +32,14 @@ public:
 	UFUNCTION()
 	void Knockback(AMyCharacter* InflictedTarget);
 
+	UFUNCTION()
+	void Zigzag(int count);
+
 	bool KBTimerExpired;
 	FTimerHandle KnockbackTimerHandle;
+	FTimerHandle ZigzagTimerHandle;
 	FVector Knockbackstep;
+	FVector BaseVelocity;
 	int increments;
 
 	UPROPERTY()
