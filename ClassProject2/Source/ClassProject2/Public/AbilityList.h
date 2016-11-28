@@ -1,3 +1,7 @@
 #include "public/MobilityAbility_RushBase.h"
+#include "public/MobilityAbility_RushBase_Effect.h"
 #include "public/OffensiveAbility_WaveBase.h"
+#include "public/DefensiveAbility_BlockBase.h"
+#include "public/UtilityAbility_Lasso.h"
 #include "public/Fireball.h"
+#include "public/Fireball_Effect.h"

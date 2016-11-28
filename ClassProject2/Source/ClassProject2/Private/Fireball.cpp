@@ -209,7 +209,11 @@ void AFireball::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimiti
 		else 
 		//more complex damage inflicting mechanisms can be implemented
 		{ 
-			targethit->TakeDmg(15.0f * Cast<AMyCharacter>(CustomOwner)->MyAffinity->GetAtkDmgMultiplier());
+			targethit->TakeDmg(
+				Cast<AMyCharacter>(CustomOwner)->AtkDebuffMultiplier 
+				* 15.0f 
+				* Cast<AMyCharacter>(CustomOwner)->MyAffinity->GetAtkDmgMultiplier()
+			);
 			UWorld* const World = GetWorld();
 			FTimerDelegate TimerDel;
 			TimerDel.BindUFunction(this, FName("Knockback"), targethit);

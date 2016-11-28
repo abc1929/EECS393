@@ -144,7 +144,11 @@ void AMobilityAbility_RushBase::OnStartOverlapping(UPrimitiveComponent* Overlapp
 				//	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Waaa RushBase Test!"));
 
 				
-				targethit->TakeDmg(15.0f * Cast<AMyCharacter>(CustomOwner)->MyAffinity->GetAtkDmgMultiplier());
+				targethit->TakeDmg(
+					Cast<AMyCharacter>(CustomOwner)->AtkDebuffMultiplier 
+					* 15.0f 
+					* Cast<AMyCharacter>(CustomOwner)->MyAffinity->GetAtkDmgMultiplier()
+				);
 				FTimerDelegate TimerDel;
 				TimerDel.BindUFunction(this, FName("Knockback"), targethit);
 				World->GetTimerManager().SetTimer(KnockbackTimerHandle, TimerDel, 0.01f, true, 0.f);

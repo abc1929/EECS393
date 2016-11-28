@@ -27,9 +27,9 @@ public:
 	TArray<float> GetElements(); //raw
 	TArray<float> GetProcessedElementAffinities();
 	void CalculateMultipliers();
-	float opeCurve(float firstAffinity, float secondAffinity = 0, int AffinityCount = 1);
-	float opfCurve(float firstAffinity, float secondAffinity = 0, int AffinityCount = 1);
-	float optCurve(float affinity);
+	static float opeCurve(float firstAffinity, float secondAffinity = 0, int AffinityCount = 1);
+	static float opfCurve(float firstAffinity, float secondAffinity = 0, int AffinityCount = 1);
+	static float optCurve(float affinity);
 
 	UFUNCTION(BlueprintCallable, Category = "Affin")
 	void UpdateAll(TArray<float> elements);

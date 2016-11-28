@@ -64,6 +64,7 @@ public:
 
 	float SprintSpeedModifier;
 	float DefaultNormalSpeed;
+	float CurrentNormalSpeed;
 
 	bool InForceField;
 
@@ -76,12 +77,12 @@ public:
 	void SetHP(float hp);
 
 	UFUNCTION()
-	void TakeDmg(float x, bool canReduce=false);
+	void TakeDmg(float x, bool canReduce=true); //only forcefield dmg is not reduced, maybe some other manually specified
 
 	UFUNCTION()
 	void TakingForceFieldDamage(bool yeah);
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, Category="stam")
 	float GetMaxStamina() const;
 
 	UFUNCTION()
@@ -200,6 +201,11 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	UAnimBlueprint* SampleBP;
+
+	//debuff multipliers from abilities
+
+	float DefDebuffMultiplier;
+	float AtkDebuffMultiplier;
 
 
 // camera collision

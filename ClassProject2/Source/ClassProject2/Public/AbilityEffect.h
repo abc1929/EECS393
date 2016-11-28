@@ -9,7 +9,7 @@ class AAbility;
 
 // UE4's internal objects don't really do true abstract since they need to exist in some instance that you run
 // we use macro to do abstract methods
-UCLASS(ABSTRACT)
+UCLASS()
 class CLASSPROJECT2_API AAbilityEffect : public AActor
 {
 	GENERATED_BODY()
@@ -28,9 +28,7 @@ public:
 private:
 	float duration; //0 for apply once instantly
 	int effectElementalType; //what elemental type this effect is 
-	int priority; //when does this effect occurs in the enire list
 	float tickInterval; //for dot and such, 0 for instant
-	int effectCategory; //offensive? basic? 
 
 
 	float totalDmg;
@@ -55,11 +53,11 @@ private:
 
 	// example other effect: slow(boost speed), stun, immobilize (slow 100%), dmg(heal)
 	virtual float movSlowCurve(float t) PURE_VIRTUAL(AAbilityEffect::movSlowCurve, return 1;);
-	virtual float stunCurve(float t) PURE_VIRTUAL(AAbilityEffect::stunCurve, return 1;);
+	virtual bool stunCurve(float t) PURE_VIRTUAL(AAbilityEffect::stunCurve, return 1;);
 	virtual float atkSlowCurve(float t) PURE_VIRTUAL(AAbilityEffect::atkSlowCurve, return 1;);
 
 	//regen suppression? defense boost, attack dmg boost? assume all negative effects, but can be written other way 
-	virtual float defWeakenCurve(float t) PURE_VIRTUAL(AAbilityEffect::atkWeakenCurve, return 1;);
+	virtual float defWeakenCurve(float t) PURE_VIRTUAL(AAbilityEffect::defWeakenCurve, return 1;);
 	virtual float atkWeakenCurve(float t) PURE_VIRTUAL(AAbilityEffect::atkWeakenCurve, return 1;);
 
 
