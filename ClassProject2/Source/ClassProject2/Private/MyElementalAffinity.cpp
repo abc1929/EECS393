@@ -217,8 +217,17 @@ int UMyElementalAffinity::GetAbilityElementalPrefix()
 	return AbilityElementalPrefix;
 }
 
+// it's kinda messy how the debuffs are handled. there are some implemented from MyChar side
+// some might be here. These are justifiable considering convenience
 float UMyElementalAffinity::GetAtkSpeedMultiplier() { return AtkSpeedMultiplier; }
-float UMyElementalAffinity::GetAtkDmgMultiplier() { return AtkDmgMultiplier; }
+float UMyElementalAffinity::GetAtkDmgMultiplier() 
+{ 
+	// if (Cast<AMyCharacter>(GetOwner()))
+	// 	return GetOwner()->AttackDmgDebuffMultiplier * AtkDmgMultiplier;
+	// else
+		return AtkDmgMultiplier; 
+}
+
 float UMyElementalAffinity::GetMovSpeedMultiplier() { return MovSpeedMultiplier; }
 float UMyElementalAffinity::GetCritChanceMultiplier() { return CritChanceMultiplier; }
 float UMyElementalAffinity::GetCritDmgMultiplier() { return CritDmgMultiplier; }

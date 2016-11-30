@@ -17,6 +17,12 @@ AMyCharacter::AMyCharacter()
 	MaxStamina = 100.f;
 	Stamina = MaxStamina;
 	SprintSpeedModifier = 1.8f;
+	AttackDmgDebuffMultiplier = 1.0f;
+	DefenseDebuffMultiplier = 1.0f;
+	AttackSpeedDebuffMultiplier = 1.0f;
+	isStunned = false;
+	isCharging = false;
+
 	DefaultNormalSpeed = this->GetCharacterMovement()->MaxWalkSpeed /1.5; // default normal speed is passive speed set semistatically, not a current walkspeed reflection
 	this->GetCharacterMovement()->MaxWalkSpeed = DefaultNormalSpeed;
 	CurrentNormalSpeed = DefaultNormalSpeed;
@@ -281,7 +287,7 @@ void AMyCharacter::SetHP(float hp)
 void AMyCharacter::TakeDmg(float x, bool canReduce)
 {
 	if(canReduce)
-		SetHP(GetHP() - x/(DefDebuffMultiplier * MyAffinity->GetDefenseMultiplier()) );
+		SetHP(GetHP() - x/(DefenseDebuffMultiplier * MyAffinity->GetDefenseMultiplier()) );
 	else 
 		SetHP(GetHP() - x);
 }
@@ -542,8 +548,35 @@ if (World != NULL)
 }
 
 
-void AMyCharacter::SetMovementSpeed(float MovespeedDebuffMultiplier)
+
+// Debuffs
+void AMyCharacter::SetMovementSpeedDebuffMultiplier(float MovespeedDebuffMultiplier)
 {
 	CurrentNormalSpeed = DefaultNormalSpeed * MovespeedDebuffMultiplier;
 	this->GetCharacterMovement()->MaxWalkSpeed = CurrentNormalSpeed;
 }
+
+void AMyCharacter::SetAttackSpeedDebuffMultiplier(float _AttackSpeedDebuffMultiplier)
+{
+	this->AttackSpeedDebuffMultiplier=_AttackSpeedDebuffMultiplier;
+}
+
+void AMyCharacter::SetAttackDmgDebuffMultiplier(float _AttackDmgDebuffMultiplier)
+{
+	this->AttackDmgDebuffMultiplier=_AttackSpeedDebuffMultiplier;
+}
+
+void AMyCharacter::SetDefenseDebuffMultiplier(float _DefenseDebuffMultiplier)
+{
+	this->DefenseDebuffMultiplier=_DefenseDebuffMultiplier;	
+}
+
+
+void AMyCharacter::SetStun(bool stunned)
+{
+	// if already stunned just break
+	this->IsStunned=true;
+	// disable movement input?? is that enough? I think 
+	// play some visual effect 
+}
+

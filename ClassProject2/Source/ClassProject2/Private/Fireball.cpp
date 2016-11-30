@@ -53,7 +53,10 @@ void AFireball::Tick( float DeltaTime )
 	Super::Tick( DeltaTime );
 	if (this->GetActorLocation().Size() > 10000) {
 		this->Destroy();
+		// prevent projectile shooting to the sky sticking too long
 	}
+
+	//lightning bolt animation logic
 	if (CustomOwner->MyAffinity->PrimaryElementalPrefix==2) {
 		Firetrail->SetBeamTargetPoint(0, FireballMesh->GetComponentLocation(), 0);
 		Firetrail->SetBeamSourcePoint(0, CustomOwner->GetActorLocation() + 50 * FRotationMatrix(CustomOwner->GetActorRotation()).GetScaledAxis(EAxis::X), 0);
@@ -210,7 +213,7 @@ void AFireball::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimiti
 		//more complex damage inflicting mechanisms can be implemented
 		{ 
 			targethit->TakeDmg(
-				Cast<AMyCharacter>(CustomOwner)->AtkDebuffMultiplier 
+				Cast<AMyCharacter>(CustomOwner)->AttackDmgDebuffMultiplier 
 				* 15.0f 
 				* Cast<AMyCharacter>(CustomOwner)->MyAffinity->GetAtkDmgMultiplier()
 			);

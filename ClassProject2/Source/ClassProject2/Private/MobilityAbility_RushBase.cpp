@@ -119,8 +119,7 @@ void AMobilityAbility_RushBase::Zigzag(int count)
 		TimerDel.BindUFunction(this, FName("Zigzag"), 1);
 		World->GetTimerManager().SetTimer(ZigzagTimerHandle, TimerDel, 0.2f, false, -0.2f);
 		Movement->Velocity = BaseVelocity + 0.5*FVector(BaseVelocity.Y, -(BaseVelocity.X), 0);
-		//Movement->Velocity = Movement->Velocity + Movement->Velocity.RightVector * 2500;
-		
+		//Movement->Velocity = Movement->Velocity + Movement->Velocity.RightVector * 2500;		
 	}
 }
 
@@ -145,7 +144,7 @@ void AMobilityAbility_RushBase::OnStartOverlapping(UPrimitiveComponent* Overlapp
 
 				
 				targethit->TakeDmg(
-					Cast<AMyCharacter>(CustomOwner)->AtkDebuffMultiplier 
+					Cast<AMyCharacter>(CustomOwner)->AttackDmgDebuffMultiplier 
 					* 15.0f 
 					* Cast<AMyCharacter>(CustomOwner)->MyAffinity->GetAtkDmgMultiplier()
 				);

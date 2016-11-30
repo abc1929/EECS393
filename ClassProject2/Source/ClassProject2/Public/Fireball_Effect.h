@@ -54,7 +54,7 @@ public:
 	UFUNCTION()
 	void applystamdrain(float start, float end, float d, int n);
 	UFUNCTION()
-	void applymovslow(float start, float end, float , int nd);
+	void applymovslow(float start, float end, float d, int n);
 	UFUNCTION()
 	void applystun(float start, float end, float d, int n);
 	UFUNCTION()
