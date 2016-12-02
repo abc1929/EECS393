@@ -119,8 +119,7 @@ void AMobilityAbility_RushBase::Zigzag(int count)
 		TimerDel.BindUFunction(this, FName("Zigzag"), 1);
 		World->GetTimerManager().SetTimer(ZigzagTimerHandle, TimerDel, 0.2f, false, -0.2f);
 		Movement->Velocity = BaseVelocity + 0.5*FVector(BaseVelocity.Y, -(BaseVelocity.X), 0);
-		//Movement->Velocity = Movement->Velocity + Movement->Velocity.RightVector * 2500;
-		
+		//Movement->Velocity = Movement->Velocity + Movement->Velocity.RightVector * 2500;		
 	}
 }
 
@@ -144,7 +143,11 @@ void AMobilityAbility_RushBase::OnStartOverlapping(UPrimitiveComponent* Overlapp
 				//	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Waaa RushBase Test!"));
 
 				
-				targethit->TakeDmg(15.0f * Cast<AMyCharacter>(CustomOwner)->MyAffinity->GetAtkDmgMultiplier());
+				targethit->TakeDmg(
+					Cast<AMyCharacter>(CustomOwner)->AttackDmgDebuffMultiplier 
+					* 15.0f 
+					* Cast<AMyCharacter>(CustomOwner)->MyAffinity->GetAtkDmgMultiplier()
+				);
 				FTimerDelegate TimerDel;
 				TimerDel.BindUFunction(this, FName("Knockback"), targethit);
 				World->GetTimerManager().SetTimer(KnockbackTimerHandle, TimerDel, 0.01f, true, 0.f);

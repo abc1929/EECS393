@@ -64,7 +64,7 @@ float UMyElementalAffinity::PenaltyCurve(float ratio)
 }
 
 //An affinity has a cap of 10 (usually penalized and under 10)
-float UMyElementalAffinity::optCurve(float affinity) //scaling curve for max 1.2 multipliers
+static float UMyElementalAffinity::optCurve(float affinity) //scaling curve for max 1.2 multipliers
 {
 	if (affinity > 0)
 	{
@@ -75,7 +75,7 @@ float UMyElementalAffinity::optCurve(float affinity) //scaling curve for max 1.2
 
 }
 
-float UMyElementalAffinity::opfCurve(float firstAffinity, float secondAffinity, int AffinityCount) //scaling curve for max 1.5 multipliers
+static float UMyElementalAffinity::opfCurve(float firstAffinity, float secondAffinity, int AffinityCount) //scaling curve for max 1.5 multipliers
 {
 	if (AffinityCount == 2)
 	{
@@ -89,7 +89,7 @@ float UMyElementalAffinity::opfCurve(float firstAffinity, float secondAffinity, 
 		return 1.0f;
 }
 
-float UMyElementalAffinity::opeCurve(float firstAffinity, float secondAffinity, int AffinityCount) //scaling curve for max 1.8 multipliers
+static float UMyElementalAffinity::opeCurve(float firstAffinity, float secondAffinity, int AffinityCount) //scaling curve for max 1.8 multipliers
 {
 	if (AffinityCount == 2 && firstAffinity>0 && secondAffinity>0)
 	{
@@ -217,8 +217,17 @@ int UMyElementalAffinity::GetAbilityElementalPrefix()
 	return AbilityElementalPrefix;
 }
 
+// it's kinda messy how the debuffs are handled. there are some implemented from MyChar side
+// some might be here. These are justifiable considering convenience
 float UMyElementalAffinity::GetAtkSpeedMultiplier() { return AtkSpeedMultiplier; }
-float UMyElementalAffinity::GetAtkDmgMultiplier() { return AtkDmgMultiplier; }
+float UMyElementalAffinity::GetAtkDmgMultiplier() 
+{ 
+	// if (Cast<AMyCharacter>(GetOwner()))
+	// 	return GetOwner()->AttackDmgDebuffMultiplier * AtkDmgMultiplier;
+	// else
+		return AtkDmgMultiplier; 
+}
+
 float UMyElementalAffinity::GetMovSpeedMultiplier() { return MovSpeedMultiplier; }
 float UMyElementalAffinity::GetCritChanceMultiplier() { return CritChanceMultiplier; }
 float UMyElementalAffinity::GetCritDmgMultiplier() { return CritDmgMultiplier; }

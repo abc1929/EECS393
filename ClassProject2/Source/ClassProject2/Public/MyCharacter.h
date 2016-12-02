@@ -64,6 +64,7 @@ public:
 
 	float SprintSpeedModifier;
 	float DefaultNormalSpeed;
+	float CurrentNormalSpeed;
 
 	bool InForceField;
 
@@ -76,12 +77,12 @@ public:
 	void SetHP(float hp);
 
 	UFUNCTION()
-	void TakeDmg(float x, bool canReduce=false);
+	void TakeDmg(float x, bool canReduce=true); //only forcefield dmg is not reduced, maybe some other manually specified
 
 	UFUNCTION()
 	void TakingForceFieldDamage(bool yeah);
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, Category="stam")
 	float GetMaxStamina() const;
 
 	UFUNCTION()
@@ -135,6 +136,8 @@ private:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
+
+//abilities and progression related
 public:
 	FTimerHandle DamageTimer;
 	FTimerHandle RegenTimer;
@@ -188,10 +191,27 @@ public:
 	UFUNCTION()
 	void UpdateStats();
 
-public:
+	UFUNCTION()
+	void SetStun(bool stunned);
+
+	UFUNCTION()
+	void SetMovementSpeedDebuffMultiplier(float MovespeedDebuffMultiplier); 
+	//this is fundamentally different from others since movement speed is pulled straight from UE presets
+	//others are implemented from our abilities system
+
+	UFUNCTION()
+	void SetAttackSpeedDebuffMultiplier(float AttackSpeedDebuffMultiplier); // of base attack speed of 1.0
+
+	UFUNCTION()
+	void SetAttackDmgDebuffMultiplier(float AttackDmgDebuffMultiplier);
+
+	UFUNCTION()
+	void SetDefenseDebuffMultiplier(float DefenseDebuffMultiplier);
+
 	//Ability related
 	bool isCharging;
-	
+	bool isStunned;
+
 	//movement effect on char
 	class UProjectileMovementComponent* movementcomponent;
 
@@ -200,6 +220,13 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	UAnimBlueprint* SampleBP;
+
+	//debuff multipliers from abilities
+
+
+	float AttackDmgDebuffMultiplier;
+	float DefenseDebuffMultiplier;
+	float AttackSpeedDebuffMultiplier;
 
 
 // camera collision

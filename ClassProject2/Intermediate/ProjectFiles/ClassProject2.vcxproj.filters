@@ -172,6 +172,12 @@
     <ClInclude Include="..\..\Source\ClassProject2\Public\UtilityAbility_Lasso.h">
       <Filter>Source\ClassProject2\Public</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\ClassProject2\Public\MobilityAbility_RushBase_Effect.h">
+      <Filter>Source\ClassProject2\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\ClassProject2\Public\Fireball_Effect.h">
+      <Filter>Source\ClassProject2\Public</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\ClassProject2\Private\DefensiveAbility.cpp">
@@ -184,6 +190,12 @@
       <Filter>Source\ClassProject2\Private</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\ClassProject2\Private\UtilityAbility_Lasso.cpp">
+      <Filter>Source\ClassProject2\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\ClassProject2\Private\MobilityAbility_RushBase_Effect.cpp">
+      <Filter>Source\ClassProject2\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\ClassProject2\Private\Fireball_Effect.cpp">
       <Filter>Source\ClassProject2\Private</Filter>
     </ClCompile>
   </ItemGroup>

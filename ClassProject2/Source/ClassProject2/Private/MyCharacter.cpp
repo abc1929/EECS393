@@ -17,8 +17,15 @@ AMyCharacter::AMyCharacter()
 	MaxStamina = 100.f;
 	Stamina = MaxStamina;
 	SprintSpeedModifier = 1.8f;
-	DefaultNormalSpeed = this->GetCharacterMovement()->MaxWalkSpeed /1.5;
+	AttackDmgDebuffMultiplier = 1.0f;
+	DefenseDebuffMultiplier = 1.0f;
+	AttackSpeedDebuffMultiplier = 1.0f;
+	isStunned = false;
+	isCharging = false;
+
+	DefaultNormalSpeed = this->GetCharacterMovement()->MaxWalkSpeed /1.5; // default normal speed is passive speed set semistatically, not a current walkspeed reflection
 	this->GetCharacterMovement()->MaxWalkSpeed = DefaultNormalSpeed;
+	CurrentNormalSpeed = DefaultNormalSpeed;
 	exhausted = false;
 	CanJumpOverload = false;
 	BasicAttackCDFinished = true; MobilityAbilityCDFinished = true;
@@ -121,6 +128,8 @@ void AMyCharacter::Tick( float DeltaTime )
 		StopJumping();
 		OnSprintFinish();
 	}
+
+
 }
 
 // Called to bind functionality to input
@@ -217,7 +226,8 @@ void AMyCharacter::OnSprint()
 {
 	if (!exhausted)
 	{
-		this->GetCharacterMovement()->MaxWalkSpeed = DefaultNormalSpeed*MyAffinity->GetMovSpeedMultiplier() * SprintSpeedModifier;
+		this->GetCharacterMovement()->MaxWalkSpeed = 
+		CurrentNormalSpeed*MyAffinity->GetMovSpeedMultiplier() * SprintSpeedModifier;
 		UWorld* const World = GetWorld();
 		FTimerDelegate TimerDele;
 		TimerDele.BindUFunction(this, FName("StaminaIncrease"), -2.0f);
@@ -227,7 +237,8 @@ void AMyCharacter::OnSprint()
 void AMyCharacter::OnSprintFinish()
 {
 	UWorld* const World = GetWorld();
-	this->GetCharacterMovement()->MaxWalkSpeed = DefaultNormalSpeed*MyAffinity->GetMovSpeedMultiplier();
+	this->GetCharacterMovement()->MaxWalkSpeed = 
+	CurrentNormalSpeed*MyAffinity->GetMovSpeedMultiplier();
 	World->GetTimerManager().ClearTimer(SprintTimer);
 }
 
@@ -276,7 +287,7 @@ void AMyCharacter::SetHP(float hp)
 void AMyCharacter::TakeDmg(float x, bool canReduce)
 {
 	if(canReduce)
-		SetHP(GetHP() - x/MyAffinity->GetDefenseMultiplier());
+		SetHP(GetHP() - x/(DefenseDebuffMultiplier * MyAffinity->GetDefenseMultiplier()) );
 	else 
 		SetHP(GetHP() - x);
 }
@@ -330,7 +341,7 @@ void AMyCharacter::SetStamina(float sta)
 
 void AMyCharacter::StaminaIncrease(float x)
 {
-	if (this->GetCharacterMovement()->MaxWalkSpeed > DefaultNormalSpeed*MyAffinity->GetMovSpeedMultiplier() 
+	if (this->GetCharacterMovement()->MaxWalkSpeed > CurrentNormalSpeed*MyAffinity->GetMovSpeedMultiplier()
 		&& this->GetCharacterMovement()->Velocity.Size()<50) {return;} //holding sprint while not moving will not decrease stamina, but it blocks regen
 	if (Stamina > MaxStamina) { SetStamina(MaxStamina-1.5f); } // needs to be reduced more than 1.f (regen is at 1.f, would have bugs)
 	else if (Stamina < 0) { SetStamina(0); exhausted = true; }
@@ -355,7 +366,7 @@ void AMyCharacter::OnCast()
 	if (World != NULL)
 	{
 		//Will be more logics on MaxCastTime if more ability added
-		TimerDel.BindUFunction(this, FName("CastIncrement"), 1.2f/ MyAffinity->GetAtkSpeedMultiplier());
+		TimerDel.BindUFunction(this, FName("CastIncrement"), AtkSpeedDebuff * 1.2f/ MyAffinity->GetAtkSpeedMultiplier());
 		World->GetTimerManager().SetTimer(CastTimer, TimerDel, 0.01f, true, 0.f);
 	}
 }
@@ -463,7 +474,7 @@ void AMyCharacter::CastMobilityAbility()
 		FTimerDelegate local2;
 		local2.BindUFunction(this, FName("GainController"), AbilityCasing);
 		//GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
-		World->GetTimerManager().SetTimer(CastTimer, local2, 1.0f/ MyAffinity->GetAtkSpeedMultiplier(), false);
+		World->GetTimerManager().SetTimer(CastTimer, local2, AtkSpeedDebuff * 1.0f/ MyAffinity->GetAtkSpeedMultiplier(), false);
 		isCharging = true;
 		
 	}
@@ -517,6 +528,7 @@ float AMyCharacter::GetDefenseMultiplier() { return MyAffinity->GetDefenseMultip
 // This should get called after allocating points
 void AMyCharacter::UpdateStats()
 {
+	//this should only used in between rounds for character progression
 	MaxHealth = 100 * MyAffinity->GetHPMultiplier();
 	Health = MaxHealth;
 	this->GetCharacterMovement()->MaxWalkSpeed = DefaultNormalSpeed*MyAffinity->GetMovSpeedMultiplier();
@@ -534,3 +546,37 @@ void AMyCharacter::MobilityAbilityCDRefresh() { MobilityAbilityCDFinished = true
 if (World != NULL)
 	World->GetTimerManager().ClearTimer(MobilityAbilityCD);
 }
+
+
+
+// Debuffs
+void AMyCharacter::SetMovementSpeedDebuffMultiplier(float MovespeedDebuffMultiplier)
+{
+	CurrentNormalSpeed = DefaultNormalSpeed * MovespeedDebuffMultiplier;
+	this->GetCharacterMovement()->MaxWalkSpeed = CurrentNormalSpeed;
+}
+
+void AMyCharacter::SetAttackSpeedDebuffMultiplier(float _AttackSpeedDebuffMultiplier)
+{
+	this->AttackSpeedDebuffMultiplier=_AttackSpeedDebuffMultiplier;
+}
+
+void AMyCharacter::SetAttackDmgDebuffMultiplier(float _AttackDmgDebuffMultiplier)
+{
+	this->AttackDmgDebuffMultiplier=_AttackSpeedDebuffMultiplier;
+}
+
+void AMyCharacter::SetDefenseDebuffMultiplier(float _DefenseDebuffMultiplier)
+{
+	this->DefenseDebuffMultiplier=_DefenseDebuffMultiplier;	
+}
+
+
+void AMyCharacter::SetStun(bool stunned)
+{
+	// if already stunned just break
+	this->IsStunned=true;
+	// disable movement input?? is that enough? I think 
+	// play some visual effect 
+}
+
