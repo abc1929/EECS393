@@ -32,11 +32,11 @@ AMyCharacter::AMyCharacter()
 	CurrentCastElapse = 0.f;
 	MyAffinity = CreateDefaultSubobject<UMyElementalAffinity>(TEXT("Affinity"));
 	//debug
-	//MyAffinity->UpdateElements(5, 0); //Fire
-	//MyAffinity->UpdateElements(4, 1); //Earth
-	//MyAffinity->UpdateElements(8, 2); //Lightning
-	//MyAffinity->UpdateElements(7, 3); //Darkness
-	//MyAffinity->UpdateElements(2, 4); //Ice
+	MyAffinity->UpdateElements(5, 0); //Fire
+	MyAffinity->UpdateElements(4, 1); //Earth
+	MyAffinity->UpdateElements(8, 2); //Lightning
+	MyAffinity->UpdateElements(7, 3); //Darkness
+	MyAffinity->UpdateElements(2, 4); //Ice
 
 	//MyAffinity->RegisterComponent();
 
@@ -366,7 +366,7 @@ void AMyCharacter::OnCast()
 	if (World != NULL)
 	{
 		//Will be more logics on MaxCastTime if more ability added
-		TimerDel.BindUFunction(this, FName("CastIncrement"), AtkSpeedDebuff * 1.2f/ MyAffinity->GetAtkSpeedMultiplier());
+		TimerDel.BindUFunction(this, FName("CastIncrement"), AttackSpeedDebuffMultiplier * 1.2f/ MyAffinity->GetAtkSpeedMultiplier());
 		World->GetTimerManager().SetTimer(CastTimer, TimerDel, 0.01f, true, 0.f);
 	}
 }
@@ -474,7 +474,7 @@ void AMyCharacter::CastMobilityAbility()
 		FTimerDelegate local2;
 		local2.BindUFunction(this, FName("GainController"), AbilityCasing);
 		//GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
-		World->GetTimerManager().SetTimer(CastTimer, local2, AtkSpeedDebuff * 1.0f/ MyAffinity->GetAtkSpeedMultiplier(), false);
+		World->GetTimerManager().SetTimer(CastTimer, local2, AttackSpeedDebuffMultiplier * 1.0f/ MyAffinity->GetAtkSpeedMultiplier(), false);
 		isCharging = true;
 		
 	}
@@ -563,7 +563,7 @@ void AMyCharacter::SetAttackSpeedDebuffMultiplier(float _AttackSpeedDebuffMultip
 
 void AMyCharacter::SetAttackDmgDebuffMultiplier(float _AttackDmgDebuffMultiplier)
 {
-	this->AttackDmgDebuffMultiplier=_AttackSpeedDebuffMultiplier;
+	this->AttackDmgDebuffMultiplier= _AttackDmgDebuffMultiplier;
 }
 
 void AMyCharacter::SetDefenseDebuffMultiplier(float _DefenseDebuffMultiplier)

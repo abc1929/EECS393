@@ -6,6 +6,7 @@
 #include "AbilityEffect.generated.h"
 
 class AAbility;
+class AMyCharacter;
 
 // UE4's internal objects don't really do true abstract since they need to exist in some instance that you run
 // we use macro to do abstract methods
@@ -15,8 +16,25 @@ class CLASSPROJECT2_API AAbilityEffect : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
+
 	AAbilityEffect(const class FObjectInitializer& ObjectInitializer);
+
+	AMyCharacter* CustomOwner;
+	AMyCharacter* Target;
+
+	FTimerHandle atkWeakenCurveTimerHandler;
+	FTimerHandle defWeakenCurveTimerHandler;
+	FTimerHandle atkSlowCurveTimerHandler;
+	FTimerHandle movSlowCurveTimerHandler;
+	FTimerHandle stunCurveTimerHandler;
+	FTimerHandle dmgCurveTimerHandler;
+	FTimerHandle stamdrainCurveTimerHandler;
+
+	TArray<float> Affin;
+
+	int PrimaryAffin;
+	float dlratio; //determine stam leech for affin 3 and 2 
+
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -25,7 +43,7 @@ public:
 	virtual void Tick( float DeltaSeconds ) override;
 
 	
-private:
+public:
 	float duration; //0 for apply once instantly
 	int effectElementalType; //what elemental type this effect is 
 	float tickInterval; //for dot and such, 0 for instant
@@ -59,6 +77,8 @@ private:
 	//regen suppression? defense boost, attack dmg boost? assume all negative effects, but can be written other way 
 	virtual float defWeakenCurve(float t) PURE_VIRTUAL(AAbilityEffect::defWeakenCurve, return 1;);
 	virtual float atkWeakenCurve(float t) PURE_VIRTUAL(AAbilityEffect::atkWeakenCurve, return 1;);
+
+	void _initialize();
 
 
 };

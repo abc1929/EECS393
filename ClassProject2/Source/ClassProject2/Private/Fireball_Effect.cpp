@@ -3,24 +3,20 @@
 
 #include "ClassProject2.h"
 #include "Fireball_Effect.h"
-
-
-AFireball_Effect::AFireball_Effect(const class FObjectInitializer& ObjectInitializer) : AAbilityEffect(ObjectInitializer){
-	;
-}
+#include "public/MyCharacter.h"
+#include "public/Fireball.h"
 
 void AFireball_Effect::BeginPlay() {
 	Super::BeginPlay();
+	this->SetLifeSpan(20.f);
 	//now think of it the residual effect shall not be affected by the situation
 	//where the caster's affinities got weakened during the timespan
 	//that is the abilities should snapshot MyAffinity rather than accessing it in realtime
 	//but I guess we're not worrying about this currently
 
-	Affin = CustomOwner->MyAffinity->GetProcessedElementAffinities();
-	
-	PrimaryAffin = CustomOwner->MyAffinity->PrimaryElementalPrefix;
-
-	dlratio = (Affin[3]+Affin[2]) > 0 ? Affin[3]/(Affin[3]+Affin[2]) : 0.f;
+	//Affin = CustomOwner->MyAffinity->GetProcessedElementAffinities();
+	//PrimaryAffin = CustomOwner->MyAffinity->PrimaryElementalPrefix;
+	//dlratio = (Affin[3]+Affin[2]) > 0 ? Affin[3]/(Affin[3]+Affin[2]) : 0.f;
 
 }
 
@@ -87,20 +83,24 @@ float AFireball_Effect::atkWeakenCurve(float t)
 
 
 
-// I'm not sure if those can be written in the parent class
-// right now just copy those for each effect files
+// well pretty sure those functions can easily be congregated into a single function and branch within, but w/e
 void AFireball_Effect::applydmg(float start, float end, float d, int n)
 {
 	UWorld* const World = GetWorld();
+	World->GetTimerManager().ClearTimer(dmgCurveTimerHandler);
 	FTimerDelegate TimerDel;
 	if(start>=end)
 	{
 		World->GetTimerManager().ClearTimer(dmgCurveTimerHandler);
-		break;
+		return;
 	}
-	TimerDel.BindUFunction(this,"applydmg", start, end ,d, n+1); //determining d manually
+	
 	Target->TakeDmg(dmgCurve(n*d));
-	World->GetTimerManager().SetTimer(dmgCurveTimerHandler, TimerDel, d, false, -d); 	
+
+	if(GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Doing DoT dmg!"));
+	TimerDel.BindUFunction(this, FName("applydmg"), start + d, end, d, n + 1);
+	World->GetTimerManager().SetTimer(dmgCurveTimerHandler, TimerDel, d, false); 	
 }
 
 void AFireball_Effect::applystamdrain(float start, float end, float d, int n)
@@ -110,11 +110,13 @@ void AFireball_Effect::applystamdrain(float start, float end, float d, int n)
 	if(start>=end)
 	{
 		World->GetTimerManager().ClearTimer(stamdrainCurveTimerHandler);
-		break;
+		return;
 	}
-	TimerDel.BindUFunction(this,"applystamdrain", start, end ,d, n+1); //determining d manually
+	TimerDel.BindUFunction(this, FName("applystamdrain"), start+d, end ,d, n+1); //determining d manually
 	Target->StaminaIncrease(-stamdrainCurve(n*d));
 	CustomOwner->StaminaIncrease(dlratio*stamdrainCurve(n*d)); //could be 0
+
+	World->GetTimerManager().ClearTimer(stamdrainCurveTimerHandler);
 	World->GetTimerManager().SetTimer(stamdrainCurveTimerHandler, TimerDel, d, false, -d); 	
 }
 
@@ -126,10 +128,12 @@ void AFireball_Effect::applystun(float start, float end, float d, int n)
 	{
 		World->GetTimerManager().ClearTimer(stunCurveTimerHandler);
 		Target->SetStun(false);
-		break;
+		return;
 	}
-	TimerDel.BindUFunction(this,"applystun", start, end ,d, n+1); //determining d manually
+	TimerDel.BindUFunction(this, FName("applystun"), start + d, end ,d, n+1); //determining d manually
 	if(stunCurve(n*d)) {Target->SetStun(true);}
+
+	World->GetTimerManager().ClearTimer(stunCurveTimerHandler);
 	World->GetTimerManager().SetTimer(stunCurveTimerHandler, TimerDel, d, false, -d); 	
 }
 
@@ -141,11 +145,13 @@ void AFireball_Effect::applymovslow(float start, float end, float d, int n)
 	{
 		World->GetTimerManager().ClearTimer(movSlowCurveTimerHandler);
 		Target->SetMovementSpeedDebuffMultiplier(1.f); // reset back to default base speed
-		break;
+		return;
 	}
-	TimerDel.BindUFunction(this,"applymovslow", start, end ,d, n+1); //determining d manually
+	TimerDel.BindUFunction(this, FName("applymovslow"), start + d, end ,d, n+1); //determining d manually
 	//Target->TakeDmg(movSlowCurve(n*d));//add another parameter for MyChar I guess;
 	Target->SetMovementSpeedDebuffMultiplier(movSlowCurve(n*d));
+
+	World->GetTimerManager().ClearTimer(movSlowCurveTimerHandler);
 	World->GetTimerManager().SetTimer(movSlowCurveTimerHandler, TimerDel, d, false, -d); 	
 }
 
@@ -157,10 +163,12 @@ void AFireball_Effect::applyatkslow(float start, float end, float d, int n)
 	{
 		World->GetTimerManager().ClearTimer(atkSlowCurveTimerHandler);
 		Target->SetAttackSpeedDebuffMultiplier(1.f);
-		break;
+		return;
 	}
-	TimerDel.BindUFunction(this,"applyatkslow", start, end ,d, n+1); //determining d manually
+	TimerDel.BindUFunction(this, FName("applyatkslow"), start + d, end ,d, n+1); //determining d manually
 	Target->SetAttackSpeedDebuffMultiplier(atkSlowCurve(n*d));
+
+	World->GetTimerManager().ClearTimer(atkSlowCurveTimerHandler);
 	World->GetTimerManager().SetTimer(atkSlowCurveTimerHandler, TimerDel, d, false, -d); 	
 }
 
@@ -172,10 +180,12 @@ void AFireball_Effect::applydefweak(float start, float end, float d, int n)
 	{
 		World->GetTimerManager().ClearTimer(defWeakenCurveTimerHandler);
 		Target->SetDefenseDebuffMultiplier(1.f);
-		break;
+		return;
 	}
-	TimerDel.BindUFunction(this,"applydefweak", start, end ,d, n+1); //determining d manually
+	TimerDel.BindUFunction(this, FName("applydefweak"), start + d, end ,d, n+1); //determining d manually
 	Target->SetDefenseDebuffMultiplier(defWeakenCurve(n*d));
+
+	World->GetTimerManager().ClearTimer(defWeakenCurveTimerHandler);
 	World->GetTimerManager().SetTimer(defWeakenCurveTimerHandler, TimerDel, d, false, -d); 	
 }
 
@@ -187,18 +197,14 @@ void AFireball_Effect::applyatkweak(float start, float end, float d, int n)
 	{
 		World->GetTimerManager().ClearTimer(atkWeakenCurveTimerHandler);
 		Target->SetAttackDmgDebuffMultiplier(1.0f);
-		break;
+		return;
 	}
-	TimerDel.BindUFunction(this,"applyatkweak", start, end ,d, n+1); //determining d manually
+	TimerDel.BindUFunction(this, FName("applyatkweak"), start + d, end ,d, n+1); //determining d manually
 	Target->SetAttackDmgDebuffMultiplier(atkWeakenCurve(n*d));
+
+	World->GetTimerManager().ClearTimer(atkWeakenCurveTimerHandler);
 	World->GetTimerManager().SetTimer(atkWeakenCurveTimerHandler, TimerDel, d, false, -d); 	
 }
 
 
 //A timer spawns for each effect at its TimeInterval; do increment tracks for each? functionally
-
-void ApplyAll()
-{
-	applydmg(0, 2, 0.2, 0); //let basic attack's effect last 2 seconds
-	
-}

@@ -64,7 +64,7 @@ float UMyElementalAffinity::PenaltyCurve(float ratio)
 }
 
 //An affinity has a cap of 10 (usually penalized and under 10)
-static float UMyElementalAffinity::optCurve(float affinity) //scaling curve for max 1.2 multipliers
+float UMyElementalAffinity::optCurve(float affinity) //scaling curve for max 1.2 multipliers
 {
 	if (affinity > 0)
 	{
@@ -75,7 +75,7 @@ static float UMyElementalAffinity::optCurve(float affinity) //scaling curve for 
 
 }
 
-static float UMyElementalAffinity::opfCurve(float firstAffinity, float secondAffinity, int AffinityCount) //scaling curve for max 1.5 multipliers
+float UMyElementalAffinity::opfCurve(float firstAffinity, float secondAffinity, int AffinityCount) //scaling curve for max 1.5 multipliers
 {
 	if (AffinityCount == 2)
 	{
@@ -89,7 +89,7 @@ static float UMyElementalAffinity::opfCurve(float firstAffinity, float secondAff
 		return 1.0f;
 }
 
-static float UMyElementalAffinity::opeCurve(float firstAffinity, float secondAffinity, int AffinityCount) //scaling curve for max 1.8 multipliers
+float UMyElementalAffinity::opeCurve(float firstAffinity, float secondAffinity, int AffinityCount) //scaling curve for max 1.8 multipliers
 {
 	if (AffinityCount == 2 && firstAffinity>0 && secondAffinity>0)
 	{

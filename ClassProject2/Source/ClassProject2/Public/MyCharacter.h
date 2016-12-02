@@ -137,6 +137,10 @@ private:
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
 
+
+public:
+	bool IsStunned;
+
 //abilities and progression related
 public:
 	FTimerHandle DamageTimer;

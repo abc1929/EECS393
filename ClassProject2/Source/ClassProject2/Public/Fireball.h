@@ -7,6 +7,7 @@
 #include "Fireball.generated.h"
 
 class AMyCharacter;
+class AFireball_Effect;
 
 UCLASS()
 class CLASSPROJECT2_API AFireball : public AActor
@@ -35,7 +36,7 @@ public:
 	UPROPERTY()
 	AMyCharacter* CustomOwner;
 
-protected:
+public:
 	UFUNCTION()
 	void CreateMesh(int prefix);
 
@@ -46,6 +47,8 @@ protected:
 	UMaterial* grime;
 	UParticleSystem* ParticleAsset_sparks;
 	UParticleSystem* ParticleAsset_fire;
+
+	//AFireball_Effect* AfterEffect;
 
 
 	class USphereComponent* Collision;

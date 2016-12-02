@@ -3,6 +3,7 @@
 #include "ClassProject2.h"
 #include "public/Fireball.h"
 #include "public/MyCharacter.h"
+#include "Fireball_Effect.h"
 
 
 // Even though it is called Fireball, well this class is for all basic ranged attack.
@@ -28,6 +29,7 @@ AFireball::AFireball()
 	Movement->MaxSpeed = 50000.f; //* Cast<AMyCharacter>(GetOwner())->MyAffinity->GetAtkSpeedMultiplier();
 	GetAssets();
 
+	//AfterEffect = CreateDefaultSubobject<AFireball_Effect>(TEXT("Affinity"));
 
 	//Knockback variables
 	increments = 0;
@@ -221,6 +223,22 @@ void AFireball::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimiti
 			FTimerDelegate TimerDel;
 			TimerDel.BindUFunction(this, FName("Knockback"), targethit);
 			World->GetTimerManager().SetTimer(KnockbackTimerHandle, TimerDel, 0.01f, true, 0.f);
+
+
+			FTransform SpawnTransform;
+			auto AfterEffect = Cast<AFireball_Effect>(UGameplayStatics::BeginDeferredActorSpawnFromClass(this, AFireball_Effect::StaticClass(), SpawnTransform));
+			if (AfterEffect != nullptr)
+			{
+				AfterEffect->Target = targethit;
+				AfterEffect->CustomOwner = CustomOwner;
+				AfterEffect->_initialize();
+				AfterEffect->applydmg(0, 2, 0.2, 0);
+				UGameplayStatics::FinishSpawningActor(AfterEffect, SpawnTransform);
+
+			}
+
+
+
 		}
 		// deactivating fireball immediately, it only hits once
 		this->SetActorHiddenInGame(true);
@@ -245,6 +263,7 @@ void AFireball::Knockback(AMyCharacter* InflictedTarget)
 		//	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Some debug message!"));
 		UWorld* const World = GetWorld();
 		World->GetTimerManager().ClearTimer(KnockbackTimerHandle);
+		Collision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 		Destroy();
 	}
 	increments++;

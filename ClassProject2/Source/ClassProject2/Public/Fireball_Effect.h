@@ -6,6 +6,7 @@
 #include "Fireball_Effect.generated.h"
 
 class AMyCharacter;
+class AFireball;
 /**
  * 
  */
@@ -15,17 +16,11 @@ class CLASSPROJECT2_API AFireball_Effect : public AAbilityEffect
 	GENERATED_BODY()
 
 public:
-	AFireball_Effect(const class FObjectInitializer& ObjectInitializer);
-	virtual void BeginPlay() override;
-
-	AMyCharacter* CustomOwner; 
-	AMyCharacter* Target;
-
-	TArray<float> Affin;
 	
-	int PrimaryAffin;
-	float dlratio; //determine stam leech for affin 3 and 2 
+	virtual void BeginPlay() override;
+	//AFireball_Effect(const class FObjectInitializer& ObjectInitializer);
 
+	AFireball* Fireball;
 
 	UFUNCTION()
 	float dmgCurve(float t);
@@ -64,9 +59,10 @@ public:
 	UFUNCTION()
 	void applyatkweak(float start, float end, float d, int n);
 	
+		
 	//not used
-	UFUNCTION()
-	void applymmt();	
+	//UFUNCTION()
+	//void applymmt();	
 
 
 };

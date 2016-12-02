@@ -2,7 +2,7 @@
 
 #include "ClassProject2.h"
 #include "AbilityEffect.h"
-
+#include "public/MyCharacter.h"
 
 // Sets default values
 AAbilityEffect::AAbilityEffect(const class FObjectInitializer& ObjectInitializer)
@@ -42,3 +42,11 @@ void AAbilityEffect::Tick( float DeltaTime )
 //float AAbilityEffect::defWeakenCurve(float t);
 //float AAbilityEffect::atkWeakenCurve(float t);
 
+
+
+void AAbilityEffect::_initialize()
+{
+	Affin = CustomOwner->MyAffinity->GetProcessedElementAffinities();
+	PrimaryAffin = CustomOwner->MyAffinity->PrimaryElementalPrefix;
+	dlratio = (Affin[3] + Affin[2]) > 0 ? Affin[3] / (Affin[3] + Affin[2]) : 0.f;
+}
