@@ -69,9 +69,6 @@ public:
 	bool InForceField;
 
 	//other properties
-
-	float GetMaxHP() const;
-	float GetHP() const;
 	
 	UFUNCTION()
 	void SetHP(float hp);
@@ -85,8 +82,20 @@ public:
 	UFUNCTION(BlueprintCallable, Category="stam")
 	float GetMaxStamina() const;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, Category = "stam")
 	float GetStamina() const;
+
+	UFUNCTION(BlueprintCallable, Category = "hp")
+	float GetMaxHP() const;
+
+	UFUNCTION(BlueprintCallable, Category = "hp")
+	float GetHP() const;
+
+	UFUNCTION(BlueprintCallable, Category = "casting")
+	float GetCastProgress() const;
+
+	UFUNCTION(BlueprintCallable, Category = "stam")
+	float GetCD(int order) const;
 
 	UFUNCTION()
 	void SetStamina(float sta);
@@ -196,7 +205,7 @@ public:
 	void UpdateStats();
 
 	UFUNCTION()
-	void SetStun(bool stunned);
+	void SetStun(float duration);
 
 	UFUNCTION()
 	void SetMovementSpeedDebuffMultiplier(float MovespeedDebuffMultiplier); 

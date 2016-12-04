@@ -259,16 +259,6 @@ void AMyCharacter::OnSprintFinish()
 // float GetSprintSpeedModifier() const;
 
 // // other properties
-// float GetMaxHP() const;
-float AMyCharacter::GetMaxHP() const 
-{
-	return MaxHealth;
-}
-// float GetHP() const;
-float AMyCharacter::GetHP() const
-{
-	return Health;
-}
 
 void AMyCharacter::SetHP(float hp)
 {
@@ -319,10 +309,25 @@ float AMyCharacter::GetStamina() const
 	return Stamina;
 }
 
+float AMyCharacter::GetMaxHP() const
+{
+	return MaxHealth;
+}
+
+float AMyCharacter::GetHP() const
+{
+	return Health;
+}
+
+float AMyCharacter::GetCastProgress() const
+{
+	return CurrentCastElapse > CurrentCastMax? 1.0f : CurrentCastElapse / CurrentCastMax;
+}
+
 void AMyCharacter::SetStamina(float sta)
 {
 	if (sta >= MaxStamina) {
-		Stamina = MaxStamina-1;
+		Stamina = MaxStamina;
 	}
 	else
 	if (sta <= 0) {
@@ -341,9 +346,16 @@ void AMyCharacter::SetStamina(float sta)
 
 void AMyCharacter::StaminaIncrease(float x)
 {
+	if (x < -5) // for stamina consumption
+	{
+		SetStamina(GetStamina() + x);
+		return;
+	}
+
+	// for stamina regens
 	if (this->GetCharacterMovement()->MaxWalkSpeed > CurrentNormalSpeed*MyAffinity->GetMovSpeedMultiplier()
 		&& this->GetCharacterMovement()->Velocity.Size()<50) {return;} //holding sprint while not moving will not decrease stamina, but it blocks regen
-	if (Stamina > MaxStamina) { SetStamina(MaxStamina-1.5f); } // needs to be reduced more than 1.f (regen is at 1.f, would have bugs)
+	if (Stamina > MaxStamina) { SetStamina(MaxStamina-1.2f); } // needs to be reduced more than 1.f (regen is at 1.f, would have bugs)
 	else if (Stamina < 0) { SetStamina(0); exhausted = true; }
 	else { SetStamina(GetStamina() + x * MyAffinity->GetStamRegenMultiplier()); }
 }
@@ -354,19 +366,40 @@ bool AMyCharacter::IsAlive() const
 	return Health > 0;
 }
 
+float AMyCharacter::GetCD(int order) const
+{
+	UWorld* const World = GetWorld();
+	switch (order)
+	{
+		case 1: return World->GetTimerManager().GetTimerRemaining(BasicAttackCD);
+		case 2: //offensive
+		case 3: //defensive
+		case 4: return World->GetTimerManager().GetTimerRemaining(MobilityAbilityCD);
+		case 5: //utility
+		default:
+			break;
+	}
+	
+	return 0.f;
+}
+
+
 // // basic attack
 // bool TryCast();
 //  OnCast();
 void AMyCharacter::OnCast()
 {
-	if (!BasicAttackCDFinished) { return; }
+	CurrentCastElapse = 0;
+	if (!BasicAttackCDFinished || GetStamina() < 20) { return; }
 	CurrentCastSuccess = false;
 	FTimerDelegate TimerDel;
 	UWorld* const World = GetWorld();
 	if (World != NULL)
 	{
 		//Will be more logics on MaxCastTime if more ability added
-		TimerDel.BindUFunction(this, FName("CastIncrement"), AttackSpeedDebuffMultiplier * 1.2f/ MyAffinity->GetAtkSpeedMultiplier());
+		CurrentCastMax = AttackSpeedDebuffMultiplier * 1.2f / MyAffinity->GetAtkSpeedMultiplier();
+		TimerDel.BindUFunction(this, FName("CastIncrement"), CurrentCastMax);
+		
 		World->GetTimerManager().SetTimer(CastTimer, TimerDel, 0.01f, true, 0.f);
 	}
 }
@@ -378,16 +411,18 @@ void AMyCharacter::CastIncrement(float RequiredTime)
 		UWorld* const World = GetWorld();
 		CurrentCastSuccess = true;
 		World->GetTimerManager().ClearTimer(CastTimer);
-		CurrentCastElapse = 0;
 	}
 	CurrentCastElapse += 0.01f;
 }
 // this only casts basic attack despite the name
 void AMyCharacter::CastAbility()
 {
+	UWorld* const World = GetWorld();
+	if (World != NULL)
+		World->GetTimerManager().ClearTimer(CastTimer);
+	CurrentCastElapse = 0;
 	if (!CurrentCastSuccess)
 	{
-		CurrentCastElapse = 0;
 		return; 
 		// exit function call
 	}
@@ -395,7 +430,6 @@ void AMyCharacter::CastAbility()
 
 
 	// try and fire a projectile
-	UWorld* const World = GetWorld();
 	if (World != NULL)
 	{
 		World->GetTimerManager().ClearTimer(CastTimer);
@@ -423,7 +457,7 @@ void AMyCharacter::CastAbility()
 void AMyCharacter::CastMobilityAbility()
 {
 
-	if (!MobilityAbilityCDFinished)
+	if (!MobilityAbilityCDFinished ||  GetStamina() < 20)
 	{
 		return;
 		// exit function call
@@ -572,7 +606,7 @@ void AMyCharacter::SetDefenseDebuffMultiplier(float _DefenseDebuffMultiplier)
 }
 
 
-void AMyCharacter::SetStun(bool stunned)
+void AMyCharacter::SetStun(float duration)
 {
 	// if already stunned just break
 	this->IsStunned=true;
