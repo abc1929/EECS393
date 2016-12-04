@@ -37,6 +37,9 @@ public:
 	// movements
 	void MoveForward(float Value);
 	void MoveRight(float Value);
+	void AddControllerPitchInput(float Val);
+	void AddControllerYawInput(float Val);
+	bool GameInputDisabled;
 
 	// movements logics, movement properties
 	UFUNCTION(Category = "Character")
@@ -240,6 +243,26 @@ public:
 	float AttackDmgDebuffMultiplier;
 	float DefenseDebuffMultiplier;
 	float AttackSpeedDebuffMultiplier;
+
+
+	//Player UI states
+	bool InGameMenuOn;
+	bool CharacterSheetOn;
+	bool ScoreSheetOn;
+
+	UFUNCTION(BlueprintCallable, Category = "buttons")
+	void PauseMenu();
+	UFUNCTION(BlueprintCallable, Category = "buttons")
+	void CharSheet();
+	UFUNCTION(BlueprintCallable, Category = "buttons")
+	void ScoreSheet();
+
+	// well no enum for this, enum now is required handled globally, I guess for this toy project just track int manually
+	//UENUM() 
+	//enum UIButtons { InGameMenu, CharacterSheet, ScoreSheet};
+
+	UFUNCTION(BlueprintCallable, Category = "buttons")
+	bool ClickedUIButtons(int x) const; //1,2,3
 
 
 // camera collision

@@ -13,7 +13,13 @@ class CLASSPROJECT2_API AMyPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
-	
-	
-	
+	public:
+		AMyPlayerController();
+		virtual void SetupInputComponent() override;
+		void PauseMenu();
+		void CharSheet();
+		void ScoreSheet();
+			
+
+
 };

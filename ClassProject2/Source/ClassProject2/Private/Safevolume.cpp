@@ -19,7 +19,7 @@ ASafevolume::ASafevolume()
 		ZoneMesh->SetStaticMesh(mmesh.Object);
 		ZoneMesh->SetWorldScale3D(FVector(65, 65, 5));
 	}
-	static ConstructorHelpers::FObjectFinder<UMaterial> mmaterial(TEXT("Material'/Engine/VREditor/WorldMovementGrid/GridMaterial.GridMaterial'"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> mmaterial(TEXT("Material'/Engine/BufferVisualization/Specular.Specular'"));
 	if (mmaterial.Object)
 	{
 		 ZoneMesh->SetMaterial(0,mmaterial.Object);
@@ -72,7 +72,7 @@ void ASafevolume::OnStartOverlapping(UPrimitiveComponent* OverlappedComp, AActor
 
 void ASafevolume::Shrink() {
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("SafeZone Shrinked!"));
-	ZoneMesh->SetWorldScale3D(FVector(65-ShrinkLevel*13, 65-ShrinkLevel*13, 5));
+	ZoneMesh->SetWorldScale3D(FVector(65-ShrinkLevel*11, 65-ShrinkLevel*11, 5)); //nerfing 20% to ~17%, 20% of the original is a bit too small
 	if (ShrinkLevel == 4) {
 		UWorld* const World = GetWorld();
 		World->GetTimerManager().ClearTimer(ShrinkTimer);

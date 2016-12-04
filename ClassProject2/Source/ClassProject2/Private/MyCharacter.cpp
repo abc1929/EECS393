@@ -95,6 +95,11 @@ AMyCharacter::AMyCharacter()
 
 	//initializing movement effect
 	//movementcomponent = CreateDefaultSubobject<UProjectileMovementComponent>(" ");
+
+	InGameMenuOn = false;
+	CharacterSheetOn = false;
+	ScoreSheetOn = false;
+	GameInputDisabled = false;
 }
 
 
@@ -135,7 +140,7 @@ void AMyCharacter::Tick( float DeltaTime )
 // Called to bind functionality to input
 void AMyCharacter::SetupPlayerInputComponent(class UInputComponent* MyInputComponent)
 {
-	//Super::SetupPlayerInputComponent(InputComponent);
+	Super::SetupPlayerInputComponent(CreatePlayerInputComponent());
 	check(MyInputComponent);
 	// Binding inputs to actions
 	//we can, for example press WASD to move 
@@ -157,7 +162,34 @@ void AMyCharacter::SetupPlayerInputComponent(class UInputComponent* MyInputCompo
 
 	MyInputComponent->BindAction("SprintHold", IE_Pressed, this, &AMyCharacter::OnSprint);
 	MyInputComponent->BindAction("SprintHold", IE_Released, this, &AMyCharacter::OnSprintFinish);
+
+	MyInputComponent->BindAction("PauseMenu", IE_Released, this, &AMyCharacter::PauseMenu);
+	MyInputComponent->BindAction("CharacterSheet", IE_Released, this, &AMyCharacter::CharSheet);
+	MyInputComponent->BindAction("ScoreSheet", IE_Released, this, &AMyCharacter::ScoreSheet);
 }
+
+void AMyCharacter::AddControllerPitchInput(float Val)
+{
+	if (GameInputDisabled)
+		return;
+	if (Val != 0.f && Controller && Controller->IsLocalPlayerController())
+	{
+		APlayerController* const PC = CastChecked<APlayerController>(Controller);
+		PC->AddPitchInput(Val);
+	}
+}
+
+void AMyCharacter::AddControllerYawInput(float Val)
+{
+	if (GameInputDisabled)
+		return;
+	if (Val != 0.f && Controller && Controller->IsLocalPlayerController())
+	{
+		APlayerController* const PC = CastChecked<APlayerController>(Controller);
+		PC->AddYawInput(Val);
+	}
+}
+
 
 // MoveFoward handles moving forward and backwards
 void AMyCharacter::MoveForward(float Value)
@@ -346,7 +378,7 @@ void AMyCharacter::SetStamina(float sta)
 
 void AMyCharacter::StaminaIncrease(float x)
 {
-	if (x < -5) // for stamina consumption
+	if (x < 0) // for stamina consumption
 	{
 		SetStamina(GetStamina() + x);
 		return;
@@ -503,8 +535,10 @@ void AMyCharacter::CastMobilityAbility()
 		AbilityCasing->Movement->UpdatedComponent = this->GetRootComponent();
 		//auto sMovement = AbilityCasing->Movement;
 		//sMovement->UpdatedComponent = RootComponent;
-		DisableInput(World->GetFirstPlayerController());	
-		//FTimerHandle local;
+		//DisableInput(World->GetFirstPlayerController());	
+
+		GameInputDisabled = true;
+
 		FTimerDelegate local2;
 		local2.BindUFunction(this, FName("GainController"), AbilityCasing);
 		//GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
@@ -521,9 +555,12 @@ void AMyCharacter::GainController(AActor* effect)//, UProjectileMovementComponen
 	UWorld* const World = GetWorld();
 	if (World != NULL)
 	{
-
+		GameInputDisabled = false;
+		if(ClickedUIButtons(1) || ClickedUIButtons(2) || ClickedUIButtons(3))
+			GameInputDisabled = true;
+		//EnableInput(World->GetFirstPlayerController());
 		
-		EnableInput(World->GetFirstPlayerController());
+		
 		//if (movementeffecthandle->IsRooted()) {
 			//movementeffecthandle->RemoveFromRoot();
 		//}'
@@ -614,3 +651,40 @@ void AMyCharacter::SetStun(float duration)
 	// play some visual effect 
 }
 
+
+
+void AMyCharacter::PauseMenu()
+{
+	InGameMenuOn = !InGameMenuOn ? true : false;
+	APlayerController* MyController = GetWorld()->GetFirstPlayerController();
+	MyController->bShowMouseCursor = InGameMenuOn ? true : false;
+	MyController->bEnableClickEvents = InGameMenuOn ? true : false;
+	MyController->bEnableMouseOverEvents = InGameMenuOn ? true : false;
+
+	GameInputDisabled = isCharging ? true : (!GameInputDisabled ? true : false);
+}
+
+void AMyCharacter::CharSheet()
+{
+	CharacterSheetOn = !CharacterSheetOn ? true : false;
+}
+
+void AMyCharacter::ScoreSheet()
+{
+	ScoreSheetOn = !ScoreSheetOn ? true : false;
+}
+
+
+bool AMyCharacter::ClickedUIButtons(int x) const
+{
+	switch (x)
+	{
+		case 1: 
+			return InGameMenuOn;   break;
+		case 2: 
+			return CharacterSheetOn; break;
+		case 3: 
+			return ScoreSheetOn;  break;
+		default: return false; break;
+	}
+}
