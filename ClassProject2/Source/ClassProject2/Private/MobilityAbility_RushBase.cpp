@@ -179,5 +179,7 @@ void AMobilityAbility_RushBase::Knockback(AMyCharacter* InflictedTarget)
 void AMobilityAbility_RushBase::Deactivate()
 {
 	Movement->DestroyComponent();
+	if (false == CustomOwner->ClickedUIButtons(1) || CustomOwner->ClickedUIButtons(2) || CustomOwner->ClickedUIButtons(3))
+		CustomOwner->GameInputDisabled = false;
 	this->SetActorEnableCollision(false);
 }

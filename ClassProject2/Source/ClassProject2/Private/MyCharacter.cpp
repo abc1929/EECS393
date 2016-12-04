@@ -194,6 +194,8 @@ void AMyCharacter::AddControllerYawInput(float Val)
 // MoveFoward handles moving forward and backwards
 void AMyCharacter::MoveForward(float Value)
 {
+	if (isCharging)
+		return;
 	if ((Controller != NULL) && (Value != 0.0f))
 	{
 		// find out which way is forward
@@ -208,6 +210,8 @@ void AMyCharacter::MoveForward(float Value)
 
 void AMyCharacter::MoveRight(float Value)
 {
+	if (isCharging)
+		return;
 	if ( (Controller != NULL) && (Value != 0.0f) )
 	{
 		// find out which way is right
