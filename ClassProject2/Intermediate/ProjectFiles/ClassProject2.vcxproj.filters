@@ -1,179 +1,199 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ItemGroup>
-    <None Include="..\..\ClassProject2.uproject" />
-    <Filter Include="Source">
-      <UniqueIdentifier>{FD9D1666-4FD3-443B-AEB8-57027095754A}</UniqueIdentifier>
-    </Filter>
-    <None Include="..\..\Source\ClassProject2.Target.cs">
-      <Filter>Source</Filter>
-    </None>
-    <None Include="..\..\Source\ClassProject2Editor.Target.cs">
-      <Filter>Source</Filter>
-    </None>
-    <Filter Include="Config">
-      <UniqueIdentifier>{F6A65505-17CF-4A8B-96A8-9D1C9520E204}</UniqueIdentifier>
-    </Filter>
-    <None Include="..\..\Config\DefaultEditor.ini">
-      <Filter>Config</Filter>
-    </None>
-    <None Include="..\..\Config\DefaultEditorPerProjectUserSettings.ini">
-      <Filter>Config</Filter>
-    </None>
-    <None Include="..\..\Config\DefaultEngine.ini">
-      <Filter>Config</Filter>
-    </None>
-    <None Include="..\..\Config\DefaultGame.ini">
-      <Filter>Config</Filter>
-    </None>
-    <None Include="..\..\Config\DefaultInput.ini">
-      <Filter>Config</Filter>
-    </None>
-    <Filter Include="Source\ClassProject2">
-      <UniqueIdentifier>{CA17481D-238C-4406-873C-7E3D41301A28}</UniqueIdentifier>
-    </Filter>
-    <None Include="..\..\Source\ClassProject2\ClassProject2.Build.cs">
-      <Filter>Source\ClassProject2</Filter>
-    </None>
-    <ClCompile Include="..\..\Source\ClassProject2\ClassProject2.cpp">
-      <Filter>Source\ClassProject2</Filter>
-    </ClCompile>
-    <ClInclude Include="..\..\Source\ClassProject2\ClassProject2.h">
-      <Filter>Source\ClassProject2</Filter>
-    </ClInclude>
-    <ClCompile Include="..\..\Source\ClassProject2\ClassProject2Character.cpp">
-      <Filter>Source\ClassProject2</Filter>
-    </ClCompile>
-    <ClInclude Include="..\..\Source\ClassProject2\ClassProject2Character.h">
-      <Filter>Source\ClassProject2</Filter>
-    </ClInclude>
-    <ClCompile Include="..\..\Source\ClassProject2\ClassProject2GameMode.cpp">
-      <Filter>Source\ClassProject2</Filter>
-    </ClCompile>
-    <ClInclude Include="..\..\Source\ClassProject2\ClassProject2GameMode.h">
-      <Filter>Source\ClassProject2</Filter>
-    </ClInclude>
-    <None Include="..\..\Source\ClassProject2\PrefixChart.txt">
-      <Filter>Source\ClassProject2</Filter>
-    </None>
-    <Filter Include="Source\ClassProject2\Private">
-      <UniqueIdentifier>{5EA49B1C-1CC1-4355-B139-9D2A7FB5B044}</UniqueIdentifier>
-    </Filter>
-    <ClCompile Include="..\..\Source\ClassProject2\Private\Ability.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\ClassProject2\Private\AbilityEffect.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\ClassProject2\Private\Fireball.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\ClassProject2\Private\MobilityAbility.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\ClassProject2\Private\MobilityAbility_RushBase.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\ClassProject2\Private\MyAutomationTestSettings.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\ClassProject2\Private\MyCharacter.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\ClassProject2\Private\MyElementalAffinity.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\ClassProject2\Private\MyGameState.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\ClassProject2\Private\MyPlayerController.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\ClassProject2\Private\MyPlayerStart.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\ClassProject2\Private\MyPlayerState.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\ClassProject2\Private\OffensiveAbility.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\ClassProject2\Private\OffensiveAbility_WaveBase.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\ClassProject2\Private\Safevolume.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
-    </ClCompile>
-    <None Include="..\..\Source\ClassProject2\Private\TestClass.txt">
-      <Filter>Source\ClassProject2\Private</Filter>
-    </None>
-    <Filter Include="Source\ClassProject2\Public">
-      <UniqueIdentifier>{5D5CEC25-3D39-4410-915D-BE00AAFF5C27}</UniqueIdentifier>
-    </Filter>
-    <ClInclude Include="..\..\Source\ClassProject2\Public\Ability.h">
-      <Filter>Source\ClassProject2\Public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\ClassProject2\Public\AbilityEffect.h">
-      <Filter>Source\ClassProject2\Public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\ClassProject2\Public\AbilityList.h">
-      <Filter>Source\ClassProject2\Public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\ClassProject2\Public\Fireball.h">
-      <Filter>Source\ClassProject2\Public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\ClassProject2\Public\MobilityAbility.h">
-      <Filter>Source\ClassProject2\Public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\ClassProject2\Public\MobilityAbility_RushBase.h">
-      <Filter>Source\ClassProject2\Public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\ClassProject2\Public\MyAutomationTestSettings.h">
-      <Filter>Source\ClassProject2\Public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\ClassProject2\Public\MyCharacter.h">
-      <Filter>Source\ClassProject2\Public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\ClassProject2\Public\MyElementalAffinity.h">
-      <Filter>Source\ClassProject2\Public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\ClassProject2\Public\MyGameState.h">
-      <Filter>Source\ClassProject2\Public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\ClassProject2\Public\MyPlayerController.h">
-      <Filter>Source\ClassProject2\Public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\ClassProject2\Public\MyPlayerStart.h">
-      <Filter>Source\ClassProject2\Public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\ClassProject2\Public\MyPlayerState.h">
-      <Filter>Source\ClassProject2\Public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\ClassProject2\Public\OffensiveAbility.h">
-      <Filter>Source\ClassProject2\Public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\ClassProject2\Public\OffensiveAbility_WaveBase.h">
-      <Filter>Source\ClassProject2\Public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\ClassProject2\Public\Safevolume.h">
-      <Filter>Source\ClassProject2\Public</Filter>
-    </ClInclude>
-    <None Include="..\..\Source\ClassProject2\Public\TestClass.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\Source\ClassProject2\Private\Fireball_Effect.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\ClassProject2\Private\MobilityAbility_RushBase_Effect.cpp">
-      <Filter>Source\ClassProject2\Private</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\Source\ClassProject2\Public\Fireball_Effect.h">
-      <Filter>Source\ClassProject2\Public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\ClassProject2\Public\MobilityAbility_RushBase_Effect.h">
-      <Filter>Source\ClassProject2\Public</Filter>
-    </ClInclude>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\ClassProject2.uproject" />
+		<Filter Include="Source">
+			<UniqueIdentifier>{466746A5-7637-4842-9141-AA28AB7BA84C}</UniqueIdentifier>
+		</Filter>
+		<None Include="..\..\Source\ClassProject2.Target.cs">
+			<Filter>Source</Filter>
+		</None >
+		<None Include="..\..\Source\ClassProject2Editor.Target.cs">
+			<Filter>Source</Filter>
+		</None >
+		<Filter Include="Config">
+			<UniqueIdentifier>{6597D27E-CCCB-4B88-BC37-960ECE7A4F47}</UniqueIdentifier>
+		</Filter>
+		<None Include="..\..\Config\DefaultEditor.ini">
+			<Filter>Config</Filter>
+		</None >
+		<None Include="..\..\Config\DefaultEditorPerProjectUserSettings.ini">
+			<Filter>Config</Filter>
+		</None >
+		<None Include="..\..\Config\DefaultEngine.ini">
+			<Filter>Config</Filter>
+		</None >
+		<None Include="..\..\Config\DefaultGame.ini">
+			<Filter>Config</Filter>
+		</None >
+		<None Include="..\..\Config\DefaultInput.ini">
+			<Filter>Config</Filter>
+		</None >
+		<Filter Include="Source\ClassProject2">
+			<UniqueIdentifier>{B43405D3-1381-4F8E-B09F-6DD305862B3D}</UniqueIdentifier>
+		</Filter>
+		<None Include="..\..\Source\ClassProject2\ClassProject2.Build.cs">
+			<Filter>Source\ClassProject2</Filter>
+		</None >
+		<ClCompile Include="..\..\Source\ClassProject2\ClassProject2.cpp">
+			<Filter>Source\ClassProject2</Filter>
+		</ClCompile >
+		<ClInclude Include="..\..\Source\ClassProject2\ClassProject2.h">
+			<Filter>Source\ClassProject2</Filter>
+		</ClInclude >
+		<ClCompile Include="..\..\Source\ClassProject2\ClassProject2Character.cpp">
+			<Filter>Source\ClassProject2</Filter>
+		</ClCompile >
+		<ClInclude Include="..\..\Source\ClassProject2\ClassProject2Character.h">
+			<Filter>Source\ClassProject2</Filter>
+		</ClInclude >
+		<ClCompile Include="..\..\Source\ClassProject2\ClassProject2GameMode.cpp">
+			<Filter>Source\ClassProject2</Filter>
+		</ClCompile >
+		<ClInclude Include="..\..\Source\ClassProject2\ClassProject2GameMode.h">
+			<Filter>Source\ClassProject2</Filter>
+		</ClInclude >
+		<None Include="..\..\Source\ClassProject2\PrefixChart.txt">
+			<Filter>Source\ClassProject2</Filter>
+		</None >
+		<Filter Include="Source\ClassProject2\Private">
+			<UniqueIdentifier>{0E3F680C-6C03-45B8-A744-CF283414BCE6}</UniqueIdentifier>
+		</Filter>
+		<ClCompile Include="..\..\Source\ClassProject2\Private\Ability.cpp">
+			<Filter>Source\ClassProject2\Private</Filter>
+		</ClCompile >
+		<ClCompile Include="..\..\Source\ClassProject2\Private\AbilityEffect.cpp">
+			<Filter>Source\ClassProject2\Private</Filter>
+		</ClCompile >
+		<ClCompile Include="..\..\Source\ClassProject2\Private\DefensiveAbility.cpp">
+			<Filter>Source\ClassProject2\Private</Filter>
+		</ClCompile >
+		<ClCompile Include="..\..\Source\ClassProject2\Private\DefensiveAbility_BlockBase.cpp">
+			<Filter>Source\ClassProject2\Private</Filter>
+		</ClCompile >
+		<ClCompile Include="..\..\Source\ClassProject2\Private\Fireball.cpp">
+			<Filter>Source\ClassProject2\Private</Filter>
+		</ClCompile >
+		<ClCompile Include="..\..\Source\ClassProject2\Private\Fireball_Effect.cpp">
+			<Filter>Source\ClassProject2\Private</Filter>
+		</ClCompile >
+		<ClCompile Include="..\..\Source\ClassProject2\Private\MobilityAbility.cpp">
+			<Filter>Source\ClassProject2\Private</Filter>
+		</ClCompile >
+		<ClCompile Include="..\..\Source\ClassProject2\Private\MobilityAbility_RushBase.cpp">
+			<Filter>Source\ClassProject2\Private</Filter>
+		</ClCompile >
+		<ClCompile Include="..\..\Source\ClassProject2\Private\MobilityAbility_RushBase_Effect.cpp">
+			<Filter>Source\ClassProject2\Private</Filter>
+		</ClCompile >
+		<ClCompile Include="..\..\Source\ClassProject2\Private\MyAutomationTestSettings.cpp">
+			<Filter>Source\ClassProject2\Private</Filter>
+		</ClCompile >
+		<ClCompile Include="..\..\Source\ClassProject2\Private\MyCharacter.cpp">
+			<Filter>Source\ClassProject2\Private</Filter>
+		</ClCompile >
+		<ClCompile Include="..\..\Source\ClassProject2\Private\MyElementalAffinity.cpp">
+			<Filter>Source\ClassProject2\Private</Filter>
+		</ClCompile >
+		<ClCompile Include="..\..\Source\ClassProject2\Private\MyGameState.cpp">
+			<Filter>Source\ClassProject2\Private</Filter>
+		</ClCompile >
+		<ClCompile Include="..\..\Source\ClassProject2\Private\MyPlayerController.cpp">
+			<Filter>Source\ClassProject2\Private</Filter>
+		</ClCompile >
+		<ClCompile Include="..\..\Source\ClassProject2\Private\MyPlayerStart.cpp">
+			<Filter>Source\ClassProject2\Private</Filter>
+		</ClCompile >
+		<ClCompile Include="..\..\Source\ClassProject2\Private\MyPlayerState.cpp">
+			<Filter>Source\ClassProject2\Private</Filter>
+		</ClCompile >
+		<ClCompile Include="..\..\Source\ClassProject2\Private\OffensiveAbility.cpp">
+			<Filter>Source\ClassProject2\Private</Filter>
+		</ClCompile >
+		<ClCompile Include="..\..\Source\ClassProject2\Private\OffensiveAbility_WaveBase.cpp">
+			<Filter>Source\ClassProject2\Private</Filter>
+		</ClCompile >
+		<ClCompile Include="..\..\Source\ClassProject2\Private\Safevolume.cpp">
+			<Filter>Source\ClassProject2\Private</Filter>
+		</ClCompile >
+		<None Include="..\..\Source\ClassProject2\Private\TestClass.txt">
+			<Filter>Source\ClassProject2\Private</Filter>
+		</None >
+		<ClCompile Include="..\..\Source\ClassProject2\Private\UtilityAbility.cpp">
+			<Filter>Source\ClassProject2\Private</Filter>
+		</ClCompile >
+		<ClCompile Include="..\..\Source\ClassProject2\Private\UtilityAbility_Lasso.cpp">
+			<Filter>Source\ClassProject2\Private</Filter>
+		</ClCompile >
+		<Filter Include="Source\ClassProject2\Public">
+			<UniqueIdentifier>{CDEDBE6D-2BB7-4D9D-ACEF-60EB949DD1A0}</UniqueIdentifier>
+		</Filter>
+		<ClInclude Include="..\..\Source\ClassProject2\Public\Ability.h">
+			<Filter>Source\ClassProject2\Public</Filter>
+		</ClInclude >
+		<ClInclude Include="..\..\Source\ClassProject2\Public\AbilityEffect.h">
+			<Filter>Source\ClassProject2\Public</Filter>
+		</ClInclude >
+		<ClInclude Include="..\..\Source\ClassProject2\Public\AbilityList.h">
+			<Filter>Source\ClassProject2\Public</Filter>
+		</ClInclude >
+		<ClInclude Include="..\..\Source\ClassProject2\Public\DefensiveAbility.h">
+			<Filter>Source\ClassProject2\Public</Filter>
+		</ClInclude >
+		<ClInclude Include="..\..\Source\ClassProject2\Public\DefensiveAbility_BlockBase.h">
+			<Filter>Source\ClassProject2\Public</Filter>
+		</ClInclude >
+		<ClInclude Include="..\..\Source\ClassProject2\Public\Fireball.h">
+			<Filter>Source\ClassProject2\Public</Filter>
+		</ClInclude >
+		<ClInclude Include="..\..\Source\ClassProject2\Public\Fireball_Effect.h">
+			<Filter>Source\ClassProject2\Public</Filter>
+		</ClInclude >
+		<ClInclude Include="..\..\Source\ClassProject2\Public\MobilityAbility.h">
+			<Filter>Source\ClassProject2\Public</Filter>
+		</ClInclude >
+		<ClInclude Include="..\..\Source\ClassProject2\Public\MobilityAbility_RushBase.h">
+			<Filter>Source\ClassProject2\Public</Filter>
+		</ClInclude >
+		<ClInclude Include="..\..\Source\ClassProject2\Public\MobilityAbility_RushBase_Effect.h">
+			<Filter>Source\ClassProject2\Public</Filter>
+		</ClInclude >
+		<ClInclude Include="..\..\Source\ClassProject2\Public\MyAutomationTestSettings.h">
+			<Filter>Source\ClassProject2\Public</Filter>
+		</ClInclude >
+		<ClInclude Include="..\..\Source\ClassProject2\Public\MyCharacter.h">
+			<Filter>Source\ClassProject2\Public</Filter>
+		</ClInclude >
+		<ClInclude Include="..\..\Source\ClassProject2\Public\MyElementalAffinity.h">
+			<Filter>Source\ClassProject2\Public</Filter>
+		</ClInclude >
+		<ClInclude Include="..\..\Source\ClassProject2\Public\MyGameState.h">
+			<Filter>Source\ClassProject2\Public</Filter>
+		</ClInclude >
+		<ClInclude Include="..\..\Source\ClassProject2\Public\MyPlayerController.h">
+			<Filter>Source\ClassProject2\Public</Filter>
+		</ClInclude >
+		<ClInclude Include="..\..\Source\ClassProject2\Public\MyPlayerStart.h">
+			<Filter>Source\ClassProject2\Public</Filter>
+		</ClInclude >
+		<ClInclude Include="..\..\Source\ClassProject2\Public\MyPlayerState.h">
+			<Filter>Source\ClassProject2\Public</Filter>
+		</ClInclude >
+		<ClInclude Include="..\..\Source\ClassProject2\Public\OffensiveAbility.h">
+			<Filter>Source\ClassProject2\Public</Filter>
+		</ClInclude >
+		<ClInclude Include="..\..\Source\ClassProject2\Public\OffensiveAbility_WaveBase.h">
+			<Filter>Source\ClassProject2\Public</Filter>
+		</ClInclude >
+		<ClInclude Include="..\..\Source\ClassProject2\Public\Safevolume.h">
+			<Filter>Source\ClassProject2\Public</Filter>
+		</ClInclude >
+		<ClInclude Include="..\..\Source\ClassProject2\Public\UtilityAbility.h">
+			<Filter>Source\ClassProject2\Public</Filter>
+		</ClInclude >
+		<ClInclude Include="..\..\Source\ClassProject2\Public\UtilityAbility_Lasso.h">
+			<Filter>Source\ClassProject2\Public</Filter>
+		</ClInclude >
+	</ItemGroup>
 </Project>

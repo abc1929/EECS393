@@ -107,12 +107,6 @@ AMyCharacter::AMyCharacter()
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	//debug
-	if (IsPlayerControlled()) {
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(MyAffinity->GetAtkDmgMultiplier()));
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(MyAffinity->GetAbilityElementalPrefix()));
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(MyAffinity->GetCritDmgMultiplier()));
-	}
 	UWorld* const World = GetWorld();
 	FTimerDelegate TimerDele;
 	TimerDele.BindUFunction(this, FName("StaminaIncrease"), 1.0f); // multiplier handled in StaminaIncrease
@@ -299,12 +293,11 @@ void AMyCharacter::OnSprintFinish()
 
 void AMyCharacter::SetHP(float hp)
 {
-	Health = hp;
-	if (GEngine) 
+	if (GEngine && (Health-hp)<1) 
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Setting dmg!"));
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(Health));
 	}
+	Health = hp;
 	if (Health < 0)
 	{
 		Destroy();
@@ -373,11 +366,11 @@ void AMyCharacter::SetStamina(float sta)
 	}
 	else
 	// for debug
-	if (GEngine && (int) floor(Stamina) % 10 == 0 && Stamina<MaxStamina)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Setting stamina!"));
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(Stamina));
-	} 
+	//if (GEngine && (int) floor(Stamina) % 10 == 0 && Stamina<MaxStamina)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Setting stamina!"));
+	//	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(Stamina));
+	//} 
 	Stamina = sta;
 }
 
