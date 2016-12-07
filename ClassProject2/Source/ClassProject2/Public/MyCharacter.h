@@ -124,8 +124,9 @@ public:
 	void CastAbility(); // bind 1234 F/left mouse to this
 	UFUNCTION()
 	void CastMobilityAbility();
-	/*UFUNCTION()
+	UFUNCTION()
 	void CastOffensiveAbility(); 
+	/*
 	UFUNCTION()
 	void CastDefensiveAbility(); 
 	UFUNCTION()
@@ -166,6 +167,9 @@ public:
 	FTimerHandle MobilityAbilityCD;
 	bool MobilityAbilityCDFinished;
 	void MobilityAbilityCDRefresh();
+	FTimerHandle OffensiveAbilityCD;
+	bool OffensiveAbilityCDFinished;
+	void OffensiveAbilityCDRefresh();
 	//Character progression records
 	
 	//beginning of each round gets 3 points, 21 totals

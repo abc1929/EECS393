@@ -126,7 +126,7 @@ void AMobilityAbility_RushBase::Zigzag(int count)
 
 void AMobilityAbility_RushBase::OnStartOverlapping(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (CustomOwner != OtherActor && !OtherActor->IsA(ASafevolume::StaticClass())) //hit something valid
+	if (CustomOwner != OtherActor && !OtherActor->IsA(ASafevolume::StaticClass()) && OtherActor->IsA(AMyCharacter::StaticClass())) //hit something valid
 	{	
 		if (GEngine)
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(CustomOwner->MyAffinity->GetHPMultiplier()));
@@ -161,9 +161,9 @@ void AMobilityAbility_RushBase::OnStartOverlapping(UPrimitiveComponent* Overlapp
 void AMobilityAbility_RushBase::Knockback(AMyCharacter* InflictedTarget)
 {
 	//possible to do AOE this way as well, but right now we're just doing single target
-	InflictedTarget->AddActorWorldOffset(Knockbackstep / InflictedTarget->MyAffinity->GetMomentumResistanceMultiplier()); //maybe even square the multiplier if gameplay wise knockback resistance too underpowered
+	InflictedTarget->AddActorWorldOffset(2.5 * Knockbackstep / InflictedTarget->MyAffinity->GetMomentumResistanceMultiplier()); //maybe even square the multiplier if gameplay wise knockback resistance too underpowered
 
-	if (increments >= 100)
+	if (increments >= 50)
 	{
 		//if (GEngine)
 		//	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Some debug message!"));

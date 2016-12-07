@@ -28,7 +28,7 @@ AMyCharacter::AMyCharacter()
 	CurrentNormalSpeed = DefaultNormalSpeed;
 	exhausted = false;
 	CanJumpOverload = false;
-	BasicAttackCDFinished = true; MobilityAbilityCDFinished = true;
+	BasicAttackCDFinished = true; MobilityAbilityCDFinished = true; OffensiveAbilityCDFinished = true;
 	CurrentCastElapse = 0.f;
 	MyAffinity = CreateDefaultSubobject<UMyElementalAffinity>(TEXT("Affinity"));
 	//debug
@@ -159,6 +159,7 @@ void AMyCharacter::SetupPlayerInputComponent(class UInputComponent* MyInputCompo
 
 	//MyInputComponent->BindAction("CastMobilityAbility", IE_Pressed, this, &AMyCharacter::OnCast);
 	MyInputComponent->BindAction("CastMobilityAbility", IE_Released, this, &AMyCharacter::CastMobilityAbility);
+	MyInputComponent->BindAction("CastOffensiveAbility", IE_Released, this, &AMyCharacter::CastOffensiveAbility);
 
 	MyInputComponent->BindAction("SprintHold", IE_Pressed, this, &AMyCharacter::OnSprint);
 	MyInputComponent->BindAction("SprintHold", IE_Released, this, &AMyCharacter::OnSprintFinish);
@@ -408,7 +409,7 @@ float AMyCharacter::GetCD(int order) const
 	switch (order)
 	{
 		case 1: return World->GetTimerManager().GetTimerRemaining(BasicAttackCD);
-		case 2: //offensive
+		case 2: return World->GetTimerManager().GetTimerRemaining(OffensiveAbilityCD);
 		case 3: //defensive
 		case 4: return World->GetTimerManager().GetTimerRemaining(MobilityAbilityCD);
 		case 5: //utility
@@ -487,6 +488,54 @@ void AMyCharacter::CastAbility()
 		CurrentCastSuccess = false;
 		CurrentCastElapse = 0;
 		BasicAttackCDFinished = false;
+	}
+}
+
+void AMyCharacter::CastOffensiveAbility() 
+{
+	if (!OffensiveAbilityCDFinished || GetStamina() < 40)
+	{
+		return;
+		// exit function call
+	}
+
+	UWorld* const World = GetWorld();
+	if (World != NULL)
+	{
+		//GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+		World->GetTimerManager().SetTimer(OffensiveAbilityCD, this, &AMyCharacter::OffensiveAbilityCDRefresh, 12.f, false);
+
+		StaminaIncrease(-40);
+		FRotator SpawnRotation = GetControlRotation();
+		FActorSpawnParameters params2;
+		params2.Owner = this;
+		SpawnRotation.Pitch = 90;
+
+		const FVector SpawnLocation = GetActorLocation() + 150 * FRotationMatrix(SpawnRotation).GetScaledAxis(EAxis::X);
+		FTransform SpawnTransform(SpawnRotation, SpawnLocation);
+		auto AbilityCasing = Cast<AOffensiveAbility_WaveBase>(UGameplayStatics::BeginDeferredActorSpawnFromClass(this, AOffensiveAbility_WaveBase::StaticClass(), SpawnTransform));
+		if (AbilityCasing != nullptr)
+		{
+			AbilityCasing->CustomOwner = this;
+			if (MyAffinity->GetAbilityElementalPrefix() == 0){
+				AbilityCasing->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
+				AbilityCasing->AddActorLocalOffset(FVector(300, 0, 0.0f));
+			} else {
+				AbilityCasing->AddActorLocalOffset(FVector(300, 0, -200.0f));
+			}
+			AbilityCasing->AddActorLocalRotation(FRotator(90, 0, 0));
+		
+			//AbilityCasing->AddActorLocalOffset(FVector(0, 0, -300.0f));	
+
+
+			UGameplayStatics::FinishSpawningActor(AbilityCasing, SpawnTransform);
+
+		}
+		AbilityCasing->Particle->SetVisibility(true);
+		OffensiveAbilityCDFinished = false;
+
+
+
 	}
 }
 
@@ -621,6 +670,12 @@ void AMyCharacter::MobilityAbilityCDRefresh() { MobilityAbilityCDFinished = true
 if (World != NULL)
 	World->GetTimerManager().ClearTimer(MobilityAbilityCD);
 }
+
+void AMyCharacter::OffensiveAbilityCDRefresh() { OffensiveAbilityCDFinished = true; UWorld* const World = GetWorld();
+	if (World != NULL)
+		World->GetTimerManager().ClearTimer(OffensiveAbilityCD);
+}
+
 
 
 

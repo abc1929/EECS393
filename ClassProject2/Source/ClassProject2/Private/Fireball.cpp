@@ -255,9 +255,9 @@ void AFireball::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimiti
 void AFireball::Knockback(AMyCharacter* InflictedTarget)
 {
 	//possible to do AOE this way as well, but right now we're just doing single target
-	InflictedTarget->AddActorWorldOffset(Knockbackstep / InflictedTarget->MyAffinity->GetMomentumResistanceMultiplier());
+	InflictedTarget->AddActorWorldOffset(2 * Knockbackstep / InflictedTarget->MyAffinity->GetMomentumResistanceMultiplier());
 
-	if (increments >= 100)
+	if (increments >= 50)
 	{
 		//if (GEngine)
 		//	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Some debug message!"));
