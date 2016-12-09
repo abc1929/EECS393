@@ -25,6 +25,20 @@ bool FMyCharacterTest::RunTest(const FString& Parameters)
 	return true;
 }
 
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FMyCharacterTest2, "MyCharacter.SetHP_2", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+bool FMyCharacterTest2::RunTest(const FString& Parameters)
+{
+	//AddError(FString::Printf(TEXT("The testing goat says NO! Hourray! Goto coding! ")));
+	// constructors must create equal objects
+	{
+		AMyCharacter* t = NewObject<AMyCharacter>();
+		TestEqual(TEXT("Default health"), t->GetHP(), 100.f);
+		t->Destroy();
+	}
+
+	return true;
+}
+
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FMyCharacterAffin1Test, "MyCharacter.Affinity", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 bool FMyCharacterAffin1Test::RunTest(const FString& Parameters)
 {
@@ -54,6 +68,21 @@ bool FMyCharacterAffin2Test::RunTest(const FString& Parameters)
 		AMyCharacter* t = NewObject<AMyCharacter>();
 		t->MyAffinity->UpdateElements(2, 0);
 		TestEqual(TEXT("Prefix changed" + FString::FromInt(t->MyAffinity->GetAbilityElementalPrefix())), t->MyAffinity->GetAbilityElementalPrefix(), 0);
+		t->Destroy();
+	}
+
+	return true;
+}
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FMyCharacterAffin3Test, "MyCharacter.Affinity_3", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+bool FMyCharacterAffin3Test::RunTest(const FString& Parameters)
+{
+	//AddError(FString::Printf(TEXT("The testing goat says NO! Hourray! Goto coding! ")));
+	// constructors must create equal objects
+	{
+		AMyCharacter* t = NewObject<AMyCharacter>();
+		t->MyAffinity->UpdateElements(2, 0);
+		TestEqual(TEXT("Prefix changed" + FString::FromInt(t->MyAffinity->GetAbilityElementalPrefix())), t->MyAffinity->GetAbilityElementalPrefix(), 0);
 		t->MyAffinity->UpdateElements(1, 3);
 		TestEqual(TEXT("Prefix Not changed, primary element not high enough"), t->MyAffinity->GetAbilityElementalPrefix(), 0);
 		t->Destroy();
@@ -61,7 +90,6 @@ bool FMyCharacterAffin2Test::RunTest(const FString& Parameters)
 
 	return true;
 }
-
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAffinityTest, "MyElementalAffinity.AffinityCalculation", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 bool FAffinityTest::RunTest(const FString& Parameters)
