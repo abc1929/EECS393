@@ -6,7 +6,7 @@
 #include "Fireball_Effect.h"
 
 
-// Even though it is called Fireball, well this class is for all basic ranged attack.
+// Even though it is called Fireball, this class is for all basic ranged attack.
 AFireball::AFireball()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -29,7 +29,7 @@ AFireball::AFireball()
 	Movement->MaxSpeed = 50000.f; //* Cast<AMyCharacter>(GetOwner())->MyAffinity->GetAtkSpeedMultiplier();
 	GetAssets();
 
-	//AfterEffect = CreateDefaultSubobject<AFireball_Effect>(TEXT("Affinity"));
+	//AfterEffect = CreateDefaultSubobject<AFireball_Effect>(TEXT("Affinity"));v
 
 	//Knockback variables
 	increments = 0;
@@ -55,7 +55,7 @@ void AFireball::Tick( float DeltaTime )
 	Super::Tick( DeltaTime );
 	if (this->GetActorLocation().Size() > 10000) {
 		this->Destroy();
-		// prevent projectile shooting to the sky sticking too long
+		// prevent projectile shooting to the sky sticking too long, maybe it is too heavy compared to using a skybox?
 	}
 
 	//lightning bolt animation logic
@@ -77,7 +77,7 @@ void AFireball::GetAssets() {
 }
 
 
-//This determines 
+//This determines basic visuals
 void AFireball::CreateMesh(int PrimaryElementalPrefix)
 {
 	switch (PrimaryElementalPrefix)
@@ -147,8 +147,6 @@ void AFireball::CreateMesh(int PrimaryElementalPrefix)
 			{
 
 				Firetrail->SetTemplate(ParticleAsset_sparks);
-				//Firetrail->SetupAttachment(FireballMesh);
-				//Firetrail->SetupAttachment(FireballMesh);
 
 				Firetrail->SetWorldScale3D(FVector(1.5f));
 			}
@@ -167,6 +165,8 @@ void AFireball::CreateMesh(int PrimaryElementalPrefix)
 
 			break;
 		}
+
+		// rest not implemented
 
 		// Agony - a instant reach basic attack. afflict dmg and knock back after some time period
 		case 3:
@@ -197,7 +197,7 @@ void AFireball::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimiti
 	switch (CustomOwner->MyAffinity->PrimaryElementalPrefix)
 	{
 		case 0: {Knockbackstep = this->GetVelocity() / 300; break; } //Fire
-		case 1: {Knockbackstep = FVector(0, 0, 0);  break; } //I'll make this knockback and up for Earth
+		case 1: {Knockbackstep = FVector(0, 0, 0);  break; } //Earth
 		case 2: {Knockbackstep = this->GetVelocity() / 1200; break; } //Lightning
 		case 3: {Knockbackstep = FVector(0,0,0); break; } //Death
 		case 4: {Knockbackstep = this->GetVelocity() / 450;  break; } //Ice
@@ -259,8 +259,6 @@ void AFireball::Knockback(AMyCharacter* InflictedTarget)
 
 	if (increments >= 50)
 	{
-		//if (GEngine)
-		//	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Some debug message!"));
 		UWorld* const World = GetWorld();
 		World->GetTimerManager().ClearTimer(KnockbackTimerHandle);
 		Collision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);

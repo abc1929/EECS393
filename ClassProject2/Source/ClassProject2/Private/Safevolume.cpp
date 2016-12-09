@@ -50,6 +50,7 @@ void ASafevolume::Tick( float DeltaTime )
 
 }
 
+// Called when character exit safezone
 void ASafevolume::OnComponentEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	if (AMyCharacter* targethit = Cast<AMyCharacter>(OtherActor)) 
@@ -60,6 +61,8 @@ void ASafevolume::OnComponentEndOverlap(UPrimitiveComponent* OverlappedComp, AAc
 	}
 }
 
+// Called when character reenters safezone
+// need all characters to be spawned inside safezone
 void ASafevolume::OnStartOverlapping(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	UWorld* const World = GetWorld();

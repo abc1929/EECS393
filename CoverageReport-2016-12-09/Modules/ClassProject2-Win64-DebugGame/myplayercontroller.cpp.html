@@ -1,0 +1,61 @@
+<html>
+	<head>
+	<link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	<script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+	<title>
+		myplayercontroller.cpp
+	</title>
+	<body onload="prettyPrint()">
+        <h4></h4>
+		<pre class="prettyprint lang-cpp linenums">
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#include "ClassProject2.h"
+#include "MyPlayerController.h"
+#include "Public/MyCharacter.h"
+
+
+AMyPlayerController::AMyPlayerController()
+<span style = "background-color:#dfd">{
+}</span>
+
+void AMyPlayerController::SetupInputComponent()
+<span style = "background-color:#dfd">{</span>
+	// Somehow can't figure out how to transport binds here to player, guess just do those in player
+<span style = "background-color:#dfd">	Super::SetupInputComponent();</span>
+	//InputComponent-&gt;BindAction("PauseMenu", IE_Pressed, this, &amp;AMyPlayerController::PauseMenu);
+	//InputComponent-&gt;BindAction("CharacterSheet", IE_Pressed, this, &amp;AMyPlayerController::CharSheet);
+	//InputComponent-&gt;BindAction("ScoreSheet", IE_Pressed, this, &amp;AMyPlayerController::ScoreSheet);
+<span style = "background-color:#dfd">}</span>
+
+void AMyPlayerController::PauseMenu()
+<span style = "background-color:#fdd">{
+	auto pawn = this-&gt;GetPawn();
+	if (auto inner = Cast&lt;AMyCharacter&gt;(pawn))</span>
+	{
+<span style = "background-color:#fdd">		if(GEngine)
+			GEngine-&gt;AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("&gt;&gt;&gt;"));
+		inner-&gt;InGameMenuOn = inner-&gt;InGameMenuOn ? true : false;</span>
+	}
+<span style = "background-color:#fdd">}</span>
+
+void AMyPlayerController::CharSheet()
+<span style = "background-color:#fdd">{
+	auto pawn = this-&gt;GetPawn();
+	if (auto inner = Cast&lt;AMyCharacter&gt;(pawn))</span>
+	{
+<span style = "background-color:#fdd">		inner-&gt;CharacterSheetOn = inner-&gt;CharacterSheetOn ? true : false;</span>
+	}
+<span style = "background-color:#fdd">}</span>
+
+void AMyPlayerController::ScoreSheet()
+<span style = "background-color:#fdd">{
+	auto pawn = this-&gt;GetPawn();
+	if (auto inner = Cast&lt;AMyCharacter&gt;(pawn))</span>
+	{
+<span style = "background-color:#fdd">		inner-&gt;ScoreSheetOn = inner-&gt;ScoreSheetOn ? true : false;</span>
+	}
+<span style = "background-color:#fdd">}</span></pre>
+	</body>
+</html>

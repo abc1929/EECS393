@@ -1,0 +1,97 @@
+<html>
+	<head>
+	<link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	<script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+	<title>
+		safevolume.cpp
+	</title>
+	<body onload="prettyPrint()">
+        <h4></h4>
+		<pre class="prettyprint lang-cpp linenums">
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#include "ClassProject2.h"
+#include "public/Safevolume.h"
+#include "public/MyCharacter.h"
+
+
+// Sets default values
+ASafevolume::ASafevolume()
+<span style = "background-color:#dfd">{</span>
+ 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+<span style = "background-color:#dfd">	PrimaryActorTick.bCanEverTick = true;
+	ShrinkLevel = 0;
+	ZoneMesh = CreateDefaultSubobject&lt;UStaticMeshComponent&gt;(TEXT("ZoneMesh"));
+	static ConstructorHelpers::FObjectFinder&lt;UStaticMesh&gt; mmesh(TEXT("StaticMesh'/Engine/BasicShapes/Cylinder.Cylinder'"));
+	if (mmesh.Object)</span>
+	{	
+		
+<span style = "background-color:#dfd">		ZoneMesh-&gt;SetStaticMesh(mmesh.Object);
+		ZoneMesh-&gt;SetWorldScale3D(FVector(65, 65, 5));</span>
+	}
+<span style = "background-color:#dfd">	static ConstructorHelpers::FObjectFinder&lt;UMaterial&gt; mmaterial(TEXT("Material'/Engine/BufferVisualization/Specular.Specular'"));
+	if (mmaterial.Object)</span>
+	{
+<span style = "background-color:#dfd">		 ZoneMesh-&gt;SetMaterial(0,mmaterial.Object);</span>
+
+	}
+<span style = "background-color:#dfd">	ZoneMesh-&gt;SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+	ZoneMesh-&gt;OnComponentBeginOverlap.AddDynamic(this, &amp;ASafevolume::OnStartOverlapping);
+	ZoneMesh-&gt;OnComponentEndOverlap.AddDynamic(this, &amp;ASafevolume::OnComponentEndOverlap);
+	ZoneMesh-&gt;bCastDynamicShadow = false;
+}</span>
+
+// Called when the game starts or when spawned
+void ASafevolume::BeginPlay()
+<span style = "background-color:#dfd">{
+	Super::BeginPlay();</span>
+
+	//Start shrinking logic
+
+<span style = "background-color:#dfd">	UWorld* const World = GetWorld();
+	World-&gt;GetTimerManager().SetTimer(ShrinkTimer,this, &amp;ASafevolume::Shrink, 15.0f, true, 0.f);</span>
+
+<span style = "background-color:#dfd">}</span>
+
+// Called every frame
+void ASafevolume::Tick( float DeltaTime )
+<span style = "background-color:#dfd">{
+	Super::Tick( DeltaTime );</span>
+
+<span style = "background-color:#dfd">}</span>
+
+// Called when character exit safezone
+void ASafevolume::OnComponentEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+<span style = "background-color:#dfd">{
+	if (AMyCharacter* targethit = Cast&lt;AMyCharacter&gt;(OtherActor)) </span>
+	{
+<span style = "background-color:#dfd">		if (GEngine)
+			GEngine-&gt;AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Taking Damage!"));
+		targethit-&gt;TakingForceFieldDamage(true);</span>
+	}
+<span style = "background-color:#dfd">}</span>
+
+// Called when character reenters safezone
+// need all characters to be spawned inside safezone
+void ASafevolume::OnStartOverlapping(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult&amp; SweepResult)
+<span style = "background-color:#dfd">{
+	UWorld* const World = GetWorld();
+	if (AMyCharacter* targethit = Cast&lt;AMyCharacter&gt;(OtherActor)) {
+		if (GEngine)
+			GEngine-&gt;AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Safe!"));
+		targethit-&gt;TakingForceFieldDamage(false);</span>
+	}
+<span style = "background-color:#dfd">}</span>
+
+<span style = "background-color:#dfd">void ASafevolume::Shrink() {
+	GEngine-&gt;AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("SafeZone Shrinked!"));
+	ZoneMesh-&gt;SetWorldScale3D(FVector(65-ShrinkLevel*11, 65-ShrinkLevel*11, 5)); //nerfing 20% to ~17%, 20% of the original is a bit too small
+	if (ShrinkLevel == 4) {
+		UWorld* const World = GetWorld();
+		World-&gt;GetTimerManager().ClearTimer(ShrinkTimer);</span>
+	}
+<span style = "background-color:#dfd">	ShrinkLevel++;
+}</span></pre>
+	</body>
+</html>

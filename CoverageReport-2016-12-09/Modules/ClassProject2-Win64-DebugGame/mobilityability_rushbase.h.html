@@ -1,0 +1,71 @@
+<html>
+	<head>
+	<link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	<script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+	<title>
+		mobilityability_rushbase.h
+	</title>
+	<body onload="prettyPrint()">
+        <h4></h4>
+		<pre class="prettyprint lang-cpp linenums">
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "MobilityAbility.h"
+#include "GameFramework/ProjectileMovementComponent.h"
+#include "MobilityAbility_RushBase.generated.h"
+
+
+class AMyCharacter;
+/**
+ * 
+ */
+UCLASS()
+class CLASSPROJECT2_API AMobilityAbility_RushBase : public AMobilityAbility
+{
+<span style = "background-color:#dfd">	GENERATED_BODY()</span>
+
+	
+
+public:
+	virtual void BeginPlay() override;
+
+	AMobilityAbility_RushBase(const class FObjectInitializer&amp; ObjectInitializer);
+	~AMobilityAbility_RushBase();
+
+	UFUNCTION()
+	void OnStartOverlapping(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult&amp; SweepResult);
+	//UFUNCTION()
+	//void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult&amp; Hit);
+
+	UFUNCTION()
+	void Knockback(AMyCharacter* InflictedTarget);
+
+	UFUNCTION()
+	void Zigzag(int count);
+
+	bool KBTimerExpired;
+	FTimerHandle KnockbackTimerHandle;
+	FTimerHandle ZigzagTimerHandle;
+	FVector Knockbackstep;
+	FVector BaseVelocity;
+	int increments;
+
+	UPROPERTY()
+	class UMyElementalAffinity* OwnerAffinity;
+
+
+	AActor* Instigator;
+
+	UPROPERTY()
+	AMyCharacter* CustomOwner;
+
+	class UProjectileMovementComponent* Movement;
+
+	UFUNCTION()
+	void Deactivate(); //deactive movement and collision, go in to a state resolving momentum infliction
+};</pre>
+	</body>
+</html>

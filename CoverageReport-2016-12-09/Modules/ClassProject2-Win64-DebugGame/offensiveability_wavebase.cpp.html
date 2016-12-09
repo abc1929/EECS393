@@ -1,0 +1,175 @@
+<html>
+	<head>
+	<link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	<script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+	<title>
+		offensiveability_wavebase.cpp
+	</title>
+	<body onload="prettyPrint()">
+        <h4></h4>
+		<pre class="prettyprint lang-cpp linenums">
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#include "ClassProject2.h"
+#include "OffensiveAbility_WaveBase.h"
+#include "public/MyCharacter.h"
+#include "public/Safevolume.h"
+
+// default offensive ability
+AOffensiveAbility_WaveBase::AOffensiveAbility_WaveBase()
+<span style = "background-color:#dfd">{
+	PrimaryActorTick.bCanEverTick = true;
+	Collision = CreateDefaultSubobject&lt;UCapsuleComponent&gt;(TEXT("RootComponent_Collision"));</span>
+
+<span style = "background-color:#dfd">	RootComponent = Collision;
+	Collision-&gt;BodyInstance.SetCollisionProfileName("Stationary");
+	Collision-&gt;SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap); //ECR_Overlap
+	Collision-&gt;InitCapsuleSize(120, 300);
+	Collision-&gt;SetWorldRotation(FRotator(270,0,0));
+	Collision-&gt;SetHiddenInGame(false);
+	Mesh = CreateDefaultSubobject&lt;UStaticMeshComponent&gt;(TEXT("ballmesh"));
+	Mesh-&gt;SetupAttachment(RootComponent);
+	Collision-&gt;OnComponentBeginOverlap.AddDynamic(this, &amp;AOffensiveAbility_WaveBase::OnStartOverlapping);</span>
+	//Movement = CreateDefaultSubobject&lt;UProjectileMovementComponent&gt;(TEXT("Movement"));
+	//Movement-&gt;UpdatedComponent = Collision;
+<span style = "background-color:#dfd">	GetAssets();
+	Particle = CreateDefaultSubobject&lt;UParticleSystemComponent&gt;(TEXT("Particle"));</span>
+
+<span style = "background-color:#dfd">	Particle-&gt;SetupAttachment(Mesh);</span>
+	
+	//Particle-&gt;bOverrideLODMethod = true;
+<span style = "background-color:#dfd">	Particle-&gt;bAutoActivate = true;</span>
+
+<span style = "background-color:#dfd">	Particle2 = CreateDefaultSubobject&lt;UParticleSystemComponent&gt;(TEXT("Particle2"));</span>
+
+<span style = "background-color:#dfd">	Particle2-&gt;SetupAttachment(RootComponent);</span>
+
+	//Particle-&gt;bOverrideLODMethod = true;
+<span style = "background-color:#dfd">	Particle2-&gt;bAutoActivate = true;</span>
+
+<span style = "background-color:#dfd">}</span>
+
+void AOffensiveAbility_WaveBase::BeginPlay()
+<span style = "background-color:#dfd">{
+	Super::BeginPlay();
+	this-&gt;SetLifeSpan(1.f);
+	GetAssets();
+	switch (CustomOwner-&gt;MyAffinity-&gt;GetAbilityElementalPrefix())</span>
+	{
+		case 0: {
+<span style = "background-color:#dfd">			if (ParticleAsset_fire)</span>
+			{
+<span style = "background-color:#dfd">				Particle-&gt;SetTemplate(ParticleAsset_fire);
+				Particle-&gt;SetWorldScale3D(FVector(1.4f, 3.2f, 6.0f));
+				Collision-&gt;SetCapsuleSize(120, 300);</span>
+			}
+<span style = "background-color:#dfd">			break;</span>
+		}
+
+		case 2: {
+<span style = "background-color:#dfd">			if (ParticleAsset_sparks)</span>
+			{
+<span style = "background-color:#dfd">				Particle2-&gt;SetTemplate(ParticleAsset_sparks);</span>
+				//-&gt;SetWorldScale3D(FVector(0.5f));
+<span style = "background-color:#dfd">				Collision-&gt;SetCapsuleSize(200, 20);
+				Particle2-&gt;AddLocalOffset(FVector(-300, 0, 0));
+				AddActorLocalOffset(FVector(0, 0, -100.0f));
+				AddActorLocalRotation(FRotator(0, 180, 0));</span>
+			}
+<span style = "background-color:#dfd">			break;</span>
+		}
+		case 20: {
+<span style = "background-color:#dfd">			if (ParticleAsset_sparks)</span>
+			{
+<span style = "background-color:#dfd">				Particle2-&gt;SetTemplate(ParticleAsset_sparks);
+				Particle-&gt;SetTemplate(ParticleAsset_fire);
+				Particle-&gt;SetWorldScale3D(FVector(3.4f, 1.2f, 1.2f));</span>
+				//-&gt;SetWorldScale3D(FVector(0.5f));
+<span style = "background-color:#dfd">				Particle2-&gt;AddLocalOffset(FVector(-300, 0, 0));
+				Collision-&gt;SetCapsuleSize(200, 20);
+				AddActorLocalOffset(FVector(0, 0, -100.0f));</span>
+			}
+			break;
+		}
+
+		default:
+			break;
+	}
+
+<span style = "background-color:#dfd">}</span>
+
+// Called every frame
+void AOffensiveAbility_WaveBase::Tick(float DeltaTime)
+<span style = "background-color:#dfd">{
+	Super::Tick(DeltaTime);</span>
+
+<span style = "background-color:#dfd">}</span>
+
+<span style = "background-color:#dfd">void AOffensiveAbility_WaveBase::GetAssets() {</span>
+
+
+<span style = "background-color:#dfd">	static ConstructorHelpers::FObjectFinder&lt;UParticleSystem&gt; t_ParticleAsset_sparks(TEXT("ParticleSystem'/Game/ThirdPersonCPP/Blueprints/pLightningBeam_2.pLightningBeam_2'"));
+	if (t_ParticleAsset_sparks.Object) { ParticleAsset_sparks = t_ParticleAsset_sparks.Object; }</span>
+	
+	//static ConstructorHelpers::FObjectFinder&lt;UParticleSystem&gt; t_ParticleAsset_fire(TEXT("ParticleSystem'/Game/StarterContent/Particles/P_Fire.P_Fire'"));
+<span style = "background-color:#dfd">	static ConstructorHelpers::FObjectFinder&lt;UParticleSystem&gt; t_ParticleAsset_fire(TEXT("ParticleSystem'/Game/ThirdPersonCPP/Blueprints/FireWaveBase2.FireWaveBase2'"));
+	if (t_ParticleAsset_fire.Object) { ParticleAsset_fire = t_ParticleAsset_fire.Object; }
+}</span>
+
+
+// Called when this ability hits enemy
+void AOffensiveAbility_WaveBase::OnStartOverlapping(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult&amp; SweepResult)
+<span style = "background-color:#dfd">{
+	if (CustomOwner != OtherActor &amp;&amp; !OtherActor-&gt;IsA(ASafevolume::StaticClass()) &amp;&amp; OtherActor-&gt;IsA(AMyCharacter::StaticClass())) //hit something valid</span>
+	{
+<span style = "background-color:#dfd">		UWorld* const World = GetWorld();</span>
+
+<span style = "background-color:#dfd">		if (AMyCharacter* targethit = Cast&lt;AMyCharacter&gt;(OtherActor)) {
+			if (targethit != CustomOwner)</span>
+			{
+
+<span style = "background-color:#dfd">				Knockbackstep = FRotationMatrix(CustomOwner-&gt;GetControlRotation()).GetScaledAxis(EAxis::X)*10;
+				auto interval = 0.01f;
+				auto affin = CustomOwner-&gt;MyAffinity-&gt;GetAbilityElementalPrefix();
+				if (affin == 2 || affin == 20) {
+					Knockbackstep = FVector(0,0,1) * 75;
+					interval = 0.05;</span>
+				}
+
+<span style = "background-color:#dfd">				FTimerDelegate TimerDel;
+				TimerDel.BindUFunction(this, FName("Knockback"), targethit);
+				World-&gt;GetTimerManager().SetTimer(Wavetick, TimerDel, interval, true, 0.f);</span>
+			}
+		}
+	}
+<span style = "background-color:#dfd">}</span>
+
+// knock up or knock back depends
+void AOffensiveAbility_WaveBase::Knockback(AMyCharacter* InflictedTarget)
+<span style = "background-color:#dfd">{
+	auto affin = CustomOwner-&gt;MyAffinity-&gt;GetAbilityElementalPrefix();
+	auto dmgtick = 0.3f;
+	if (affin == 2 || affin == 20) {
+		dmgtick = 1.f;</span>
+	}
+<span style = "background-color:#dfd">	InflictedTarget-&gt;TakeDmg(</span>
+		Cast&lt;AMyCharacter&gt;(CustomOwner)-&gt;AttackDmgDebuffMultiplier
+		* dmgtick
+		* Cast&lt;AMyCharacter&gt;(CustomOwner)-&gt;MyAffinity-&gt;GetAtkDmgMultiplier()
+	);
+<span style = "background-color:#dfd">	InflictedTarget-&gt;AddActorWorldOffset(0.9 * Knockbackstep / InflictedTarget-&gt;MyAffinity-&gt;GetMomentumResistanceMultiplier());
+	if (increments &gt;= 50)</span>
+	{
+
+<span style = "background-color:#dfd">		UWorld* const World = GetWorld();
+		World-&gt;GetTimerManager().ClearTimer(Wavetick);
+		Destroy();
+		return;</span>
+	}
+<span style = "background-color:#dfd">	increments++;
+}</span>
+
+</pre>
+	</body>
+</html>

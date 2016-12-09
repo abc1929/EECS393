@@ -6,6 +6,8 @@
 #include "MyElementalAffinity.h"
 #include "public/MyCharacter.h"
 
+// character progression class, easier to pass around compared to characters
+
 UMyElementalAffinity::UMyElementalAffinity()
 {
 	Elements.Init(0, 5);

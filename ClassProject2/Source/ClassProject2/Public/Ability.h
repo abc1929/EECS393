@@ -10,6 +10,8 @@
 class AAbilityEffect;
 class UMyElementalAffinity;
 
+// this class is not used currently
+
 UCLASS(ABSTRACT)
 class CLASSPROJECT2_API AAbility : public AActor
 {
@@ -57,9 +59,6 @@ private:
 	float CritChanceMultiplier; //Lightning
 	float CritDmgMultiplier; //Lightning minor, Darkness
 
-
-
-	//can't think of more now
 	
 
 };

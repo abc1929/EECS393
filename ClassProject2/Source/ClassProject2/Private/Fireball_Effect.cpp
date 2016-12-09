@@ -1,11 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "ClassProject2.h"
 #include "Fireball_Effect.h"
 #include "public/MyCharacter.h"
 #include "public/Fireball.h"
 
+
+// Effect object process ability's residual effect on enemy, while ability is destroyed (lighter weight)
 void AFireball_Effect::BeginPlay() {
 	Super::BeginPlay();
 	this->SetLifeSpan(20.f);

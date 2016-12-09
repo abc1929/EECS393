@@ -9,7 +9,6 @@
 
 
 UCLASS()
-//class CLASSPROJECT2_API AMyCharacter : public ACharacter
 class AMyCharacter : public ACharacter
 {
 	GENERATED_BODY()
@@ -23,16 +22,6 @@ public:
 	
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
-
-	// Called to bind functionality to input
-
-	// called when character is being removed from a level
-
-	// not implemented yet, commented for compiler complaint
-	// virtual void EndPlay
-	// (  
-	// 	const EEndPlayReason::Type EndPlayReason
-	// ) override;
 
 	// movements
 	void MoveForward(float Value);
@@ -52,8 +41,6 @@ public:
 	void OnJumpFinish();
 	void OnSprint();
 	void OnSprintFinish();
-	// not implemented yet, commented for compiler complaint
-	//virtual void SetIsSprinting(bool IsSprinting);
 
 	
 	//UPROPERTY(Transient, Replicated)  
@@ -216,8 +203,6 @@ public:
 
 	UFUNCTION()
 	void SetMovementSpeedDebuffMultiplier(float MovespeedDebuffMultiplier); 
-	//this is fundamentally different from others since movement speed is pulled straight from UE presets
-	//others are implemented from our abilities system
 
 	UFUNCTION()
 	void SetAttackSpeedDebuffMultiplier(float AttackSpeedDebuffMultiplier); // of base attack speed of 1.0
@@ -261,7 +246,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "buttons")
 	void ScoreSheet();
 
-	// well no enum for this, enum now is required handled globally, I guess for this toy project just track int manually
+	// well enum not allowed besides an enum class, enum is required handled globally, I guess for this toy project just track int manually
 	//UENUM() 
 	//enum UIButtons { InGameMenu, CharacterSheet, ScoreSheet};
 

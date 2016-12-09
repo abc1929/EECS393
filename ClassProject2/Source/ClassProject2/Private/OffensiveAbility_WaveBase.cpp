@@ -5,6 +5,7 @@
 #include "public/MyCharacter.h"
 #include "public/Safevolume.h"
 
+// default offensive ability
 AOffensiveAbility_WaveBase::AOffensiveAbility_WaveBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -48,8 +49,6 @@ void AOffensiveAbility_WaveBase::BeginPlay()
 		case 0: {
 			if (ParticleAsset_fire)
 			{
-				//if(GEngine)
-				//	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("WTF?"));
 				Particle->SetTemplate(ParticleAsset_fire);
 				Particle->SetWorldScale3D(FVector(1.4f, 3.2f, 6.0f));
 				Collision->SetCapsuleSize(120, 300);
@@ -99,7 +98,6 @@ void AOffensiveAbility_WaveBase::Tick(float DeltaTime)
 void AOffensiveAbility_WaveBase::GetAssets() {
 
 
-
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> t_ParticleAsset_sparks(TEXT("ParticleSystem'/Game/ThirdPersonCPP/Blueprints/pLightningBeam_2.pLightningBeam_2'"));
 	if (t_ParticleAsset_sparks.Object) { ParticleAsset_sparks = t_ParticleAsset_sparks.Object; }
 	
@@ -108,6 +106,8 @@ void AOffensiveAbility_WaveBase::GetAssets() {
 	if (t_ParticleAsset_fire.Object) { ParticleAsset_fire = t_ParticleAsset_fire.Object; }
 }
 
+
+// Called when this ability hits enemy
 void AOffensiveAbility_WaveBase::OnStartOverlapping(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (CustomOwner != OtherActor && !OtherActor->IsA(ASafevolume::StaticClass()) && OtherActor->IsA(AMyCharacter::StaticClass())) //hit something valid
@@ -125,8 +125,7 @@ void AOffensiveAbility_WaveBase::OnStartOverlapping(UPrimitiveComponent* Overlap
 					Knockbackstep = FVector(0,0,1) * 75;
 					interval = 0.05;
 				}
-				//if (GEngine)
-				//	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Waaa RushBase Test!"));
+
 				FTimerDelegate TimerDel;
 				TimerDel.BindUFunction(this, FName("Knockback"), targethit);
 				World->GetTimerManager().SetTimer(Wavetick, TimerDel, interval, true, 0.f);
@@ -135,6 +134,7 @@ void AOffensiveAbility_WaveBase::OnStartOverlapping(UPrimitiveComponent* Overlap
 	}
 }
 
+// knock up or knock back depends
 void AOffensiveAbility_WaveBase::Knockback(AMyCharacter* InflictedTarget)
 {
 	auto affin = CustomOwner->MyAffinity->GetAbilityElementalPrefix();

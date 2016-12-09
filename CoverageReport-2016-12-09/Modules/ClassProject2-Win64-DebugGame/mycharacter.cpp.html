@@ -1,0 +1,740 @@
+<html>
+	<head>
+	<link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	<script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+	<title>
+		mycharacter.cpp
+	</title>
+	<body onload="prettyPrint()">
+        <h4></h4>
+		<pre class="prettyprint lang-cpp linenums">
+// Fill out your copyright notice in the Description page of Project Settings.
+// JW,JD
+
+#include "ClassProject2.h"
+#include "ClassProject2GameMode.h"
+#include "GameFramework/InputSettings.h"
+#include "public/MyCharacter.h"
+#include "public/AbilityList.h"
+
+// Sets default values
+AMyCharacter::AMyCharacter()
+<span style = "background-color:#dfd">{</span>
+ 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+<span style = "background-color:#dfd">	PrimaryActorTick.bCanEverTick = true;
+	MaxHealth = 100.f;
+	Health = MaxHealth;
+	MaxStamina = 100.f;
+	Stamina = MaxStamina;
+	SprintSpeedModifier = 1.8f;
+	AttackDmgDebuffMultiplier = 1.0f;
+	DefenseDebuffMultiplier = 1.0f;
+	AttackSpeedDebuffMultiplier = 1.0f;
+	isStunned = false;
+	isCharging = false;</span>
+
+<span style = "background-color:#dfd">	DefaultNormalSpeed = this-&gt;GetCharacterMovement()-&gt;MaxWalkSpeed /1.5; // default normal speed is passive speed set semistatically, not a current walkspeed reflection
+	this-&gt;GetCharacterMovement()-&gt;MaxWalkSpeed = DefaultNormalSpeed;
+	CurrentNormalSpeed = DefaultNormalSpeed;
+	exhausted = false;
+	CanJumpOverload = false;
+	BasicAttackCDFinished = true; MobilityAbilityCDFinished = true; OffensiveAbilityCDFinished = true;
+	CurrentCastElapse = 0.f;
+	MyAffinity = CreateDefaultSubobject&lt;UMyElementalAffinity&gt;(TEXT("Affinity")); // default to all 0</span>
+
+	//debug
+	//MyAffinity-&gt;UpdateElements(5, 0); //Fire
+	//MyAffinity-&gt;UpdateElements(4, 1); //Earth
+	//MyAffinity-&gt;UpdateElements(8, 2); //Lightning
+	//MyAffinity-&gt;UpdateElements(7, 3); //Darkness
+	//MyAffinity-&gt;UpdateElements(2, 4); //Ice
+
+
+
+
+<span style = "background-color:#dfd">	GetCapsuleComponent()-&gt;InitCapsuleSize(42.f, 96.0f);</span>
+	//Getting character mesh
+<span style = "background-color:#dfd">	static ConstructorHelpers::FObjectFinder&lt;USkeletalMesh&gt; mmesh(TEXT("SkeletalMesh'/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin'"));
+	if (mmesh.Object) </span>
+	{
+<span style = "background-color:#dfd">		PlayerMesh = GetMesh();
+		PlayerMesh-&gt;SetSkeletalMesh(mmesh.Object);
+		PlayerMesh-&gt;AddLocalOffset(FVector(0, 0, -98.0f));
+		PlayerMesh-&gt;SetRelativeRotation(FRotator(0, -90.0f, 0));</span>
+	}
+
+
+	
+
+	// this part doesnt work in packaged game. Maybe have to wrap the character in a Blueprint class at the end.
+
+	//static ConstructorHelpers::FObjectFinder&lt;UAnimBlueprint&gt; MeshAnim(TEXT("AnimBlueprint'/Game/Mannequin/Animations/ThirdPerson_AnimBP.ThirdPerson_AnimBP'"));
+	//if (MeshAnim.Object) 
+	//{
+	//	SampleBP = MeshAnim.Object;
+	//	GetMesh()-&gt;SetAnimInstanceClass(SampleBP-&gt;GetAnimBlueprintGeneratedClass());
+	//}
+
+	
+	// set our turn rates for input
+	// BaseTurnRate = 45.f;
+	// BaseLookUpRate = 45.f;
+
+	// Don't rotate when the controller rotates. Let that just affect the camera.
+<span style = "background-color:#dfd">	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;</span>
+
+	// Configure character movement
+<span style = "background-color:#dfd">	GetCharacterMovement()-&gt;bOrientRotationToMovement = true; // Character moves in the direction of input...	
+	GetCharacterMovement()-&gt;RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
+	GetCharacterMovement()-&gt;JumpZVelocity = 400.f;
+	GetCharacterMovement()-&gt;AirControl = 0.2f;</span>
+
+	// Create a camera boom (camera collision)
+<span style = "background-color:#dfd">	CameraBoom = CreateDefaultSubobject&lt;USpringArmComponent&gt;(TEXT("CameraBoom"));
+	CameraBoom-&gt;SetupAttachment(RootComponent);
+	CameraBoom-&gt;TargetArmLength = 350.0f; // The camera follows at this distance behind the character	
+	CameraBoom-&gt;bUsePawnControlRotation = true; // Rotate the arm based on the controller</span>
+
+	// Create a follow camera
+<span style = "background-color:#dfd">	FollowCamera = CreateDefaultSubobject&lt;UCameraComponent&gt;(TEXT("FollowCamera"));
+	FollowCamera-&gt;SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
+	FollowCamera-&gt;bUsePawnControlRotation = false; // Camera does not rotate relative to arm</span>
+
+<span style = "background-color:#dfd">	FollowCamera-&gt;SetFieldOfView(110);
+	FollowCamera-&gt;AddLocalOffset(FVector(0,0,110));</span>
+
+	//initializing movement effect
+	//movementcomponent = CreateDefaultSubobject&lt;UProjectileMovementComponent&gt;(" ");
+
+<span style = "background-color:#dfd">	InGameMenuOn = false;
+	CharacterSheetOn = false;
+	ScoreSheetOn = false;
+	GameInputDisabled = false;
+}</span>
+
+
+// Called when the game starts or when spawned, added to world state
+void AMyCharacter::BeginPlay()
+<span style = "background-color:#dfd">{
+	Super::BeginPlay();
+	UWorld* const World = GetWorld();
+	FTimerDelegate TimerDele;
+	TimerDele.BindUFunction(this, FName("StaminaIncrease"), 1.0f); // multiplier handled in StaminaIncrease
+	World-&gt;GetTimerManager().SetTimer(RegenTimer, TimerDele, 0.1f, true, 0.f);
+}</span>
+
+
+// Called every frame, DeltaTime is internal frame ticking time.
+// Good for quick shallow branching checks, avoiding heavy computation here
+void AMyCharacter::Tick( float DeltaTime )
+<span style = "background-color:#dfd">{
+	Super::Tick( DeltaTime );
+	if (exhausted&amp;&amp;Stamina &gt; 20)
+		exhausted = false;
+	if (Stamina &lt; 0.2)</span>
+	{
+<span style = "background-color:#dfd">		exhausted = true;
+		StopJumping();
+		OnSprintFinish();</span>
+	}
+
+
+<span style = "background-color:#dfd">}</span>
+
+// Called to bind functionality to input, actual input maps determined by .ini file generated by engine, can be changed manually as well
+void AMyCharacter::SetupPlayerInputComponent(class UInputComponent* MyInputComponent)
+<span style = "background-color:#dfd">{
+	Super::SetupPlayerInputComponent(CreatePlayerInputComponent());
+	check(MyInputComponent);</span>
+	// Binding inputs to actions
+	// axes binding corresponds to set of inputs ()
+<span style = "background-color:#dfd">	MyInputComponent-&gt;BindAxis("MoveForward", this, &amp;AMyCharacter::MoveForward);
+    MyInputComponent-&gt;BindAxis("MoveRight", this, &amp;AMyCharacter::MoveRight);</span>
+	
+<span style = "background-color:#dfd">	MyInputComponent-&gt;BindAxis("Turn", this, &amp;APawn::AddControllerYawInput);
+    MyInputComponent-&gt;BindAxis("LookUp", this, &amp;APawn::AddControllerPitchInput);</span>
+
+<span style = "background-color:#dfd">	MyInputComponent-&gt;BindAction("Jump", IE_Pressed, this, &amp;AMyCharacter::Jump);
+	MyInputComponent-&gt;BindAction("Jump", IE_Released, this, &amp;AMyCharacter::StopJumping);</span>
+
+
+<span style = "background-color:#dfd">	MyInputComponent-&gt;BindAction("Fire", IE_Pressed, this, &amp;AMyCharacter::OnCast);
+	MyInputComponent-&gt;BindAction("Fire", IE_Released, this, &amp;AMyCharacter::CastAbility);</span>
+
+	//MyInputComponent-&gt;BindAction("CastMobilityAbility", IE_Pressed, this, &amp;AMyCharacter::OnCast);
+<span style = "background-color:#dfd">	MyInputComponent-&gt;BindAction("CastMobilityAbility", IE_Released, this, &amp;AMyCharacter::CastMobilityAbility);
+	MyInputComponent-&gt;BindAction("CastOffensiveAbility", IE_Released, this, &amp;AMyCharacter::CastOffensiveAbility);</span>
+
+<span style = "background-color:#dfd">	MyInputComponent-&gt;BindAction("SprintHold", IE_Pressed, this, &amp;AMyCharacter::OnSprint);
+	MyInputComponent-&gt;BindAction("SprintHold", IE_Released, this, &amp;AMyCharacter::OnSprintFinish);</span>
+
+<span style = "background-color:#dfd">	MyInputComponent-&gt;BindAction("PauseMenu", IE_Released, this, &amp;AMyCharacter::PauseMenu);
+	MyInputComponent-&gt;BindAction("CharacterSheet", IE_Released, this, &amp;AMyCharacter::CharSheet);
+	MyInputComponent-&gt;BindAction("ScoreSheet", IE_Released, this, &amp;AMyCharacter::ScoreSheet);
+}</span>
+
+// camera control, use mouse/console controller to turn camera by default 
+void AMyCharacter::AddControllerPitchInput(float Val)
+<span style = "background-color:#dfd">{
+	if (GameInputDisabled)
+		return;
+	if (Val != 0.f &amp;&amp; Controller &amp;&amp; Controller-&gt;IsLocalPlayerController())</span>
+	{
+<span style = "background-color:#dfd">		APlayerController* const PC = CastChecked&lt;APlayerController&gt;(Controller);
+		PC-&gt;AddPitchInput(Val);</span>
+	}
+<span style = "background-color:#dfd">}</span>
+
+void AMyCharacter::AddControllerYawInput(float Val)
+<span style = "background-color:#dfd">{
+	if (GameInputDisabled)
+		return;
+	if (Val != 0.f &amp;&amp; Controller &amp;&amp; Controller-&gt;IsLocalPlayerController())</span>
+	{
+<span style = "background-color:#dfd">		APlayerController* const PC = CastChecked&lt;APlayerController&gt;(Controller);
+		PC-&gt;AddYawInput(Val);</span>
+	}
+<span style = "background-color:#dfd">}</span>
+
+
+// MoveFoward handles moving forward and backwards
+void AMyCharacter::MoveForward(float Value)
+<span style = "background-color:#dfd">{
+	if (isCharging)
+		return;
+	if ((Controller != NULL) &amp;&amp; (Value != 0.0f))</span>
+	{
+		// find out which way is forward
+<span style = "background-color:#dfd">		const FRotator Rotation = Controller-&gt;GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);</span>
+
+		// get forward vector
+<span style = "background-color:#dfd">		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		AddMovementInput(Direction, Value);</span>
+	}
+<span style = "background-color:#dfd">}</span>
+
+void AMyCharacter::MoveRight(float Value)
+<span style = "background-color:#dfd">{
+	if (isCharging)
+		return;
+	if ( (Controller != NULL) &amp;&amp; (Value != 0.0f) )</span>
+	{
+		// find out which way is right
+<span style = "background-color:#dfd">		const FRotator Rotation = Controller-&gt;GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);</span>
+	
+		// get right vector 
+<span style = "background-color:#dfd">		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);</span>
+		// add movement in that direction
+<span style = "background-color:#dfd">		AddMovementInput(Direction, Value);</span>
+	}
+<span style = "background-color:#dfd">}</span>
+
+
+bool AMyCharacter::CanJump()
+<span style = "background-color:#fdd">{</span>
+	// a bug where canjump locked to false?
+	// this method is not used, avoided
+
+<span style = "background-color:#fdd">	if (Stamina &gt; 20 &amp;&amp; !CanJumpOverload) </span>
+	{
+<span style = "background-color:#fdd">		return true;</span>
+	}
+<span style = "background-color:#fdd">	else
+		return false;
+}</span>
+
+
+void AMyCharacter::Jump()
+<span style = "background-color:#dfd">{
+	GEngine-&gt;AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Stamina!"));
+	GEngine-&gt;AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(Stamina));
+	if (exhausted || Stamina&lt;20)
+		return;
+	Super::Jump();
+	if (!GetCharacterMovement()-&gt;IsFalling()) {
+		StaminaIncrease(-20);</span>
+	}
+<span style = "background-color:#dfd">}</span>
+
+// sprinting stamina cost
+void AMyCharacter::OnSprint()
+<span style = "background-color:#dfd">{
+	if (!exhausted)</span>
+	{
+<span style = "background-color:#dfd">		this-&gt;GetCharacterMovement()-&gt;MaxWalkSpeed = </span>
+		CurrentNormalSpeed*MyAffinity-&gt;GetMovSpeedMultiplier() * SprintSpeedModifier;
+<span style = "background-color:#dfd">		UWorld* const World = GetWorld();
+		FTimerDelegate TimerDele;
+		TimerDele.BindUFunction(this, FName("StaminaIncrease"), -2.0f);
+		World-&gt;GetTimerManager().SetTimer(SprintTimer, TimerDele, 0.1f, true, 0.f);</span>
+	}
+<span style = "background-color:#dfd">}</span>
+void AMyCharacter::OnSprintFinish()
+<span style = "background-color:#dfd">{
+	UWorld* const World = GetWorld();
+	this-&gt;GetCharacterMovement()-&gt;MaxWalkSpeed = </span>
+	CurrentNormalSpeed*MyAffinity-&gt;GetMovSpeedMultiplier();
+<span style = "background-color:#dfd">	World-&gt;GetTimerManager().ClearTimer(SprintTimer);
+}</span>
+
+// Not used, replication of character jumping for networking
+// void AMyCharacter::GetLifetimeReplicatedProps(TArray&lt;FLifetimeProperty&gt;&amp; OutLifetimeProps) const
+// {
+//	 Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+//	 DOREPLIFETIME_CONDITION(AMyCharacter, IsJumping, COND_SkipOwner);
+// }
+
+
+
+// // other properties
+
+void AMyCharacter::SetHP(float hp)
+<span style = "background-color:#dfd">{
+	if (GEngine &amp;&amp; (Health-hp)&lt;1) </span>
+	{
+<span style = "background-color:#dfd">		GEngine-&gt;AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(Health));</span>
+	}
+<span style = "background-color:#dfd">	Health = hp;
+	if (Health &lt; 0)</span>
+	{
+<span style = "background-color:#dfd">		Destroy();</span>
+	}
+<span style = "background-color:#dfd">}</span>
+
+void AMyCharacter::TakeDmg(float x, bool canReduce)
+<span style = "background-color:#dfd">{
+	if(canReduce)
+		SetHP(GetHP() - x/(DefenseDebuffMultiplier * MyAffinity-&gt;GetDefenseMultiplier()) );
+	else 
+		SetHP(GetHP() - x);
+}</span>
+
+// Constant damage taken by character outside of safezone
+void AMyCharacter::TakingForceFieldDamage(bool yeah)
+<span style = "background-color:#dfd">{
+	InForceField = yeah;
+	UWorld* const World = GetWorld();
+	if (InForceField)</span>
+	{
+<span style = "background-color:#dfd">		FTimerDelegate TimerDel;
+		TimerDel.BindUFunction(this, FName("TakeDmg"), 0.6f, false);
+		World-&gt;GetTimerManager().SetTimer(DamageTimer, TimerDel, 0.1f, true, 0.f);</span>
+	}
+<span style = "background-color:#dfd">	else</span>
+	{
+<span style = "background-color:#dfd">		World-&gt;GetTimerManager().ClearTimer(DamageTimer);</span>
+	}
+<span style = "background-color:#dfd">}</span>
+
+
+float AMyCharacter::GetMaxStamina() const
+<span style = "background-color:#dfd">{
+	return MaxStamina;
+}</span>
+
+float AMyCharacter::GetStamina() const
+<span style = "background-color:#dfd">{
+	return Stamina;
+}</span>
+
+float AMyCharacter::GetMaxHP() const
+<span style = "background-color:#dfd">{
+	return MaxHealth;
+}</span>
+
+float AMyCharacter::GetHP() const
+<span style = "background-color:#dfd">{
+	return Health;
+}</span>
+
+float AMyCharacter::GetCastProgress() const
+<span style = "background-color:#dfd">{
+	return CurrentCastElapse &gt; CurrentCastMax? 1.0f : CurrentCastElapse / CurrentCastMax;
+}</span>
+
+void AMyCharacter::SetStamina(float sta)
+<span style = "background-color:#dfd">{
+	if (sta &gt;= MaxStamina) {
+		Stamina = MaxStamina;</span>
+	}
+<span style = "background-color:#dfd">	else
+	if (sta &lt;= 0) {
+		Stamina = 0;
+		exhausted = true;</span>
+	}
+<span style = "background-color:#dfd">	else
+	Stamina = sta;
+}</span>
+
+void AMyCharacter::StaminaIncrease(float x)
+<span style = "background-color:#dfd">{
+	if (x &lt; 0) // for stamina consumption</span>
+	{
+<span style = "background-color:#dfd">		SetStamina(GetStamina() + x);
+		return;</span>
+	}
+
+	// for stamina regens
+	if (this-&gt;GetCharacterMovement()-&gt;MaxWalkSpeed &gt; CurrentNormalSpeed*MyAffinity-&gt;GetMovSpeedMultiplier()
+<span style = "background-color:#dfd">		&amp;&amp; this-&gt;GetCharacterMovement()-&gt;Velocity.Size()&lt;50) {return;} //holding sprint while not moving will not decrease stamina, but it blocks regen
+	if (Stamina &gt; MaxStamina) { SetStamina(MaxStamina-1.2f); } // needs to be reduced more than 1.f (regen is at 1.f, would have bugs)
+	else if (Stamina &lt; 0) { SetStamina(0); exhausted = true; }
+	else { SetStamina(GetStamina() + x * MyAffinity-&gt;GetStamRegenMultiplier()); }
+}</span>
+
+bool AMyCharacter::IsAlive() const
+<span style = "background-color:#fdd">{
+	return Health &gt; 0;
+}</span>
+
+// cooldown
+float AMyCharacter::GetCD(int order) const
+<span style = "background-color:#dfd">{
+	UWorld* const World = GetWorld();
+	switch (order)</span>
+	{
+<span style = "background-color:#dfd">		case 1: return World-&gt;GetTimerManager().GetTimerRemaining(BasicAttackCD);
+		case 2: return World-&gt;GetTimerManager().GetTimerRemaining(OffensiveAbilityCD);</span>
+		case 3: //defensive ability, not yet implemented
+<span style = "background-color:#dfd">		case 4: return World-&gt;GetTimerManager().GetTimerRemaining(MobilityAbilityCD);</span>
+		case 5: //utility ability, not yet implemented
+		default:
+			break;
+	}
+	
+<span style = "background-color:#fdd">	return 0.f;</span>
+<span style = "background-color:#dfd">}</span>
+
+
+// handling basic attack input pressed down
+void AMyCharacter::OnCast()
+<span style = "background-color:#dfd">{
+	CurrentCastElapse = 0;
+	if (!BasicAttackCDFinished || GetStamina() &lt; 20) { return; }
+	CurrentCastSuccess = false;
+	FTimerDelegate TimerDel;
+	UWorld* const World = GetWorld();
+	if (World != NULL)</span>
+	{
+		//Will be more logics on MaxCastTime if more ability added
+<span style = "background-color:#dfd">		CurrentCastMax = AttackSpeedDebuffMultiplier * 1.2f / MyAffinity-&gt;GetAtkSpeedMultiplier();
+		TimerDel.BindUFunction(this, FName("CastIncrement"), CurrentCastMax);</span>
+		
+<span style = "background-color:#dfd">		World-&gt;GetTimerManager().SetTimer(CastTimer, TimerDel, 0.01f, true, 0.f);</span>
+	}
+<span style = "background-color:#dfd">}</span>
+
+// this counts current casting time spend trying to cast an ability, maybe it's faster to directly access timer?
+void AMyCharacter::CastIncrement(float RequiredTime)
+<span style = "background-color:#dfd">{
+	if (CurrentCastElapse &gt; RequiredTime) </span>
+	{
+<span style = "background-color:#dfd">		UWorld* const World = GetWorld();
+		CurrentCastSuccess = true;
+		World-&gt;GetTimerManager().ClearTimer(CastTimer);</span>
+	}
+<span style = "background-color:#dfd">	CurrentCastElapse += 0.01f;
+}</span>
+// this only casts basic attack despite the name
+// handling basic attack button released
+void AMyCharacter::CastAbility()
+<span style = "background-color:#dfd">{
+	UWorld* const World = GetWorld();
+	if (World != NULL)
+		World-&gt;GetTimerManager().ClearTimer(CastTimer);
+	CurrentCastElapse = 0;
+	if (!CurrentCastSuccess)</span>
+	{
+<span style = "background-color:#dfd">		return; </span>
+		// exit function call
+	}
+<span style = "background-color:#dfd">	if (!BasicAttackCDFinished) { return; }</span>
+
+
+	// try and fire a projectile
+<span style = "background-color:#dfd">	if (World != NULL)</span>
+	{
+<span style = "background-color:#dfd">		World-&gt;GetTimerManager().ClearTimer(CastTimer);
+		World-&gt;GetTimerManager().SetTimer(BasicAttackCD, this, &amp;AMyCharacter::BasicAttackCDRefresh, 3.f, false);</span>
+		//consume stamina
+<span style = "background-color:#dfd">		StaminaIncrease(-20);
+		const FRotator SpawnRotation = GetControlRotation();
+		const FVector SpawnLocation = GetActorLocation() + 150 * FRotationMatrix(SpawnRotation).GetScaledAxis(EAxis::X);</span>
+
+<span style = "background-color:#dfd">		FTransform SpawnTransform(SpawnRotation, SpawnLocation);
+		auto Fireballspawn = Cast&lt;AFireball&gt;(UGameplayStatics::BeginDeferredActorSpawnFromClass(this, AFireball::StaticClass(), SpawnTransform));
+		if (Fireballspawn != nullptr)</span>
+		{
+<span style = "background-color:#dfd">			Fireballspawn-&gt;CustomOwner = this;</span>
+			//AbilityCasing-&gt;OwnerAffinity-&gt;UpdateAll(MyAffinity-&gt;GetElements()); //not working, maybe just directly access this's affinity
+
+<span style = "background-color:#dfd">			UGameplayStatics::FinishSpawningActor(Fireballspawn, SpawnTransform);</span>
+		}
+<span style = "background-color:#dfd">		CurrentCastSuccess = false;
+		CurrentCastElapse = 0;
+		BasicAttackCDFinished = false;</span>
+	}
+<span style = "background-color:#dfd">}</span>
+
+void AMyCharacter::CastOffensiveAbility() 
+<span style = "background-color:#dfd">{
+	if (!OffensiveAbilityCDFinished || GetStamina() &lt; 40)</span>
+	{
+<span style = "background-color:#dfd">		return;</span>
+		// exit function call
+	}
+
+<span style = "background-color:#dfd">	UWorld* const World = GetWorld();
+	if (World != NULL)</span>
+	{
+
+<span style = "background-color:#dfd">		World-&gt;GetTimerManager().SetTimer(OffensiveAbilityCD, this, &amp;AMyCharacter::OffensiveAbilityCDRefresh, 12.f, false);</span>
+
+<span style = "background-color:#dfd">		StaminaIncrease(-40);
+		FRotator SpawnRotation = GetControlRotation();
+		FActorSpawnParameters params2;
+		params2.Owner = this;
+		SpawnRotation.Pitch = 90;</span>
+
+<span style = "background-color:#dfd">		const FVector SpawnLocation = GetActorLocation() + 150 * FRotationMatrix(SpawnRotation).GetScaledAxis(EAxis::X);
+		FTransform SpawnTransform(SpawnRotation, SpawnLocation);
+		auto AbilityCasing = Cast&lt;AOffensiveAbility_WaveBase&gt;(UGameplayStatics::BeginDeferredActorSpawnFromClass(this, AOffensiveAbility_WaveBase::StaticClass(), SpawnTransform));
+		if (AbilityCasing != nullptr)</span>
+		{
+<span style = "background-color:#dfd">			AbilityCasing-&gt;CustomOwner = this;
+			if (MyAffinity-&gt;GetAbilityElementalPrefix() == 0){
+				AbilityCasing-&gt;AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
+				AbilityCasing-&gt;AddActorLocalOffset(FVector(300, 0, 0.0f));
+			} else {
+				AbilityCasing-&gt;AddActorLocalOffset(FVector(300, 0, -200.0f));</span>
+			}
+<span style = "background-color:#dfd">			AbilityCasing-&gt;AddActorLocalRotation(FRotator(90, 0, 0));</span>
+		
+			//AbilityCasing-&gt;AddActorLocalOffset(FVector(0, 0, -300.0f));	
+
+
+<span style = "background-color:#dfd">			UGameplayStatics::FinishSpawningActor(AbilityCasing, SpawnTransform);</span>
+
+		}
+<span style = "background-color:#dfd">		AbilityCasing-&gt;Particle-&gt;SetVisibility(true);
+		OffensiveAbilityCDFinished = false;</span>
+
+
+
+	}
+<span style = "background-color:#dfd">}</span>
+
+void AMyCharacter::CastMobilityAbility()
+<span style = "background-color:#dfd">{</span>
+
+<span style = "background-color:#dfd">	if (!MobilityAbilityCDFinished ||  GetStamina() &lt; 20)</span>
+	{
+<span style = "background-color:#dfd">		return;</span>
+		// exit function call
+	}
+
+<span style = "background-color:#dfd">	UWorld* const World = GetWorld();
+	if (World != NULL)</span>
+	{
+		//GetCapsuleComponent()-&gt;SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+<span style = "background-color:#dfd">		World-&gt;GetTimerManager().SetTimer(MobilityAbilityCD, this, &amp;AMyCharacter::MobilityAbilityCDRefresh, 8.f, false);</span>
+
+<span style = "background-color:#dfd">		StaminaIncrease(-20);
+		FRotator SpawnRotation = GetControlRotation();
+		const FVector SpawnLocation = GetActorLocation();
+		FActorSpawnParameters params2;
+		params2.Owner = this;
+		params2.Instigator = this;</span>
+		//GetCapsuleComponent()-&gt;SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+<span style = "background-color:#dfd">		SpawnRotation.Pitch = 0;</span>
+		//AMobilityAbility_RushBase* AbilityCasing = World-&gt;SpawnActor&lt;AMobilityAbility_RushBase&gt;(SpawnLocation, SpawnRotation, params2); //hardcoded for now
+
+<span style = "background-color:#dfd">		FTransform SpawnTransform(SpawnRotation,SpawnLocation);
+		auto AbilityCasing = Cast&lt;AMobilityAbility_RushBase&gt;(UGameplayStatics::BeginDeferredActorSpawnFromClass(this, AMobilityAbility_RushBase::StaticClass(), SpawnTransform));
+		if (AbilityCasing != nullptr)</span>
+		{
+<span style = "background-color:#dfd">			AbilityCasing-&gt;CustomOwner = this;</span>
+			//AbilityCasing-&gt;OwnerAffinity-&gt;UpdateAll(MyAffinity-&gt;GetElements()); //not working, maybe just directly access this's affinity
+
+
+<span style = "background-color:#dfd">			UGameplayStatics::FinishSpawningActor(AbilityCasing, SpawnTransform);</span>
+
+		}
+<span style = "background-color:#dfd">		MobilityAbilityCDFinished = false;</span>
+
+		//debug
+		//I assume that this part is messing with owner passing
+<span style = "background-color:#dfd">		AbilityCasing-&gt;AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));</span>
+		//AttachToActor(AbilityCasing, FAttachmentTransformRules(EAttachmentRule::SnapToTarget,true));
+		//AbilityCasing-&gt;OwnerAffinity=MyAffinity;
+		//DuplicateObject(MyAffinity, AbilityCasing-&gt;OwnerAffinity);
+
+
+<span style = "background-color:#dfd">		AbilityCasing-&gt;Movement-&gt;UpdatedComponent = this-&gt;GetRootComponent();</span>
+		//auto sMovement = AbilityCasing-&gt;Movement;
+		//sMovement-&gt;UpdatedComponent = RootComponent;
+		//DisableInput(World-&gt;GetFirstPlayerController());	
+
+<span style = "background-color:#dfd">		GameInputDisabled = true;</span>
+
+<span style = "background-color:#dfd">		FTimerDelegate local2;
+		local2.BindUFunction(this, FName("GainController"), AbilityCasing);</span>
+		//GetCapsuleComponent()-&gt;SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+<span style = "background-color:#dfd">		World-&gt;GetTimerManager().SetTimer(CastTimer, local2, AttackSpeedDebuffMultiplier * 1.0f/ MyAffinity-&gt;GetAtkSpeedMultiplier(), false);
+		isCharging = true;</span>
+		
+	}
+<span style = "background-color:#dfd">}</span>
+
+// UI actions/ abilities could have the ability to lock player input during its effect, this function regains control appropriately
+void AMyCharacter::GainController(AActor* effect)//, UProjectileMovementComponent* movementeffecthandle)
+<span style = "background-color:#dfd">{
+	if (!isCharging)
+		return;
+	UWorld* const World = GetWorld();
+	if (World != NULL)</span>
+	{
+<span style = "background-color:#dfd">		GameInputDisabled = false;
+		if(ClickedUIButtons(1) || ClickedUIButtons(2) || ClickedUIButtons(3))</span>
+<span style = "background-color:#fdd">			GameInputDisabled = true;</span>
+		//EnableInput(World-&gt;GetFirstPlayerController());
+		
+		
+		//if (movementeffecthandle-&gt;IsRooted()) {
+			//movementeffecthandle-&gt;RemoveFromRoot();
+		//}'
+<span style = "background-color:#dfd">		if (Cast&lt;AMobilityAbility_RushBase&gt;(effect))
+			if (effect-&gt;IsRooted())</span>
+<span style = "background-color:#fdd">				effect-&gt;RemoveFromRoot();</span>
+<span style = "background-color:#dfd">			(Cast&lt;AMobilityAbility_RushBase&gt;(effect))-&gt;Deactivate();</span>
+		//(Cast&lt;AMobilityAbility_RushBase&gt;(effect))-&gt;Movement-&gt;DestroyComponent();
+		//(Cast&lt;AMobilityAbility_RushBase&gt;(effect))-&gt;Collision
+		//GetCapsuleComponent()-&gt;SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+	}
+<span style = "background-color:#dfd">	isCharging = false;
+}</span>
+
+
+//Char Progression
+<span style = "background-color:#dfd">UMyElementalAffinity* AMyCharacter::GetAffinity() {
+	return MyAffinity;
+}</span>
+
+
+<span style = "background-color:#fdd">float AMyCharacter::GetAtkSpeedMultiplier() { return MyAffinity-&gt;GetAtkSpeedMultiplier(); }
+float AMyCharacter::GetAtkDmgMultiplier() { return MyAffinity-&gt;GetAtkDmgMultiplier(); }
+float AMyCharacter::GetMovSpeedMultiplier() { return MyAffinity-&gt;GetMovSpeedMultiplier(); }
+float AMyCharacter::GetCritChanceMultiplier() { return MyAffinity-&gt;GetCritChanceMultiplier(); }
+float AMyCharacter::GetCritDmgMultiplier() { return MyAffinity-&gt;GetCritDmgMultiplier(); }
+float AMyCharacter::GetHPMultiplier() { return MyAffinity-&gt;GetHPMultiplier(); }
+float AMyCharacter::GetMomentumResistanceMultiplier() { return MyAffinity-&gt;GetMomentumResistanceMultiplier(); }
+float AMyCharacter::GetStamRegenMultiplier() { return MyAffinity-&gt;GetStamRegenMultiplier(); }
+float AMyCharacter::GetDefenseMultiplier() { return MyAffinity-&gt;GetDefenseMultiplier(); }</span>
+
+// This should get called after allocating points
+void AMyCharacter::UpdateStats()
+<span style = "background-color:#dfd">{</span>
+	//this should only used in between rounds for character progression
+<span style = "background-color:#dfd">	MaxHealth = 100 * MyAffinity-&gt;GetHPMultiplier();
+	Health = MaxHealth;
+	this-&gt;GetCharacterMovement()-&gt;MaxWalkSpeed = DefaultNormalSpeed*MyAffinity-&gt;GetMovSpeedMultiplier();</span>
+	//others not needed yet, those multipliers communicate with abilities directly
+<span style = "background-color:#dfd">}</span>
+
+
+//Misc
+//Timing
+
+//Cooldowns
+<span style = "background-color:#dfd">void AMyCharacter::BasicAttackCDRefresh() { BasicAttackCDFinished = true; UWorld* const World = GetWorld(); 
+if (World != NULL)
+	World-&gt;GetTimerManager().ClearTimer(BasicAttackCD);
+}
+void AMyCharacter::MobilityAbilityCDRefresh() { MobilityAbilityCDFinished = true; UWorld* const World = GetWorld();
+if (World != NULL)
+	World-&gt;GetTimerManager().ClearTimer(MobilityAbilityCD);
+}</span>
+
+<span style = "background-color:#dfd">void AMyCharacter::OffensiveAbilityCDRefresh() { OffensiveAbilityCDFinished = true; UWorld* const World = GetWorld();
+	if (World != NULL)
+		World-&gt;GetTimerManager().ClearTimer(OffensiveAbilityCD);
+}</span>
+
+
+
+
+// Debuffs
+void AMyCharacter::SetMovementSpeedDebuffMultiplier(float MovespeedDebuffMultiplier)
+<span style = "background-color:#fdd">{
+	CurrentNormalSpeed = DefaultNormalSpeed * MovespeedDebuffMultiplier;
+	this-&gt;GetCharacterMovement()-&gt;MaxWalkSpeed = CurrentNormalSpeed;
+}</span>
+
+void AMyCharacter::SetAttackSpeedDebuffMultiplier(float _AttackSpeedDebuffMultiplier)
+<span style = "background-color:#fdd">{
+	this-&gt;AttackSpeedDebuffMultiplier=_AttackSpeedDebuffMultiplier;
+}</span>
+
+void AMyCharacter::SetAttackDmgDebuffMultiplier(float _AttackDmgDebuffMultiplier)
+<span style = "background-color:#fdd">{
+	this-&gt;AttackDmgDebuffMultiplier= _AttackDmgDebuffMultiplier;
+}</span>
+
+void AMyCharacter::SetDefenseDebuffMultiplier(float _DefenseDebuffMultiplier)
+<span style = "background-color:#fdd">{
+	this-&gt;DefenseDebuffMultiplier=_DefenseDebuffMultiplier;	
+}</span>
+
+
+void AMyCharacter::SetStun(float duration)
+<span style = "background-color:#fdd">{</span>
+	// if already stunned just break
+<span style = "background-color:#fdd">	this-&gt;IsStunned=true;</span>
+	// not implemented
+<span style = "background-color:#fdd">}</span>
+
+
+
+void AMyCharacter::PauseMenu()
+<span style = "background-color:#dfd">{
+	InGameMenuOn = !InGameMenuOn ? true : false;
+	APlayerController* MyController = GetWorld()-&gt;GetFirstPlayerController();
+	MyController-&gt;bShowMouseCursor = InGameMenuOn ? true : false;
+	MyController-&gt;bEnableClickEvents = InGameMenuOn ? true : false;
+	MyController-&gt;bEnableMouseOverEvents = InGameMenuOn ? true : false;</span>
+
+<span style = "background-color:#dfd">	GameInputDisabled = isCharging ? true : (!GameInputDisabled ? true : false);
+}</span>
+
+// not implemented
+void AMyCharacter::CharSheet()
+<span style = "background-color:#fdd">{
+	CharacterSheetOn = !CharacterSheetOn ? true : false;
+}</span>
+
+void AMyCharacter::ScoreSheet()
+<span style = "background-color:#fdd">{
+	ScoreSheetOn = !ScoreSheetOn ? true : false;
+}</span>
+
+
+bool AMyCharacter::ClickedUIButtons(int x) const
+<span style = "background-color:#dfd">{
+	switch (x)</span>
+	{
+		case 1: 
+<span style = "background-color:#dfd">			return InGameMenuOn;   break;</span>
+		case 2: 
+<span style = "background-color:#dfd">			return CharacterSheetOn; break;</span>
+		case 3: 
+<span style = "background-color:#dfd">			return ScoreSheetOn;  break;</span>
+<span style = "background-color:#fdd">		default: return false; break;</span>
+	}
+<span style = "background-color:#dfd">}</span></pre>
+	</body>
+</html>

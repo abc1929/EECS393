@@ -3,6 +3,7 @@
 #include "ClassProject2.h"
 #include "public/Ability.h"
 
+// Abstract class for hierarchy, not really utilized currently
 
 // Sets default values
 AAbility::AAbility(const class FObjectInitializer& ObjectInitializer)

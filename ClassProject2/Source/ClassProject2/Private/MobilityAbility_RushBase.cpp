@@ -8,19 +8,15 @@
 #include "public/MyCharacter.h"
 
 
-
+// Basic mobility ability
 AMobilityAbility_RushBase::AMobilityAbility_RushBase(const class FObjectInitializer& ObjectInitializer)
 {
 	
 	PrimaryActorTick.bCanEverTick = true;
-	//CustomOwner->MyAffinity = CreateDefaultSubobject<UMyElementalAffinity>(TEXT("Affinity"));
-	//CustomOwner->MyAffinity->RegisterComponent();
 
 	auto Collision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("RootComponent_Collision"));
 	Collision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 
-	//AttachToActor(Owner, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
-	//AttachToActor(CustomOwner, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
 
 
 	Collision->InitCapsuleSize(90.f, 110.0f);
@@ -53,6 +49,7 @@ void AMobilityAbility_RushBase::BeginPlay()
 		BaseVelocity = Movement->Velocity;
 		Movement->UpdateComponentVelocity();
 		//Movement->MaxSpeed = 1000.f *std::pow(CustomOwner->MyAffinity->GetAtkSpeedMultiplier(), 1.5) * CustomOwner->MyAffinity->GetMovSpeedMultiplier();
+		// debugs, won't appear in game build
 		if (GEngine) {
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Rushspeed buffed!, and elemental is " + FString::FromInt(CustomOwner->MyAffinity->GetAbilityElementalPrefix())));
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(Movement->Velocity.Size()));
@@ -139,9 +136,6 @@ void AMobilityAbility_RushBase::OnStartOverlapping(UPrimitiveComponent* Overlapp
 			if (targethit != CustomOwner)
 			{
 				Knockbackstep = this->BaseVelocity / 500;
-				//if (GEngine)
-				//	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Waaa RushBase Test!"));
-
 				
 				targethit->TakeDmg(
 					Cast<AMyCharacter>(CustomOwner)->AttackDmgDebuffMultiplier 
@@ -165,17 +159,16 @@ void AMobilityAbility_RushBase::Knockback(AMyCharacter* InflictedTarget)
 
 	if (increments >= 50)
 	{
-		//if (GEngine)
-		//	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Some debug message!"));
+
 		UWorld* const World = GetWorld();
 		World->GetTimerManager().ClearTimer(KnockbackTimerHandle);
-		//auto Owner = Cast<AMyCharacter>(CustomOwner);
-		//Owner->SetActorEnableCollision(true);
+
 		Destroy();
 	}
 	increments++;
 }
 
+// cleaning up ability, ready to destroy after all effects are processed on enemy
 void AMobilityAbility_RushBase::Deactivate()
 {
 	Movement->DestroyComponent();

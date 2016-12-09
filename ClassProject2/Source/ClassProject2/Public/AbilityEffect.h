@@ -9,7 +9,7 @@ class AAbility;
 class AMyCharacter;
 
 // UE4's internal objects don't really do true abstract since they need to exist in some instance that you run
-// we use macro to do abstract methods
+// use macro to do abstract methods
 UCLASS()
 class CLASSPROJECT2_API AAbilityEffect : public AActor
 {

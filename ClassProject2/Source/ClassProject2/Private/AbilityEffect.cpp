@@ -1,4 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
+// Abstract class for hierarchy, not really utilized currently
 
 #include "ClassProject2.h"
 #include "AbilityEffect.h"
