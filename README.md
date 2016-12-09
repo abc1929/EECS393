@@ -1,9 +1,5 @@
 # EECS393 code guide
 
-ClassProject1 Contains original blueprint scripts assets, kept for potential reuse
-ClassProject2 is the one we're operating on.
-
-
 Source/
 
 *.cs are generated code for compiling
